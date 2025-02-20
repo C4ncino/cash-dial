@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "biomejs.biome",
+        "usernamehw.errorlens",
+        "dsznajder.es7-react-js-snippets",
+        "dbaeumer.vscode-eslint",
+        "moalamri.inline-fold",
+        "burkeholland.simple-react-snippets",
+        "bradlc.vscode-tailwindcss",
+        "fabiospampinato.vscode-todo-plus",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-spanish"
+    ]
+}
