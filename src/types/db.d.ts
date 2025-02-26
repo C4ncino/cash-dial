@@ -175,11 +175,7 @@ type UseDatabase = () => {
     ...args: [QueryParams<T>]
   ) => Row<T>[];
 
-  update: <T extends TableId>(
-    tableName: T,
-    id: Id,
-    value: Row<T>
-  ) => Row<T> | null;
+  update: <T extends TableId>(tableName: T, id: Id, value: Row<T>) => boolean;
 
   remove: (tableName: TableId, id: Id) => boolean;
 };

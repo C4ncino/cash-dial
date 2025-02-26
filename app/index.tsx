@@ -1,9 +1,10 @@
+import { View, Text, Button, FlatList } from "react-native";
+
+import ListItem from "@/components/ListItem";
 import useDatabase from "@/hooks/useDatabase";
-import { View, Text, Button, Pressable, FlatList } from "react-native";
-import { useRow, useSortedRowIds, useStore } from "tinybase/ui-react";
 
 const Home = () => {
-  const { create, getAll, getById, remove } = useDatabase();
+  const { create, getAll, update, remove } = useDatabase();
 
   return (
     <View>
@@ -17,20 +18,29 @@ const Home = () => {
         }}
         title="Add"
       />
+      <Button
+        onPress={() => {
+          const a = update("categories", "10", {
+            name: "New Category 8",
+          });
+
+          console.log(a);
+        }}
+        title="Update"
+      />
+
+      <Button
+        onPress={() => {
+          const a = remove("categories", "10");
+
+          console.log(a);
+        }}
+        title="Rm"
+      />
 
       <FlatList
         data={getAll("categories")}
-        renderItem={({ item }) => {
-          const cat = getById("categories", item);
-
-          return (
-            <Pressable onPress={() => remove("categories", item)}>
-              <Text>
-                {item}: {cat?.name}
-              </Text>
-            </Pressable>
-          );
-        }}
+        renderItem={({ item }) => <ListItem id={item} />}
       />
     </View>
   );
