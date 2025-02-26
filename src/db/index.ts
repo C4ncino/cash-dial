@@ -15,7 +15,7 @@ import {
   foreignKeys as planningsFK,
 } from "./planningsConfig";
 import { indexes as categoriesIdx } from "./categoriesConfig";
-import { TableSchema } from "./tableSchema";
+import { tableSchema } from "./tableSchema";
 
 const indexes = [
   ...accountsIdx,
@@ -32,4 +32,4 @@ const foreignKeys = [
   ...planningsFK,
 ];
 
-export { TableSchema, indexes, foreignKeys };
+export { tableSchema, indexes, foreignKeys };

@@ -1,11 +1,19 @@
 const categoriesConfig: TableConfig = {
-  id: { type: "number" },
-  idFather: { type: "number" },
+  idFather: { type: "string" },
   name: { type: "string" },
 };
 
 const indexes: Index[] = [
-  { id: "id_categories", tableId: "categories", cellId: "id" },
+  // { id: "id_father_categories", tableId: "categories", cellId: "idFather" },
 ];
 
-export { categoriesConfig, indexes };
+const foreignKeys: ForeignKey[] = [
+  {
+    id: "categories_categories",
+    tableId: "categories",
+    oTableId: "categories",
+    cellId: "_id",
+  },
+];
+
+export { categoriesConfig, indexes, foreignKeys };

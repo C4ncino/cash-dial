@@ -1,16 +1,14 @@
 const incomesConfig: TableConfig = {
-  id: { type: "number" },
-  idAccount: { type: "number" },
-  idCategory: { type: "number" },
+  idAccount: { type: "string" },
+  idCategory: { type: "string" },
   amount: { type: "number" },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },
 };
 
 const expensesConfig: TableConfig = {
-  id: { type: "number" },
-  idAccount: { type: "number" },
-  idCategory: { type: "number" },
+  idAccount: { type: "string" },
+  idCategory: { type: "string" },
   amount: { type: "number" },
   msi: { type: "number", default: 0 },
   date: { type: "number", default: Date.now() },
@@ -18,27 +16,25 @@ const expensesConfig: TableConfig = {
 };
 
 const transfersConfig: TableConfig = {
-  id: { type: "number" },
-  idFrom: { type: "number" },
-  idTo: { type: "number" },
+  idFrom: { type: "string" },
+  idTo: { type: "string" },
   amount: { type: "number" },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },
 };
 
 const templatesConfig: TableConfig = {
-  id: { type: "number" },
-  idAccount: { type: "number" },
-  idCategory: { type: "number" },
+  idAccount: { type: "string" },
+  idCategory: { type: "string" },
   amount: { type: "number" },
   description: { type: "string", default: "" },
 };
 
 const indexes: Index[] = [
-  { id: "id_incomes", tableId: "incomes", cellId: "id" },
-  { id: "id_expenses", tableId: "expenses", cellId: "id" },
-  { id: "id_transfers", tableId: "transfers", cellId: "id" },
-  { id: "id_templates", tableId: "templates", cellId: "id" },
+  // { id: "id_incomes", tableId: "incomes", cellId: "id" },
+  // { id: "id_expenses", tableId: "expenses", cellId: "id" },
+  // { id: "id_transfers", tableId: "transfers", cellId: "id" },
+  // { id: "id_templates", tableId: "templates", cellId: "id" },
 ];
 
 const foreignKeys: ForeignKey[] = [

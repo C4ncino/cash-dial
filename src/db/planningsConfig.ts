@@ -1,7 +1,6 @@
 const planningsConfig: TableConfig = {
-  id: { type: "number" },
-  idAccount: { type: "number" },
-  idCategory: { type: "number" },
+  idAccount: { type: "string" },
+  idCategory: { type: "string" },
   name: { type: "string" },
   amount: { type: "number" },
   date: { type: "number" },
@@ -10,41 +9,41 @@ const planningsConfig: TableConfig = {
 };
 
 const recurringPlanningsConfig: TableConfig = {
-  idPlanning: { type: "number" },
+  idPlanning: { type: "string" },
   endDate: { type: "number" },
   interval: { type: "number" },
 };
 
 const payDaysPlanningsConfig: TableConfig = {
-  idPlanning: { type: "number" },
+  idPlanning: { type: "string" },
   day: { type: "number" },
   month: { type: "number" },
 };
 
 const historicPlanningsConfig: TableConfig = {
-  idPlanning: { type: "number" },
+  idPlanning: { type: "string" },
   date: { type: "number" },
   amount: { type: "number" },
   idOrigin: { type: "number" },
 };
 
 const indexes: Index[] = [
-  { id: "id_plannings", tableId: "plannings", cellId: "id" },
-  {
-    id: "id_recurringPlannings",
-    tableId: "recurringPlannings",
-    cellId: "idPlanning",
-  },
-  {
-    id: "id_payDaysPlannings",
-    tableId: "payDaysPlannings",
-    cellId: "idPlanning",
-  },
-  {
-    id: "id_historicPlannings",
-    tableId: "historicPlannings",
-    cellId: "idPlanning",
-  },
+  // { id: "id_plannings", tableId: "plannings", cellId: "id" },
+  // {
+  //   id: "id_recurringPlannings",
+  //   tableId: "recurringPlannings",
+  //   cellId: "idPlanning",
+  // },
+  // {
+  //   id: "id_payDaysPlannings",
+  //   tableId: "payDaysPlannings",
+  //   cellId: "idPlanning",
+  // },
+  // {
+  //   id: "id_historicPlannings",
+  //   tableId: "historicPlannings",
+  //   cellId: "idPlanning",
+  // },
 ];
 
 const foreignKeys: ForeignKey[] = [

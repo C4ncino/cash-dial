@@ -7,7 +7,7 @@ import * as categories from "./categoriesConfig";
 import { TablesSchema } from "tinybase/store";
 // --------------------------------------------------------------------
 
-export const TableSchema: TablesSchema = {
+export const tableSchema: TablesSchema = {
   // ----------------------------------------------
   accounts: accounts.accountsConfig,
   creditAccounts: accounts.creditAccountsConfig,

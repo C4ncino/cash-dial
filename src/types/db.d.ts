@@ -8,3 +8,178 @@ type ForeignKey = {
   oTableId: string;
   cellId: string;
 };
+
+type Id = string;
+
+type Tables = {
+  accounts?: {
+    [rowId: Id]: { name?: string; type?: number; currentBalance?: number };
+  };
+  creditAccounts?: {
+    [rowId: Id]: {
+      idAccount?: string;
+      creditLimit?: number;
+      cutOffDay?: number;
+      paymentDueDay?: number;
+    };
+  };
+  goals?: {
+    [rowId: Id]: {
+      name?: string;
+      targetAmount?: number;
+      currentAmount?: number;
+      startDate?: number;
+      endDate?: number;
+    };
+  };
+  categories?: { [rowId: Id]: { idFather?: string; name?: string } };
+  incomes?: {
+    [rowId: Id]: {
+      idAccount?: string;
+      idCategory?: string;
+      amount?: number;
+      date: number;
+      description: string;
+    };
+  };
+  expenses?: {
+    [rowId: Id]: {
+      idAccount?: string;
+      idCategory?: string;
+      amount?: number;
+      msi: number;
+      date: number;
+      description: string;
+    };
+  };
+  transfers?: {
+    [rowId: Id]: {
+      idFrom?: string;
+      idTo?: string;
+      amount?: number;
+      date: number;
+      description: string;
+    };
+  };
+  templates?: {
+    [rowId: Id]: {
+      idAccount?: string;
+      idCategory?: string;
+      amount?: number;
+      description: string;
+    };
+  };
+  plannings?: {
+    [rowId: Id]: {
+      idAccount?: string;
+      idCategory?: string;
+      name?: string;
+      amount?: number;
+      date?: number;
+      type?: number;
+      isRecurring?: boolean;
+    };
+  };
+  recurringPlannings?: {
+    [rowId: Id]: { idPlanning?: string; endDate?: number; interval?: number };
+  };
+  payDaysPlannings?: {
+    [rowId: Id]: { idPlanning?: string; day?: number; month?: number };
+  };
+  historicPlannings?: {
+    [rowId: Id]: {
+      idPlanning?: string;
+      date?: number;
+      amount?: number;
+      idOrigin?: number;
+    };
+  };
+  budgets?: {
+    [rowId: Id]: {
+      idCategory?: string;
+      name?: string;
+      amountLimit?: number;
+      type?: number;
+    };
+  };
+  historicBudgets?: {
+    [rowId: Id]: {
+      idBudget?: string;
+      startDate?: number;
+      amountSpent?: number;
+    };
+  };
+};
+
+/** A Table Id in the Store. */
+type TableId = keyof Tables;
+
+/** A Table in the Store. */
+type Table<TId extends TableId> = NonNullable<Tables[TId]>;
+
+/** A Row in a Table. */
+type Row<TId extends TableId> = Table<TId>[Id];
+
+/** A Cell Id in a Row. */
+type CellId<TId extends TableId> = Extract<keyof Row<TId>, Id>;
+
+/** A Cell in a Row. */
+type Cell<TId extends TableId, CId extends CellId<TId>> = NonNullable<
+  Tables[TId]
+>[Id][CId];
+
+/** Cell Ids and types in a Row. */
+type CellIdCellArray<
+  TId extends TableId,
+  CId = CellId<TId>,
+> = CId extends CellId<TId> ? [cellId: CId, cell: Cell<TId, CId>] : never;
+
+type QueryParams<T extends TableId> =
+  | {
+      type: "select";
+      columns: CellId<T>[];
+      as?: string;
+    }
+  | {
+      type: "join";
+      table: TableId;
+      on: CellId<T>;
+      as?: string;
+    }
+  | {
+      type: "where";
+      column: CellId<T> | CellId<T>[];
+      operator: "==" | ">" | "<" | ">=" | "<=" | "!=";
+      value: number | string | boolean | Date;
+    }
+  | {
+      type: "group";
+      column: CellId<T>;
+      aggregate: "sum" | "count" | "avg" | "max" | "min";
+      as?: string;
+    }
+  | {
+      type: "having";
+      column: CellId<T>;
+      value: number | string | boolean | Date;
+    };
+
+type UseDatabase = () => {
+  create: <T extends TableId>(tableName: T, value: Row<T>) => Id | undefined;
+
+  getAll: (tableName: TableId) => Id[];
+  getById: <T extends TableId>(tableName: T, id: Id) => Row<T> | null;
+
+  query: <T extends TableId>(
+    tableName: T,
+    ...args: [QueryParams<T>]
+  ) => Row<T>[];
+
+  update: <T extends TableId>(
+    tableName: T,
+    id: Id,
+    value: Row<T>
+  ) => Row<T> | null;
+
+  remove: (tableName: TableId, id: Id) => boolean;
+};

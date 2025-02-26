@@ -1,21 +1,19 @@
 const budgetsConfig: TableConfig = {
-  id: { type: "number" },
-  idCategory: { type: "number" },
+  idCategory: { type: "string" },
   name: { type: "string" },
   amountLimit: { type: "number" },
   type: { type: "number" },
 };
 
 const historicBudgetsConfig: TableConfig = {
-  id: { type: "number" },
-  idBudget: { type: "number" },
+  idBudget: { type: "string" },
   startDate: { type: "number" },
   amountSpent: { type: "number" },
 };
 
 const indexes: Index[] = [
-  { id: "id_budgets", tableId: "budgets", cellId: "id" },
-  { id: "id_historicBudgets", tableId: "historicBudgets", cellId: "id" },
+  // { id: "id_budgetsCategory", tableId: "budgets", cellId: "idCategory" },
+  // { id: "id_historicBudgets", tableId: "historicBudgets", cellId: "idBudget" },
 ];
 
 const foreignKeys: ForeignKey[] = [
