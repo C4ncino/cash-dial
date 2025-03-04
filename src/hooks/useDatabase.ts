@@ -1,7 +1,14 @@
+import { useMemo } from "react";
+import { createQueries, ResultRow } from "tinybase/queries";
 import { useRow, useSortedRowIds, useStore } from "tinybase/ui-react";
 
 const useDatabase: UseDatabase = () => {
   const store = useStore();
+
+  const queries = useMemo(() => {
+    if (!store) return;
+    return createQueries(store);
+  }, [store]);
 
   const create = <T extends TableId>(tableName: T, value: Row<T>) => {
     if (!store) return;
@@ -23,9 +30,84 @@ const useDatabase: UseDatabase = () => {
 
   const query = <T extends TableId>(
     tableName: T,
-    ...args: [QueryParams<T>]
+    ...args: QueryParams<T>[]
   ) => {
-    return [];
+    if (!queries) return { ids: [], results: {} };
+
+    queries.setQueryDefinition(
+      "tempQuery",
+      tableName,
+      ({ select, join, where, group, having }) => {
+        let result;
+
+        for (const arg of args) {
+          switch (arg.type) {
+            case "select":
+              result = arg.joinTable
+                ? select(arg.joinTable, arg.column)
+                : select(arg.column);
+
+              if (arg.as) result.as(arg.as);
+              break;
+
+            case "join":
+              result = join(arg.table, arg.on);
+              if (arg.as) result.as(arg.as);
+              break;
+
+            case "where":
+              const firstArgs: [string, string] | [string] = [arg.column];
+
+              if (arg.joinTable) firstArgs.unshift(arg.joinTable);
+
+              if (arg.operator === "==") where(...firstArgs, arg.value);
+              else {
+                if (!arg.joinTable) firstArgs.unshift(tableName);
+                where((getTableCell) => {
+                  const value = getTableCell(...firstArgs);
+
+                  if (!value) return false;
+
+                  switch (arg.operator) {
+                    case ">":
+                      return value > arg.value;
+                    case "<":
+                      return value < arg.value;
+                    case ">=":
+                      return value >= arg.value;
+                    case "<=":
+                      return value <= arg.value;
+                    case "!=":
+                      return value !== arg.value;
+                    default:
+                      return false;
+                  }
+                });
+              }
+
+              break;
+
+            case "group":
+              result = group(arg.column, arg.aggregate);
+              if (arg.as) result.as(arg.as);
+              break;
+
+            case "having":
+              having(arg.column, arg.value);
+              break;
+          }
+        }
+      }
+    );
+
+    const results = queries.getResultTable("tempQuery");
+
+    queries.delQueryDefinition("tempQuery");
+
+    return {
+      ids: Object.keys(results),
+      results: results,
+    };
   };
 
   const update = <T extends TableId>(tableName: T, id: Id, value: Row<T>) => {

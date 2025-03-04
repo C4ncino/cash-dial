@@ -137,20 +137,22 @@ type CellIdCellArray<
 type QueryParams<T extends TableId> =
   | {
       type: "select";
-      columns: CellId<T>[];
+      joinTable?: TableId;
+      column: CellId<T> | CellId<TableId>;
       as?: string;
     }
   | {
       type: "join";
       table: TableId;
-      on: CellId<T>;
+      on: CellId<TableId>;
       as?: string;
     }
   | {
       type: "where";
-      column: CellId<T> | CellId<T>[];
+      joinTable?: TableId;
+      column: CellId<T> | CellId<TableId>;
       operator: "==" | ">" | "<" | ">=" | "<=" | "!=";
-      value: number | string | boolean | Date;
+      value: number | string | boolean;
     }
   | {
       type: "group";
@@ -161,8 +163,13 @@ type QueryParams<T extends TableId> =
   | {
       type: "having";
       column: CellId<T>;
-      value: number | string | boolean | Date;
+      value: number | string | boolean;
     };
+
+type QueryResults = {
+  ids: Id[];
+  results: { [key: Id]: any };
+};
 
 type UseDatabase = () => {
   create: <T extends TableId>(tableName: T, value: Row<T>) => Id | undefined;
@@ -172,8 +179,8 @@ type UseDatabase = () => {
 
   query: <T extends TableId>(
     tableName: T,
-    ...args: [QueryParams<T>]
-  ) => Row<T>[];
+    ...args: QueryParams<T>[]
+  ) => QueryResults;
 
   update: <T extends TableId>(tableName: T, id: Id, value: Row<T>) => boolean;
 
