@@ -1,14 +1,13 @@
-import { View, Text } from "react-native";
-import { useColorScheme } from "react-native";
+import CreateAccount from "@/components/modals/CreateAccount";
+import { Link } from "expo-router";
+import { ScrollView, Text } from "react-native";
 
 const Home = () => {
-  const colors = useColorScheme();
-  console.log(colors);
-
   return (
-    <View>
+    <ScrollView>
       <Text>Home</Text>
-    </View>
+      <CreateAccount />
+    </ScrollView>
   );
 };
 

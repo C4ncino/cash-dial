@@ -1,16 +1,37 @@
 import { Tabs } from "expo-router";
+import { useColorScheme } from "nativewind";
 import { StatusBar } from "expo-status-bar";
-import { Iconoir } from "iconoir-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  HomeSimpleDoor,
+  StatsUpSquare,
+  Clock,
+  MoreHorizCircle,
+} from "iconoir-react-native";
+
+import colors from "tailwindcss/colors";
 
 const Layout = () => {
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
+
   return (
     <Tabs
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: isDark ? "#18181b" : "#fff",
+          borderTopWidth: 0,
+        },
+        tabBarIconStyle: { marginTop: -2 },
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarActiveTintColor: "#3b82f6",
+        tabBarInactiveTintColor: "#9ca3af",
+      }}
       screenLayout={(props) => {
         return (
-          <SafeAreaView className="px-2 dark:bg-gray-950">
-            <StatusBar animated />
+          <SafeAreaView className="px-2 min-h-screen pb-14 dark:bg-zinc-900">
+            <StatusBar animated style="auto" />
             {props.children}
           </SafeAreaView>
         );
@@ -21,43 +42,34 @@ const Layout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Iconoir height={36} width={36} color={color} />
+            <HomeSimpleDoor height={28} width={28} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="stats"
         options={{
-          title: "Home",
+          title: "Stats",
           tabBarIcon: ({ color }) => (
-            <Iconoir height={36} width={36} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="history"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Iconoir height={36} width={36} color={color} />
+            <StatsUpSquare height={28} width={28} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="schedules"
         options={{
-          title: "Home",
+          title: "Schedules",
           tabBarIcon: ({ color }) => (
-            <Iconoir height={36} width={36} color={color} />
+            <Clock height={28} width={28} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="more"
         options={{
-          title: "Home",
+          title: "More",
           tabBarIcon: ({ color }) => (
-            <Iconoir height={36} width={36} color={color} />
+            <MoreHorizCircle height={28} width={28} color={color} />
           ),
         }}
       />
