@@ -3,6 +3,7 @@ const planningsConfig: TableConfig = {
   idCategory: { type: "string" },
   name: { type: "string" },
   amount: { type: "number" },
+  currency: { type: "string" },
   date: { type: "number" },
   type: { type: "number" },
   isRecurring: { type: "boolean" },
@@ -77,6 +78,12 @@ const foreignKeys: ForeignKey[] = [
     oTableId: "plannings",
     cellId: "idPlanning",
   },
+  {
+    id: "plannings_currency",
+    tableId: "plannings",
+    oTableId: "currencies",
+    cellId: "currency",
+  }
 ];
 
 export {

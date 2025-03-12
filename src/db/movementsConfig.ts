@@ -1,7 +1,8 @@
 const incomesConfig: TableConfig = {
   idAccount: { type: "string" },
   idCategory: { type: "string" },
-  amount: { type: "number" },
+  amount: { type: "string" },
+  currency: { type: "string" },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },
 };
@@ -10,6 +11,7 @@ const expensesConfig: TableConfig = {
   idAccount: { type: "string" },
   idCategory: { type: "string" },
   amount: { type: "number" },
+  currency: { type: "string" },
   msi: { type: "number", default: 0 },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },
@@ -19,6 +21,7 @@ const transfersConfig: TableConfig = {
   idFrom: { type: "string" },
   idTo: { type: "string" },
   amount: { type: "number" },
+  currency: { type: "string" },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },
 };
@@ -27,6 +30,7 @@ const templatesConfig: TableConfig = {
   idAccount: { type: "string" },
   idCategory: { type: "string" },
   amount: { type: "number" },
+  currency: { type: "string" },
   description: { type: "string", default: "" },
 };
 
@@ -86,6 +90,30 @@ const foreignKeys: ForeignKey[] = [
     oTableId: "categories",
     cellId: "idCategory",
   },
+  {
+    id: "incomes_currency",
+    tableId: "incomes",
+    oTableId: "currencies",
+    cellId: "currency",
+  },
+  {
+    id: "expenses_currency",
+    tableId: "expenses",
+    oTableId: "currencies",
+    cellId: "currency",
+  },
+  {
+    id: "transfers_currency",
+    tableId: "transfers",
+    oTableId: "currencies",
+    cellId: "currency",
+  },
+  {
+    id: "templates_currency",
+    tableId: "templates",
+    oTableId: "currencies",
+    cellId: "currency",
+  }
 ];
 
 export {

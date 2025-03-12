@@ -9,6 +9,7 @@ import { TablesSchema } from "tinybase/store";
 
 export const tableSchema: TablesSchema = {
   // ----------------------------------------------
+  currencies: accounts.currenciesConfig,
   accounts: accounts.accountsConfig,
   creditAccounts: accounts.creditAccountsConfig,
   goals: accounts.goalsConfig,
