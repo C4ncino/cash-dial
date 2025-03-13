@@ -20,8 +20,9 @@ const Layout = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: isDark ? "#18181b" : "#fff",
+          backgroundColor: isDark ? colors.zinc[950] : colors.white,
           borderTopWidth: 0,
+          elevation: 0,
         },
         tabBarIconStyle: { marginTop: -2 },
         tabBarLabelStyle: { fontSize: 12 },
@@ -30,7 +31,7 @@ const Layout = () => {
       }}
       screenLayout={(props) => {
         return (
-          <SafeAreaView className="px-2 min-h-screen pb-14 dark:bg-zinc-900">
+          <SafeAreaView className="min-h-screen dark:bg-zinc-900 bg-white px-2">
             <StatusBar animated style="auto" />
             {props.children}
           </SafeAreaView>
