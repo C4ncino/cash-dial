@@ -1,16 +1,16 @@
 import { useState } from "react";
-import BaseModal from "./BaseModal";
 import { Text, Button, View, ScrollView } from "react-native";
+
+import BaseModal from "@/BaseModal";
+import { ACCOUNT_TYPES, DAYS } from "@/db/ui";
+import ExitingView from "@/animations/ExitingView";
+import { errors } from "@/messages/create-account";
 
 import Input from "@/forms/Input";
 import Select from "@/forms/Select";
 import SegmentedControl from "@/forms/SegmentedControl";
 
 import useForm from "@/hooks/useForm";
-import { ACCOUNT_TYPES, DAYS } from "@/db/ui";
-import { errors } from "@/messages/create-account";
-
-import ExitingView from "@/animations/ExitingView";
 import useDatabase from "@/hooks/useDatabase";
 
 interface Props {
