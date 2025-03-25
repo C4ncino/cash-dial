@@ -31,7 +31,7 @@ const Layout = () => {
       }}
       screenLayout={(props) => {
         return (
-          <SafeAreaView className="min-h-screen dark:bg-zinc-900 bg-white px-2">
+          <SafeAreaView className="min-h-screen dark:bg-zinc-900 px-2">
             <StatusBar animated style="auto" />
             {props.children}
           </SafeAreaView>

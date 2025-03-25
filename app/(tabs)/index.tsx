@@ -1,11 +1,15 @@
-import CreateAccount from "@/components/modals/CreateAccount";
-import { ScrollView, Text } from "react-native";
+import useModal from "@/hooks/useModal";
+import CreateAccount from "@/modals/CreateAccount";
+import { Button, ScrollView, Text } from "react-native";
 
 const Home = () => {
+  const { visible: modalVisible, openModal, closeModal } = useModal();
+
   return (
     <ScrollView>
       <Text>Home</Text>
-      <CreateAccount />
+      <Button onPress={openModal} title="Create Account" />
+      <CreateAccount visible={modalVisible} closeModal={closeModal} />
     </ScrollView>
   );
 };

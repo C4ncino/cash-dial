@@ -12,101 +12,101 @@ type ForeignKey = {
 type Id = string;
 
 type Tables = {
-  accounts?: {
-    [rowId: Id]: { name?: string; type?: number; currentBalance?: number };
+  accounts: {
+    [rowId: Id]: { name: string; type: number; currentBalance: number };
   };
-  creditAccounts?: {
+  creditAccounts: {
     [rowId: Id]: {
       idAccount?: string;
-      creditLimit?: number;
-      cutOffDay?: number;
-      paymentDueDay?: number;
+      creditLimit: number;
+      cutOffDay: number;
+      paymentDueDay: number;
     };
   };
-  goals?: {
+  goals: {
     [rowId: Id]: {
-      name?: string;
-      targetAmount?: number;
-      currentAmount?: number;
-      startDate?: number;
+      name: string;
+      targetAmount: number;
+      currentAmount: number;
+      startDate: number;
       endDate?: number;
     };
   };
-  categories?: { [rowId: Id]: { idFather?: string; name?: string } };
-  incomes?: {
+  categories: { [rowId: Id]: { idFather?: string; name: string } };
+  incomes: {
     [rowId: Id]: {
-      idAccount?: string;
-      idCategory?: string;
-      amount?: number;
+      idAccount: string;
+      idCategory: string;
+      amount: number;
       date: number;
-      description: string;
+      description?: string;
     };
   };
-  expenses?: {
+  expenses: {
     [rowId: Id]: {
-      idAccount?: string;
-      idCategory?: string;
-      amount?: number;
+      idAccount: string;
+      idCategory: string;
+      amount: number;
       msi: number;
       date: number;
-      description: string;
+      description?: string;
     };
   };
-  transfers?: {
+  transfers: {
     [rowId: Id]: {
-      idFrom?: string;
-      idTo?: string;
-      amount?: number;
+      idFrom: string;
+      idTo: string;
+      amount: number;
       date: number;
-      description: string;
+      description?: string;
     };
   };
-  templates?: {
+  templates: {
     [rowId: Id]: {
       idAccount?: string;
       idCategory?: string;
       amount?: number;
-      description: string;
+      description?: string;
     };
   };
-  plannings?: {
+  plannings: {
     [rowId: Id]: {
-      idAccount?: string;
-      idCategory?: string;
-      name?: string;
-      amount?: number;
-      date?: number;
-      type?: number;
-      isRecurring?: boolean;
+      idAccount: string;
+      idCategory: string;
+      name: string;
+      amount: number;
+      date: number;
+      type: number;
+      isRecurring: boolean;
     };
   };
-  recurringPlannings?: {
-    [rowId: Id]: { idPlanning?: string; endDate?: number; interval?: number };
+  recurringPlannings: {
+    [rowId: Id]: { idPlanning: string; endDate: number; interval: number };
   };
-  payDaysPlannings?: {
-    [rowId: Id]: { idPlanning?: string; day?: number; month?: number };
+  payDaysPlannings: {
+    [rowId: Id]: { idPlanning: string; day: number; month: number };
   };
-  historicPlannings?: {
+  historicPlannings: {
     [rowId: Id]: {
-      idPlanning?: string;
-      date?: number;
-      amount?: number;
+      idPlanning: string;
+      date: number;
+      amount: number;
       idOrigin?: number;
     };
   };
-  budgets?: {
+  budgets: {
     [rowId: Id]: {
-      idCategory?: string;
-      name?: string;
-      amountLimit?: number;
-      type?: number;
+      idCategory: string;
+      name: string;
+      amountLimit: number;
+      type: number;
     };
   };
-  historicBudgets?: {
+  historicBudgets: {
     [rowId: Id]: {
-      idBudget?: string;
-      startDate?: number;
-      amountSpent?: number;
+      idBudget: string;
+      startDate: number;
+      amountSpent: number;
     };
   };
 };
@@ -136,35 +136,35 @@ type CellIdCellArray<
 
 type QueryParams<T extends TableId> =
   | {
-      type: "select";
-      joinTable?: TableId;
-      column: CellId<T> | CellId<TableId>;
-      as?: string;
-    }
+    type: "select";
+    joinTable?: TableId;
+    column: CellId<T> | CellId<TableId>;
+    as?: string;
+  }
   | {
-      type: "join";
-      table: TableId;
-      on: CellId<TableId>;
-      as?: string;
-    }
+    type: "join";
+    table: TableId;
+    on: CellId<TableId>;
+    as?: string;
+  }
   | {
-      type: "where";
-      joinTable?: TableId;
-      column: CellId<T> | CellId<TableId>;
-      operator: "==" | ">" | "<" | ">=" | "<=" | "!=";
-      value: number | string | boolean;
-    }
+    type: "where";
+    joinTable?: TableId;
+    column: CellId<T> | CellId<TableId>;
+    operator: "==" | ">" | "<" | ">=" | "<=" | "!=";
+    value: number | string | boolean;
+  }
   | {
-      type: "group";
-      column: CellId<T>;
-      aggregate: "sum" | "count" | "avg" | "max" | "min";
-      as?: string;
-    }
+    type: "group";
+    column: CellId<T>;
+    aggregate: "sum" | "count" | "avg" | "max" | "min";
+    as?: string;
+  }
   | {
-      type: "having";
-      column: CellId<T>;
-      value: number | string | boolean;
-    };
+    type: "having";
+    column: CellId<T>;
+    value: number | string | boolean;
+  };
 
 type QueryResults = {
   ids: Id[];

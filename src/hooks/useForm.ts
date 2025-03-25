@@ -27,13 +27,17 @@ const useForm = <T extends Record<string, any>>(
 
     const validate = () => {
         for (const key of Object.keys(initialValues)) {
+
             if (
                 initialValues[key] !== undefined &&
                 (values[key] === undefined ||
+                    values[key] === null ||
                     values[key] === "" ||
-                    values[key].length === 0)
+                    values[key].length === 0
+                )
             )
                 return false;
+            else if (typeof initialValues[key] === "number" && isNaN(Number(values[key]))) return false;
         }
 
         return true;
