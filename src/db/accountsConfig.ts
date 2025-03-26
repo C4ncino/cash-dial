@@ -8,7 +8,7 @@ const accountsConfig: TableConfig = {
   name: { type: "string" },
   type: { type: "number" },
   currentBalance: { type: "number" },
-  currency: { type: "number" },
+  currency: { type: "string" },
 };
 
 const creditAccountsConfig: TableConfig = {
@@ -24,7 +24,7 @@ const goalsConfig: TableConfig = {
   currentAmount: { type: "number" },
   startDate: { type: "number" },
   endDate: { type: "number" },
-  currency: { type: "number" },
+  currency: { type: "string" },
 };
 
 const indexes: Index[] = [];

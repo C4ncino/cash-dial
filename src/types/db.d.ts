@@ -12,8 +12,20 @@ type ForeignKey = {
 type Id = string;
 
 type Tables = {
+  currencies: {
+    [rowId: Id]: {
+      name: string;
+      symbol: string;
+      code: string
+    }
+  };
   accounts: {
-    [rowId: Id]: { name: string; type: number; currentBalance: number };
+    [rowId: Id]: {
+      name: string;
+      type: number;
+      currentBalance: number;
+      currency: string;
+    };
   };
   creditAccounts: {
     [rowId: Id]: {
@@ -30,6 +42,7 @@ type Tables = {
       currentAmount: number;
       startDate: number;
       endDate?: number;
+      currency: string;
     };
   };
   categories: { [rowId: Id]: { idFather?: string; name: string } };
@@ -38,6 +51,7 @@ type Tables = {
       idAccount: string;
       idCategory: string;
       amount: number;
+      currency: string;
       date: number;
       description?: string;
     };
@@ -47,6 +61,7 @@ type Tables = {
       idAccount: string;
       idCategory: string;
       amount: number;
+      currency: string;
       msi: number;
       date: number;
       description?: string;
@@ -57,6 +72,7 @@ type Tables = {
       idFrom: string;
       idTo: string;
       amount: number;
+      currency: string;
       date: number;
       description?: string;
     };
@@ -65,6 +81,7 @@ type Tables = {
     [rowId: Id]: {
       idAccount?: string;
       idCategory?: string;
+      currency: string;
       amount?: number;
       description?: string;
     };
@@ -75,6 +92,7 @@ type Tables = {
       idCategory: string;
       name: string;
       amount: number;
+      currency: string;
       date: number;
       type: number;
       isRecurring: boolean;
@@ -100,6 +118,7 @@ type Tables = {
       name: string;
       amountLimit: number;
       type: number;
+      currency: string;
     };
   };
   historicBudgets: {
@@ -171,7 +190,7 @@ type QueryResults = {
   results: { [key: Id]: any };
 };
 
-type UseDatabase = () => {
+type UseDatabase = {
   create: <T extends TableId>(tableName: T, value: Row<T>) => Id | undefined;
 
   getAll: (tableName: TableId) => Id[];
@@ -186,3 +205,8 @@ type UseDatabase = () => {
 
   remove: (tableName: TableId, id: Id) => boolean;
 };
+
+type UseTinyBase = UseDatabase & {
+  useAll: (tableName: TableId) => Id[];
+  useRowById: <T extends TableId>(tableName: T, id: Id) => Row<T> | null;
+}

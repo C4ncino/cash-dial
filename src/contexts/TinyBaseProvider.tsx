@@ -14,7 +14,16 @@ interface Props extends PropsWithChildren<{}> {}
 const TinyBaseProvider = ({ children }: Props) => {
   // TODO: Add TableSchema
   const store = useCreateStore(() =>
-    createStore().setTablesSchema(tableSchema).setValuesSchema({})
+    createStore()
+      .setTablesSchema(tableSchema)
+      .setValuesSchema({})
+      .setTable("currencies", {
+        "0": {
+          name: "Peso Mexicano",
+          symbol: "$",
+          code: "MXN",
+        },
+      })
   );
 
   const storeIndexes = createIndexes(store);

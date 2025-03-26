@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { createQueries, ResultRow } from "tinybase/queries";
+import { createQueries } from "tinybase/queries";
 import { useRow, useSortedRowIds, useStore } from "tinybase/ui-react";
 
-const useDatabase: UseDatabase = () => {
+const useTinybase: () => UseTinyBase = () => {
   const store = useStore();
 
   const queries = useMemo(() => {
@@ -19,10 +19,22 @@ const useDatabase: UseDatabase = () => {
   const getAll = (tableName: TableId) => {
     if (!store) return [];
 
-    return useSortedRowIds(tableName);
+    return store.getSortedRowIds(tableName);
   };
 
   const getById = <T extends TableId>(tableName: T, id: Id) => {
+    if (!store) return null;
+
+    return store.getRow(tableName, id) as Table<T>[string];
+  };
+
+  const useAll = (tableName: TableId) => {
+    if (!store) return [];
+
+    return useSortedRowIds(tableName);
+  };
+
+  const useRowById = <T extends TableId>(tableName: T, id: Id) => {
     if (!store) return null;
 
     return useRow(tableName, id) as Table<T>[string];
@@ -137,7 +149,9 @@ const useDatabase: UseDatabase = () => {
     query,
     update,
     remove,
+    useAll,
+    useRowById,
   };
 };
 
-export default useDatabase;
+export default useTinybase;
