@@ -1,24 +1,30 @@
 import { Cash, CreditCard, MastercardCard } from "iconoir-react-native";
+import colors from "tailwindcss/colors";
 
 export const ACCOUNT_TYPES = {
   CASH: {
     id: 1,
     name: "Efectivo",
-    icon: (color = "#000") => <Cash width={24} height={24} color={color} />,
+    icon: (color = "#000") => (
+      <Cash width={24} height={24} strokeWidth={2} color={color} />
+    ),
+    color: colors.green[600],
   },
   DEBIT: {
     id: 2,
     name: "Débito",
     icon: (color = "#000") => (
-      <CreditCard width={24} height={24} color={color} />
+      <CreditCard width={24} height={24} strokeWidth={2} color={color} />
     ),
+    color: colors.blue[600],
   },
   CREDIT: {
     id: 3,
     name: "Crédito",
     icon: (color = "#000") => (
-      <MastercardCard width={24} height={24} color={color} />
+      <MastercardCard width={24} height={24} strokeWidth={2} color={color} />
     ),
+    color: colors.red[600],
   },
 } as const;
 

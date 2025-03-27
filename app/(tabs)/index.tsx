@@ -1,15 +1,16 @@
-import useModal from "@/hooks/useModal";
-import CreateAccount from "@/modals/CreateAccount";
-import { Button, ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+
+import AccountsCards from "@/accounts/AccountsCards";
 
 const Home = () => {
-  const { visible: modalVisible, openModal, closeModal } = useModal();
-
   return (
-    <ScrollView>
-      <Text>Home</Text>
-      <Button onPress={openModal} title="Create Account" />
-      <CreateAccount visible={modalVisible} closeModal={closeModal} />
+    <ScrollView contentContainerClassName="px-4">
+      <View role="presentation" className="my-5">
+        <Text className="text-3xl font-semibold text-center dark:text-white">
+          Bienvenido
+        </Text>
+      </View>
+      <AccountsCards />
     </ScrollView>
   );
 };
