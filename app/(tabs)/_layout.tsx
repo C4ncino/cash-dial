@@ -20,7 +20,7 @@ const Layout = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: isDark ? colors.zinc[950] : colors.white,
+          backgroundColor: isDark ? colors.zinc[900] : colors.zinc[50],
           borderTopWidth: 0,
           elevation: 0,
         },
@@ -31,7 +31,7 @@ const Layout = () => {
       }}
       screenLayout={(props) => {
         return (
-          <SafeAreaView className="min-h-screen dark:bg-zinc-900 px-2">
+          <SafeAreaView className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
             <StatusBar animated style="auto" />
             {props.children}
           </SafeAreaView>
@@ -41,7 +41,7 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Inicio",
           tabBarIcon: ({ color }) => (
             <HomeSimpleDoor height={28} width={28} color={color} />
           ),
@@ -50,7 +50,7 @@ const Layout = () => {
       <Tabs.Screen
         name="stats"
         options={{
-          title: "Stats",
+          title: "Estadísticas",
           tabBarIcon: ({ color }) => (
             <StatsUpSquare height={28} width={28} color={color} />
           ),
@@ -59,7 +59,7 @@ const Layout = () => {
       <Tabs.Screen
         name="schedules"
         options={{
-          title: "Schedules",
+          title: "Planificación",
           tabBarIcon: ({ color }) => (
             <Clock height={28} width={28} color={color} />
           ),
@@ -68,7 +68,7 @@ const Layout = () => {
       <Tabs.Screen
         name="more"
         options={{
-          title: "More",
+          title: "Más",
           tabBarIcon: ({ color }) => (
             <MoreHorizCircle height={28} width={28} color={color} />
           ),
