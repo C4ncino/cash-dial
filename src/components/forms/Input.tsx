@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { View, TextInput, TextInputProps } from "react-native";
+import { View, TextInput, TextInputProps, Text } from "react-native";
 
 import Label from "./Label";
 
@@ -77,7 +77,7 @@ const Input = ({
   }, [type]);
 
   return (
-    <View className={className}>
+    <View className={`${props.maxLength && "relative"} ${className}`}>
       <Label label={label} />
       <TextInput
         className="h-12 px-2 border rounded-md dark:text-white placeholder:text-zinc-600 dark:placeholder:text-zinc-400"
@@ -85,6 +85,13 @@ const Input = ({
         {...props}
         placeholder={placeholder}
       />
+      {props.maxLength && (
+        <View className="absolute right-2 bottom-3">
+          <Text className="text-zinc-600 dark:text-zinc-400 mb-[2px]">
+            {props.value?.length}/{props.maxLength}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
