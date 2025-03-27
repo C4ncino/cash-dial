@@ -1,12 +1,30 @@
+import colors from "tailwindcss/colors";
 import { PropsWithChildren } from "react";
-import { Modal, ScrollView, View } from "react-native";
+import { Modal, View, Text } from "react-native";
+
+import Button from "./forms/Button";
 
 interface Props extends PropsWithChildren {
   visible: boolean;
+
   closeModal: () => void;
+  onSubmit: () => void;
+  label: string;
+  closeButtonLabel?: string;
+  submitButtonLabel?: string;
+  canSubmit?: boolean;
 }
 
-const BaseModal = ({ children, visible, closeModal }: Props) => {
+const BaseModal = ({
+  children,
+  visible,
+  closeModal,
+  onSubmit,
+  label,
+  closeButtonLabel = "Cerrar",
+  submitButtonLabel = "Guardar",
+  canSubmit = false,
+}: Props) => {
   return (
     <Modal
       animationType="slide"
@@ -14,9 +32,32 @@ const BaseModal = ({ children, visible, closeModal }: Props) => {
       onRequestClose={closeModal}
       presentationStyle="formSheet"
     >
-      <ScrollView contentContainerClassName="px-2 py-2 flex-1 dark:bg-zinc-900">
+      <View className="px-2 py-2 flex-1 dark:bg-zinc-900">
+        <View
+          role="presentation"
+          className="py-2 my-2 flex-row items-center px-4 ios:px-0"
+        >
+          <View className="w-1/4">
+            <Button
+              title={closeButtonLabel}
+              onPress={closeModal}
+              color={colors.red[600]}
+              style="outline"
+            />
+          </View>
+          <Text className="text-2xl font-semibold text-center dark:text-white flex-1">
+            {label}
+          </Text>
+          <View className="w-1/4">
+            <Button
+              onPress={onSubmit}
+              title={submitButtonLabel}
+              disabled={!canSubmit}
+            />
+          </View>
+        </View>
         {children}
-      </ScrollView>
+      </View>
     </Modal>
   );
 };
