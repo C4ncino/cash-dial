@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 import { ACCOUNT_TYPES } from "@/db/ui";
 import useDatabase from "@/hooks/useDatabase";
@@ -6,9 +6,10 @@ import { formatNumber, hyphenateText } from "@/utils/formatters";
 
 interface Props {
   id: string;
+  onPress?: () => void;
 }
 
-const AccountCard = ({ id }: Props) => {
+const AccountCard = ({ id, onPress }: Props) => {
   const { useRowById, getById } = useDatabase();
 
   const data = useRowById("accounts", id);
@@ -21,7 +22,10 @@ const AccountCard = ({ id }: Props) => {
   const type = Object.values(ACCOUNT_TYPES)[data.type - 1];
 
   return (
-    <View className="h-28 w-48 bg-zinc-100 dark:bg-zinc-950 rounded-md p-2 px-3 justify-evenly shadow-lg ios:shadow-sm flex-col">
+    <Pressable
+      className="h-28 w-48 bg-zinc-100 dark:bg-zinc-950 rounded-md p-2 px-3 justify-evenly shadow-lg ios:shadow-sm flex-col"
+      onPress={onPress}
+    >
       <View className="flex-row gap-2 mb-1">
         <View
           className="w-10 h-9 items-center justify-center rounded-md"
@@ -44,7 +48,7 @@ const AccountCard = ({ id }: Props) => {
       <Text className="text-right text-lg font-light dark:text-white -mt-1">
         {currency.code}
       </Text>
-    </View>
+    </Pressable>
   );
 };
 

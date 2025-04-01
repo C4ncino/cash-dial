@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text } from "react-native";
 
 import { ACCOUNT_TYPES } from "@/db/ui";
@@ -12,29 +12,29 @@ import useDatabase from "@/hooks/useDatabase";
 interface Props {
   visible: boolean;
   closeModal: () => void;
+  id: Id;
 }
-
-const CreateAccount = ({ visible, closeModal }: Props) => {
-  const { create } = useDatabase();
+const EditAccount = ({ visible, closeModal, id }: Props) => {
+  const { update, getById, query } = useDatabase();
   const [error, setError] = useState("");
-  const { setFieldValue, values, resetForm, validate } = useForm<
-    Row<"accounts">
-  >({
-    name: "",
-    currency: "0",
-    currentBalance: 0,
-    type: ACCOUNT_TYPES.CASH.id,
-  });
+
+  const data = getById("accounts", id);
+  const creditData = getById("creditAccounts", id);
+
+  if (!data) return null;
+  else if (data.type === ACCOUNT_TYPES.CREDIT.id && !creditData) return null;
+
+  const { setFieldValue, values, resetForm, validate } =
+    useForm<Row<"accounts">>(data);
+
   const {
     values: creditValues,
     setFieldValue: setCreditFieldValue,
     resetForm: resetCreditForm,
     validate: validateCredit,
-  } = useForm<Row<"creditAccounts">>({
-    creditLimit: 0,
-    cutOffDay: NaN,
-    paymentDueDay: NaN,
-  });
+  } = useForm<Row<"creditAccounts">>(
+    creditData || { creditLimit: 0, cutOffDay: NaN, paymentDueDay: NaN }
+  );
 
   const onSubmit = () => {
     setError("");
@@ -46,27 +46,40 @@ const CreateAccount = ({ visible, closeModal }: Props) => {
     values.currentBalance = Number(values.currentBalance);
     if (isNaN(values.currentBalance)) return setError(errors.MUST_BE_NUMBER);
 
-    const id = create("accounts", values);
+    update("accounts", id, values);
 
     if (values.type === ACCOUNT_TYPES.CREDIT.id) {
       creditValues.creditLimit = Number(creditValues.creditLimit);
       if (isNaN(creditValues.creditLimit))
         return setError(errors.MUST_BE_NUMBER_C);
 
-      create("creditAccounts", { ...creditValues, idAccount: id });
+      const { ids } = query(
+        "creditAccounts",
+        { type: "select", column: "idAccount" },
+        {
+          type: "where",
+          column: "idAccount",
+          value: id,
+          operator: "==",
+        }
+      );
+
+      update("creditAccounts", ids[0], { ...creditValues });
     }
 
-    resetForm();
-    resetCreditForm();
     closeModal();
   };
 
   return (
     <Form
-      label="Crea cuenta"
+      label="Editar cuenta"
+      closeButtonLabel="Cancelar"
       visible={visible}
-      closeModal={closeModal}
-      submitButtonLabel="Crear"
+      closeModal={() => {
+        resetForm();
+        resetCreditForm();
+        closeModal();
+      }}
       //----------------------------
       values={values}
       validValues={validate()}
@@ -97,4 +110,4 @@ const CreateAccount = ({ visible, closeModal }: Props) => {
   );
 };
 
-export default CreateAccount;
+export default EditAccount;

@@ -65,9 +65,10 @@ const Form = ({
       closeButtonLabel={closeButtonLabel}
       submitButtonLabel={submitButtonLabel}
       canSubmit={
-        (values.type !== ACCOUNT_TYPES.CREDIT.id && !validValues) ||
+        (values.type !== ACCOUNT_TYPES.CREDIT.id && validValues) ||
         (values.type === ACCOUNT_TYPES.CREDIT.id &&
-          (!validValues || !validCreditValues))
+          validValues &&
+          validCreditValues)
       }
     >
       <ScrollView role="form" contentContainerClassName="pb-16 gap-3 px-4">
