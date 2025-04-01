@@ -8,6 +8,7 @@ import { createIndexes, createRelationships, createStore } from "tinybase";
 import { openDatabaseSync } from "expo-sqlite";
 import { createExpoSqlitePersister } from "tinybase/persisters/persister-expo-sqlite";
 import { tableSchema, indexes, foreignKeys } from "@/db";
+import { data as categoriesData } from "@/db/categoriesConfig";
 
 interface Props extends PropsWithChildren<{}> {}
 
@@ -24,6 +25,7 @@ const TinyBaseProvider = ({ children }: Props) => {
           code: "MXN",
         },
       })
+      .setTable("categories", categoriesData)
   );
 
   const storeIndexes = createIndexes(store);
