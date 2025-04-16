@@ -41,7 +41,7 @@ const Select = <T,>({
   const isDark = colorScheme === "dark";
 
   return (
-    <View className="flex-1">
+    <View>
       <Label label={label} />
       <Dropdown
         style={[
@@ -75,10 +75,11 @@ const Select = <T,>({
           borderRadius: 6,
           shadowColor: isDark ? colors.zinc[100] : colors.zinc[800],
           shadowOffset: { width: 2, height: 2 },
-          shadowOpacity: 0.07,
+          shadowOpacity: 0.05,
           shadowRadius: 10,
-          elevation: isDark ? 3 : 5,
+          elevation: isDark ? 2 : 5,
         }}
+        disable={data.length === 0}
         data={data}
         renderItem={renderItem}
         search={needSearch}
@@ -86,7 +87,11 @@ const Select = <T,>({
         maxHeight={maxHeight}
         labelField={labelField}
         valueField={valueField}
-        placeholder={placeholder ?? "Seleccione una opción"}
+        placeholder={
+          data.length === 0
+            ? "No hay opciones"
+            : (placeholder ?? "Seleccione una opción")
+        }
         value={value}
         onChange={onSelect}
         onFocus={() => setIsOpen(true)}
@@ -124,13 +129,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 14,
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 14,
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 16,
+    fontSize: 14,
   },
 });

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 import Select from "./Select";
 
@@ -28,19 +28,21 @@ const CurrencySelect = ({ label, value, onSelect }: Props) => {
   }, []);
 
   return (
-    <Select
-      label={label}
-      labelField="code"
-      valueField="id"
-      data={currencies}
-      renderItem={(item) => (
-        <Text className="bg-white dark:text-white dark:bg-zinc-900 text-xl px-4 py-2">
-          {item.code}
-        </Text>
-      )}
-      value={value}
-      onSelect={(item) => onSelect(item.id)}
-    />
+    <View className="flex-1">
+      <Select
+        label={label}
+        labelField="code"
+        valueField="id"
+        data={currencies}
+        renderItem={(item) => (
+          <Text className="bg-white dark:text-white dark:bg-zinc-900 text-xl px-4 py-2">
+            {item.code}
+          </Text>
+        )}
+        value={value}
+        onSelect={(item) => onSelect(item.id)}
+      />
+    </View>
   );
 };
 
