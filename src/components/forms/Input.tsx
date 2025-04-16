@@ -6,7 +6,7 @@ import Label from "./Label";
 interface Props extends TextInputProps {
   label?: string;
   placeholder?: string;
-  type: "password" | "text" | "email" | "number" | "tel";
+  type?: "password" | "text" | "email" | "number" | "tel";
   enterKeyHint?: "enter" | "done" | "next" | "search" | "send";
   className?: string;
 }
@@ -14,7 +14,7 @@ interface Props extends TextInputProps {
 const Input = ({
   label,
   placeholder = "Escriba aquí...",
-  type,
+  type = "text",
   enterKeyHint,
   className,
   ...props
