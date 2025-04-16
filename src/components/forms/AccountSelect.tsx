@@ -27,6 +27,7 @@ const AccountSelect = ({ value, onSelect }: Props) => {
       placeholder="Elija una cuenta"
       labelField="name"
       valueField="id"
+      needSearch
       data={accounts}
       renderItem={(item) => (
         <Text className="bg-white dark:text-white dark:bg-zinc-900 px-4 py-2">
