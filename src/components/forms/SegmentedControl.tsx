@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { View } from "react-native";
+import { FlatList, View, StyleSheet } from "react-native";
 
 import Label from "./Label";
 import SegmentedControlButton from "./SegmentedControlButton";
@@ -21,10 +21,10 @@ const SegmentedControl = ({ label, data, value, onChange }: Props) => {
   return (
     <View>
       <Label label={label} />
-      <View className="flex-row  w-full">
+      <View className="flex-row">
         {data.map((item, i) => (
           <SegmentedControlButton
-            key={i}
+            key={item.id}
             {...item}
             isFirst={i === 0}
             isLast={i === data.length - 1}

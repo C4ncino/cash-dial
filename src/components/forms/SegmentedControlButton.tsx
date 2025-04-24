@@ -1,10 +1,5 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { Text, Pressable } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
 
 import colors from "tailwindcss/colors";
 
@@ -25,47 +20,30 @@ const SegmentedControlButton = ({
   icon,
   onPress,
 }: Props) => {
-  const backgroundColor = useSharedValue<string>(
-    isCurrent ? colors.blue[500] : colors.transparent
-  );
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: backgroundColor.value,
-  }));
-
-  useEffect(() => {
-    if (!isCurrent)
-      backgroundColor.value = withTiming(colors.transparent, {
-        duration: 300,
-      });
-  }, [isCurrent]);
-
   return (
     <Pressable
-      className="flex-1 h-12 min-w-12"
+      className={`
+        flex-1 h-12
+        flex-row justify-center items-center gap-2
+        border-y-2 border-blue-500 ${isFirst && "border-l-2"} border-r-2
+        ${isCurrent && "bg-blue-500"}  
+      `}
       disabled={isCurrent}
-      onPress={() => {
-        onPress();
-        backgroundColor.value = withTiming(colors.blue[500], { duration: 200 });
+      onPress={onPress}
+      style={{
+        borderTopLeftRadius: isFirst ? 6 : 0,
+        borderBottomLeftRadius: isFirst ? 6 : 0,
+        borderTopRightRadius: isLast ? 6 : 0,
+        borderBottomRightRadius: isLast ? 6 : 0,
       }}
     >
-      <Animated.View
-        style={[animatedStyle, { pointerEvents: "none" }]}
-        className={`
-            py-2
-            flex-row justify-center items-center gap-2
-            border-y-2 border-r-2 ${isFirst && "border-l-2"} border-blue-500
-            ${isFirst && "rounded-l-md"} ${isLast && "rounded-r-md"}
-            group
+      {icon && icon(isCurrent ? colors.white : colors.blue[500])}
+      <Text
+        className={`font-semibold text-blue-500 group-active:text-white ${isCurrent && "text-white"}
         `}
       >
-        {icon && icon(isCurrent ? colors.white : colors.blue[500])}
-        <Text
-          className={`font-semibold text-blue-500 group-active:text-white ${isCurrent && "text-white"}`}
-        >
-          {name}
-        </Text>
-      </Animated.View>
+        {name}
+      </Text>
     </Pressable>
   );
 };
