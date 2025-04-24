@@ -16,6 +16,7 @@ type Props<T> = {
   labelField: keyof T;
   valueField: keyof T;
   renderItem: (item: T) => JSX.Element;
+  renderLeftIcon?: () => JSX.Element;
 
   value: string;
   onSelect: (value: T) => void;
@@ -31,6 +32,7 @@ const Select = <T,>({
   valueField,
   data,
   renderItem,
+  renderLeftIcon,
   value,
   onSelect,
   needSearch,
@@ -70,14 +72,16 @@ const Select = <T,>({
         ]}
         containerStyle={{
           backgroundColor: isDark ? colors.zinc[900] : colors.white,
-          borderColor: isDark ? colors.zinc[900] : colors.white,
-          borderWidth: 4,
+          borderColor: isDark ? colors.zinc[950] : colors.zinc[100],
+          borderWidth: 1,
           borderRadius: 6,
-          shadowColor: isDark ? colors.zinc[100] : colors.zinc[800],
+          shadowColor: colors.zinc[800],
           shadowOffset: { width: 2, height: 2 },
           shadowOpacity: 0.05,
           shadowRadius: 10,
           elevation: isDark ? 2 : 5,
+          paddingTop: 2,
+          paddingBottom: needSearch ? 4 : 2,
         }}
         disable={data.length === 0}
         data={data}
@@ -96,6 +100,7 @@ const Select = <T,>({
         onChange={onSelect}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
+        renderLeftIcon={renderLeftIcon}
         renderRightIcon={() => (
           <>
             {isOpen ? (
