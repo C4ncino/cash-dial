@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Text } from "react-native";
 
-import { ACCOUNT_TYPES } from "@/db/ui";
+import { ACCOUNT_TYPES_ID } from "@/db/ui";
 import ExitingView from "@/animations/ExitingView";
 import { errors } from "@/messages/create-account";
 
@@ -23,7 +23,7 @@ const CreateAccount = ({ visible, closeModal }: Props) => {
     name: "",
     currency: "0",
     currentBalance: 0,
-    type: ACCOUNT_TYPES.CASH.id,
+    type: ACCOUNT_TYPES_ID.CASH,
   });
   const {
     values: creditValues,
@@ -40,7 +40,7 @@ const CreateAccount = ({ visible, closeModal }: Props) => {
     setError("");
 
     if (!validate()) return setError(errors.INCOMPLETE);
-    else if (values.type === ACCOUNT_TYPES.CREDIT.id && !validateCredit())
+    else if (values.type === ACCOUNT_TYPES_ID.CREDIT && !validateCredit())
       return setError(errors.INCOMPLETE);
 
     values.currentBalance = Number(values.currentBalance);
@@ -48,7 +48,7 @@ const CreateAccount = ({ visible, closeModal }: Props) => {
 
     const id = create("accounts", values);
 
-    if (values.type === ACCOUNT_TYPES.CREDIT.id) {
+    if (values.type === ACCOUNT_TYPES_ID.CREDIT) {
       creditValues.creditLimit = Number(creditValues.creditLimit);
       if (isNaN(creditValues.creditLimit))
         return setError(errors.MUST_BE_NUMBER_C);

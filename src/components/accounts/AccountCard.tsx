@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from "react-native";
 
-import { ACCOUNT_TYPES } from "@/db/ui";
+import { ACCOUNT_TYPES, ACCOUNT_TYPES_ID } from "@/db/ui";
 import useDatabase from "@/hooks/useDatabase";
 import { formatNumber, hyphenateText } from "@/utils/formatters";
 
@@ -19,7 +19,7 @@ const AccountCard = ({ id, onPress }: Props) => {
 
   if (!currency) return null;
 
-  const type = Object.values(ACCOUNT_TYPES)[data.type - 1];
+  const type = ACCOUNT_TYPES[data.type as ACCOUNT_TYPES_ID];
 
   return (
     <Pressable

@@ -85,20 +85,26 @@ import Restaurant from "@/assets/icons/RestaurantTable";
 
 import { iconRenderer } from "@/utils/iconHelpers";
 
+export enum ACCOUNT_TYPES_ID {
+  CASH = 1,
+  DEBIT = 2,
+  CREDIT = 3,
+}
+
 export const ACCOUNT_TYPES = {
-  CASH: {
+  1: {
     id: 1,
     name: "Efectivo",
     icon: iconRenderer(Cash),
     color: colors.green[600],
   },
-  DEBIT: {
+  2: {
     id: 2,
     name: "Débito",
     icon: iconRenderer(CreditCard),
     color: colors.blue[600],
   },
-  CREDIT: {
+  3: {
     id: 3,
     name: "Crédito",
     icon: iconRenderer(MastercardCard),
@@ -264,3 +270,6 @@ export const CATEGORY_COLORS = {
   "10": colors.orange[500],
   "11": colors.gray[600],
 } as const;
+
+export type CategoryIconKey = keyof typeof CATEGORY_ICONS;
+export type CategoryColorKey = keyof typeof CATEGORY_COLORS;

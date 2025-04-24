@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 
 import BaseModal from "@/BaseModal";
-import { ACCOUNT_TYPES } from "@/db/ui";
+import { ACCOUNT_TYPES, ACCOUNT_TYPES_ID } from "@/db/ui";
 import { formatNumber } from "@/utils/formatters";
 
 import Input from "@/forms/Input";
@@ -65,8 +65,8 @@ const Form = ({
       closeButtonLabel={closeButtonLabel}
       submitButtonLabel={submitButtonLabel}
       canSubmit={
-        (values.type !== ACCOUNT_TYPES.CREDIT.id && validValues) ||
-        (values.type === ACCOUNT_TYPES.CREDIT.id &&
+        (values.type !== ACCOUNT_TYPES_ID.CREDIT && validValues) ||
+        (values.type === ACCOUNT_TYPES_ID.CREDIT &&
           validValues &&
           validCreditValues)
       }
@@ -106,13 +106,13 @@ const Form = ({
           data={Object.values(ACCOUNT_TYPES)}
           value={values.type}
           onChange={(v) => {
-            if (v !== ACCOUNT_TYPES.CREDIT.id) resetCreditForm();
+            if (v !== ACCOUNT_TYPES_ID.CREDIT) resetCreditForm();
 
             setFieldValue("type", v);
           }}
         />
 
-        {values.type === ACCOUNT_TYPES.CREDIT.id && (
+        {values.type === ACCOUNT_TYPES_ID.CREDIT && (
           <>
             <Text className="text-xl font-semibold mt-2 -mb-1 dark:text-white">
               Información de crédito

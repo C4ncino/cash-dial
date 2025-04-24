@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Text } from "react-native";
 
-import { ACCOUNT_TYPES } from "@/db/ui";
+import { ACCOUNT_TYPES_ID } from "@/db/ui";
 import ExitingView from "@/animations/ExitingView";
 import { errors } from "@/messages/create-account";
 
@@ -22,7 +22,7 @@ const EditAccount = ({ visible, closeModal, id }: Props) => {
   const creditData = getById("creditAccounts", id);
 
   if (!data) return null;
-  else if (data.type === ACCOUNT_TYPES.CREDIT.id && !creditData) return null;
+  else if (data.type === ACCOUNT_TYPES_ID.CREDIT && !creditData) return null;
 
   const { setFieldValue, values, resetForm, validate } =
     useForm<Row<"accounts">>(data);
@@ -40,7 +40,7 @@ const EditAccount = ({ visible, closeModal, id }: Props) => {
     setError("");
 
     if (!validate()) return setError(errors.INCOMPLETE);
-    else if (values.type === ACCOUNT_TYPES.CREDIT.id && !validateCredit())
+    else if (values.type === ACCOUNT_TYPES_ID.CREDIT && !validateCredit())
       return setError(errors.INCOMPLETE);
 
     values.currentBalance = Number(values.currentBalance);
@@ -48,7 +48,7 @@ const EditAccount = ({ visible, closeModal, id }: Props) => {
 
     update("accounts", id, values);
 
-    if (values.type === ACCOUNT_TYPES.CREDIT.id) {
+    if (values.type === ACCOUNT_TYPES_ID.CREDIT) {
       creditValues.creditLimit = Number(creditValues.creditLimit);
       if (isNaN(creditValues.creditLimit))
         return setError(errors.MUST_BE_NUMBER_C);
