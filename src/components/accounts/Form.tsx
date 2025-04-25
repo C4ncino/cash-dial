@@ -9,12 +9,7 @@ import DaySelect from "@/forms/DaySelect";
 import CurrencySelect from "@/forms/CurrencySelect";
 import SegmentedControl from "@/forms/SegmentedControl";
 
-interface Props {
-  label: string;
-
-  visible: boolean;
-  closeModal: () => void;
-
+interface Props extends Omit<PropsBaseModal, "canSubmit"> {
   values: Row<"accounts">;
   creditValues: Row<"creditAccounts">;
 
@@ -32,12 +27,7 @@ interface Props {
 
   resetCreditForm: () => void;
 
-  onSubmit: () => void;
-
   ErrorMessage: () => JSX.Element;
-
-  closeButtonLabel?: string;
-  submitButtonLabel?: string;
 }
 
 const Form = ({
