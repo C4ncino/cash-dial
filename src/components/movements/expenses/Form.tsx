@@ -1,15 +1,18 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useEffect, useState } from "react";
-import CategorySelect from "@/components/forms/CategorySelect";
-import useTinybase from "@/hooks/useDatabase";
-import useForm from "@/hooks/useForm";
-import Input from "@/components/forms/Input";
-import CurrencySelect from "@/components/forms/CurrencySelect";
-import DatePicker from "@/components/forms/DatePicker";
-import AccountSelect from "@/components/forms/AccountSelect";
-import TextArea from "@/components/forms/TextArea";
-import { formatInt, formatNumber } from "@/utils/formatters";
+
+import Input from "@/forms/Input";
+import TextArea from "@/forms/TextArea";
+import DatePicker from "@/forms/DatePicker";
+import AccountSelect from "@/forms/AccountSelect";
+import CurrencySelect from "@/forms/CurrencySelect";
+import CategorySelect from "@/forms/CategorySelect";
+
 import { ACCOUNT_TYPES_ID } from "@/db/ui";
+import { formatInt, formatNumber } from "@/utils/formatters";
+
+import useForm from "@/hooks/useForm";
+import useTinybase from "@/hooks/useDatabase";
 
 interface Props extends PropsMovementsForm {}
 
