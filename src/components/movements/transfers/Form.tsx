@@ -1,0 +1,97 @@
+import { View, Text } from "react-native";
+import React, { useEffect } from "react";
+import CategorySelect from "@/components/forms/CategorySelect";
+import useTinybase from "@/hooks/useDatabase";
+import useForm from "@/hooks/useForm";
+import Input from "@/components/forms/Input";
+import { formatNumber } from "@/utils/formatters";
+import CurrencySelect from "@/components/forms/CurrencySelect";
+import DatePicker from "@/components/forms/DatePicker";
+import AccountSelect from "@/components/forms/AccountSelect";
+import TextArea from "@/components/forms/TextArea";
+
+interface Props extends PropsMovementsForm {}
+
+const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
+  const { create } = useTinybase();
+
+  const { values, setFieldValue, resetForm, validate } = useForm<
+    Row<"transfers">
+  >({
+    idFrom: "",
+    idTo: "",
+    amount: 0,
+    currency: "0",
+    date: Date.now(),
+  });
+
+  const onSubmit = () => {
+    create("transfers", values);
+    resetForm();
+  };
+
+  useEffect(() => {
+    setOnSubmit(() => onSubmit);
+  }, []);
+
+  useEffect(() => {
+    setCanSubmit(validate());
+  }, [values]);
+
+  return (
+    <>
+      <AccountSelect
+        label="Cuenta de origen"
+        value={values.idFrom}
+        onSelect={(v) => setFieldValue("idFrom", v)}
+      />
+
+      <AccountSelect
+        label="Cuenta de destino"
+        value={values.idTo}
+        onSelect={(v) => setFieldValue("idTo", v)}
+      />
+
+      <View className="flex-row justify-between items-end">
+        <Input
+          className="w-[70%] mr-2"
+          label="Monto"
+          type="number"
+          placeholder="0.00"
+          onEndEditing={(e) => {
+            const value = Number(e.nativeEvent.text.replaceAll(",", ""));
+            setFieldValue("amount", value);
+            e.target.setNativeProps({ text: formatNumber(value) });
+          }}
+          selectTextOnFocus={true}
+        />
+        <CurrencySelect
+          value={values.currency}
+          onSelect={(v) => setFieldValue("currency", v)}
+        />
+      </View>
+
+      <DatePicker
+        label="Fecha"
+        value={values.date}
+        onSelect={(v) => setFieldValue("date", v)}
+      />
+
+      <TextArea
+        placeholder="Deja alguna nota aquí..."
+        className="max-h-32 mb-24"
+        numberOfLines={5}
+        maxLength={256}
+        value={values.description}
+        onChangeText={(s) => setFieldValue("description", s)}
+        onEndEditing={(e) => {
+          const value = e.nativeEvent.text;
+          setFieldValue("description", value);
+          e.target.setNativeProps({ text: value });
+        }}
+      />
+    </>
+  );
+};
+
+export default Form;

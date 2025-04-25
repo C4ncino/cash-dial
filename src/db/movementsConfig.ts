@@ -1,7 +1,7 @@
 const incomesConfig: TableConfig = {
   idAccount: { type: "string" },
   idCategory: { type: "string" },
-  amount: { type: "string" },
+  amount: { type: "number" },
   currency: { type: "string" },
   date: { type: "number", default: Date.now() },
   description: { type: "string", default: "" },

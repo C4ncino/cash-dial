@@ -153,6 +153,14 @@ type CellIdCellArray<
   CId = CellId<TId>,
 > = CId extends CellId<TId> ? [cellId: CId, cell: Cell<TId, CId>] : never;
 
+type CategoryData = Map<Id, Row<"categories"> & { id: Id, children: CategoryNode[] }>
+
+type CategoryNode = {
+  id: string;
+  name: string;
+  children: CategoryNode[];
+}
+
 type QueryParams<T extends TableId> =
   | {
     type: "select";

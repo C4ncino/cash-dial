@@ -1,12 +1,26 @@
+import { getLocales } from 'expo-localization';
+
+export const lang = getLocales()[0].languageTag;
+
 export function formatNumber(value: number, top?: number) {
     let digits = 2;
     if (top && value > top) digits = 0;
 
     return value.toLocaleString(
-        "en-US",
+        lang,
         {
             minimumFractionDigits: digits,
             maximumFractionDigits: digits
+        }
+    );
+}
+
+export function formatInt(value: number) {
+    return value.toLocaleString(
+        lang,
+        {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
         }
     );
 }
@@ -74,7 +88,6 @@ function hyphenateSpanishWord(word: string) {
 
     return result;
 }
-
 
 export function hyphenateText(text: string, maxLineLen: number) {
     const words = text.split(" ");
