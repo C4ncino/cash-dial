@@ -4,16 +4,7 @@ import { Modal, View, Text } from "react-native";
 
 import Button from "./forms/Button";
 
-interface Props extends PropsWithChildren {
-  visible: boolean;
-
-  closeModal: () => void;
-  onSubmit: () => void;
-  label: string;
-  closeButtonLabel?: string;
-  submitButtonLabel?: string;
-  canSubmit?: boolean;
-}
+interface Props extends PropsWithChildren, PropsBaseModal {}
 
 const BaseModal = ({
   children,
