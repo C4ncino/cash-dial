@@ -2,7 +2,7 @@ import colors from "tailwindcss/colors";
 import { PropsWithChildren } from "react";
 import { Modal, View, Text } from "react-native";
 
-import Button from "./forms/Button";
+import Button from "./widgets/Button";
 
 interface Props extends PropsWithChildren, PropsBaseModal {}
 

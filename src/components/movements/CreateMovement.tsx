@@ -1,4 +1,4 @@
-import Button from "../forms/Button";
+import Button from "../widgets/Button";
 import Form from "./Form";
 
 import useModal from "@/hooks/useModal";
