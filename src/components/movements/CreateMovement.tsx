@@ -1,6 +1,8 @@
-import Button from "../widgets/Button";
-import Form from "./Form";
+import colors from "tailwindcss/colors";
+import { Pressable } from "react-native";
+import { Plus } from "iconoir-react-native";
 
+import Form from "./Form";
 import useModal from "@/hooks/useModal";
 
 const CreateMovement = () => {
@@ -8,7 +10,9 @@ const CreateMovement = () => {
 
   return (
     <>
-      <Button title="+" onPress={openModal} />
+      <Pressable className="absolute right-4 bottom-8 rounded-full bg-green-600 p-1" onPress={openModal}>
+        <Plus width={40} height={40} color={colors.white} />        
+      </Pressable>
 
       <Form visible={visible} closeModal={closeModal} label="Crear registro" />
     </>

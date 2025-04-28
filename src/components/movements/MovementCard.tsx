@@ -37,7 +37,7 @@ const MovementCard = ({
 
   return (
     <Pressable
-      className="flex-1 flex-row justify-between items-center py-2 border-t border-zinc-500 dark:border-zinc-700"
+      className="w-full flex-row justify-between items-center py-2 border-t border-zinc-500 dark:border-zinc-700"
       onPress={() => onPress && onPress(id)}
     >
       <View className="flex-row gap-2">
