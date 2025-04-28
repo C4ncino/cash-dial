@@ -26,6 +26,44 @@ const TinyBaseProvider = ({ children }: Props) => {
         },
       })
       .setTable("categories", categoriesData)
+      .setTable("accounts", {
+        "0": {
+          name: "Cash",
+          type: 1,
+          currentBalance: 200,
+          currency: "0",
+        },
+        "1": {
+          name: "Savings",
+          type: 2,
+          currentBalance: 100,
+          currency: "0",
+        },
+      })
+      .setTable("transfers", {
+        "0": {
+          idFrom: "0",
+          idTo: "1",
+          amount: 100,
+          date: new Date(2025, 3, 24, 15, 30, 0).getTime(),
+        },
+      })
+      .setTable("incomes", {
+        "0": {
+          idAccount: "0",
+          idCategory: "1",
+          amount: 100,
+          date: new Date(2025, 3, 24, 15, 33, 0).getTime(),
+        },
+      })
+      .setTable("expenses", {
+        "0": {
+          idAccount: "0",
+          idCategory: "2",
+          amount: 100,
+          date: new Date(2025, 3, 24, 15, 27, 0).getTime(),
+        },
+      })
   );
 
   const storeIndexes = createIndexes(store);
