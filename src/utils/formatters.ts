@@ -1,6 +1,7 @@
-import { getLocales } from 'expo-localization';
+import { getLocales, getCalendars } from 'expo-localization';
 
 export const lang = getLocales()[0].languageTag;
+export const clockFormat = getCalendars()[0].uses24hourClock;
 
 export function formatNumber(value: number, top?: number) {
     let digits = 2;
