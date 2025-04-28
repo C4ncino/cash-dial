@@ -161,6 +161,12 @@ type CategoryNode = {
   children: CategoryNode[];
 }
 
+type Movement = {
+  id: Id,
+  type: "in" | "out" | "transfer",
+  date: number,
+};
+
 type QueryParams<T extends TableId> =
   | {
     type: "select";
