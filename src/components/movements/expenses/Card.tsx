@@ -20,12 +20,10 @@ const Card = ({ movementId, ...props }: Props) => {
   const { useRowById, getById } = useTinybase();
   const data = useRowById("expenses", movementId);
 
-  console.log(data);
   if (!data) return null;
 
   const category = getById("categories", data.idCategory);
 
-  console.log(category);
   if (!category) return null;
 
   const iconColor =
@@ -36,10 +34,7 @@ const Card = ({ movementId, ...props }: Props) => {
 
   const account = getById("accounts", data.idAccount);
 
-  console.log(account);
   if (!account) return null;
-
-  
 
   return (
     <MovementCard
