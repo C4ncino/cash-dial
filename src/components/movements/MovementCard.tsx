@@ -5,15 +5,15 @@ import colors from "tailwindcss/colors";
 import { Minus, Plus } from "iconoir-react-native";
 
 interface Props {
-  type?: "in" | "out" | "transfer";
-  title?: string;
-  Subtitle?: () => JSX.Element;
-  id?: Id;
-  amount?: number;
-  date?: number;
+  id: Id;
+  type: "in" | "out" | "transfer";
+  title: string;
+  Subtitle: () => JSX.Element;
+  amount: number;
+  date: number;
   showTime?: boolean;
-  Icon?: () => JSX.Element;
-  onPress?: (id?: Id) => void;
+  Icon: () => JSX.Element;
+  onPress: (id: Id) => void;
 }
 
 const MovementCard = ({
@@ -38,7 +38,7 @@ const MovementCard = ({
   return (
     <Pressable
       className="w-full flex-row justify-between items-center py-2 border-t border-zinc-500 dark:border-zinc-700"
-      onPress={() => onPress && onPress(id)}
+      onPress={() => onPress(id)}
     >
       <View className="flex-row gap-2">
         {Icon && Icon()}

@@ -1,17 +1,16 @@
-import useTinybase from "@/hooks/useDatabase";
-import { View, Text } from "react-native";
-import MovementCard from "../MovementCard";
-
 import {
-  ArrowRight,
   DataTransferUp,
   DotArrowRight,
 } from "iconoir-react-native";
+import { View, Text } from "react-native";
+
+import useTinybase from "@/hooks/useDatabase";
+import MovementCard from "@/movements/MovementCard";
 
 interface Props {
   movementId: Id;
   showTime?: boolean;
-  onPress?: (id?: Id) => void;
+  onPress: (id: Id) => void;
 }
 
 const Card = ({ movementId, ...props }: Props) => {
@@ -35,7 +34,6 @@ const Card = ({ movementId, ...props }: Props) => {
       Subtitle={() => (
         <View className="flex-row items-center gap-2">
           <Text className="text-zinc-500">{origin.name}</Text>
-          {/* <ArrowRight width={16} height={16} color="#71717a" /> */}
           <DotArrowRight
             width={16}
             height={16}

@@ -6,9 +6,14 @@ import Link from "../widgets/Link";
 import IncomeCard from "./incomes/Card";
 import ExpenseCard from "./expenses/Card";
 import TransferCard from "./transfers/Card";
+import { Fragment, useState } from "react";
+import useModal from "@/hooks/useModal";
 
 const MovementsLanding = () => {
   const { getById, useAll } = useTinybase();
+  const {visible, openModal, closeModal} = useModal()
+  const [id, setId] = useState<Id>("");
+  const [type, setType] = useState(0);
 
   const getMovements = () => {
     const movements: Movement[] = [];
@@ -58,15 +63,37 @@ const MovementsLanding = () => {
       </Text>
 
       {movements.slice(0, 3).map((movement, i) => (
-        <>
-          {movement.type === "in" ? (
-             <IncomeCard key={i} movementId={movement.id} />
-           ) : movement.type === "out" ? (
-             <ExpenseCard key={i} movementId={movement.id} />
+
+        <Fragment key={i}>
+          {movement.type === "out" ? (
+            <ExpenseCard 
+               movementId={movement.id}  
+               onPress={(id: string) =>{
+                 setId(id);
+                 setType(0);
+                 openModal();
+               }}
+             />
+          ) : movement.type === "in" ? (
+             <IncomeCard 
+               movementId={movement.id}  
+               onPress={(id: string) =>{
+                 setId(id);
+                 setType(1);
+                 openModal();
+               }}
+             />
            ) : (
-             <TransferCard key={i} movementId={movement.id} />
+             <TransferCard 
+                movementId={movement.id}  
+                onPress={(id: string) =>{
+                  setId(id);
+                  setType(2);
+                  openModal();
+                }}
+              />
            )} 
-        </>
+        </Fragment>
       ))}
 
       <Link className="justify-end" href="/movements" label="Mostrar más" />

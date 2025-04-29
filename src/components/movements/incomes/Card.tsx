@@ -1,17 +1,18 @@
-import useTinybase from "@/hooks/useDatabase";
 import { View, Text } from "react-native";
-import MovementCard from "../MovementCard";
+
 import {
   CATEGORY_COLORS,
   CATEGORY_ICONS,
   CategoryColorKey,
   CategoryIconKey,
 } from "@/db/ui";
+import useTinybase from "@/hooks/useDatabase";
+import MovementCard from "@/movements/MovementCard";
 
 interface Props {
   movementId: Id;
   showTime?: boolean;
-  onPress?: (id?: Id) => void;
+  onPress: (id: Id) => void;
 }
 
 const Card = ({ movementId, ...props }: Props) => {
