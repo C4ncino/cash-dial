@@ -14,7 +14,7 @@ const CreateMovement = () => {
         <Plus width={40} height={40} color={colors.white} />        
       </Pressable>
 
-      <Form visible={visible} closeModal={closeModal} label="Crear registro" />
+      <Form visible={visible} closeModal={closeModal} label="Crear registro" submitButtonLabel="Crear"  />
     </>
   );
 };
