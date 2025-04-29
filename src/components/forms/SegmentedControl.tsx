@@ -15,9 +15,10 @@ interface Props {
   data: SegmentedControlItem[] | readonly SegmentedControlItem[];
   value?: string | number;
   onChange: (value: string | number) => void;
+  readonly?: boolean;
 }
 
-const SegmentedControl = ({ label, data, value, onChange }: Props) => {
+const SegmentedControl = ({ label, data, value, onChange, readonly }: Props) => {
   return (
     <View>
       <Label label={label} />
@@ -30,6 +31,7 @@ const SegmentedControl = ({ label, data, value, onChange }: Props) => {
             isLast={i === data.length - 1}
             isCurrent={item.id === value}
             onPress={() => onChange(item.id)}
+            readonly={readonly}
           />
         ))}
       </View>
