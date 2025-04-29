@@ -87,9 +87,6 @@ const CategorySelect = ({ value, onSelect }: Props) => {
         visible={visible}
         onRequestClose={closeModal}
         animationType="slide"
-        onLayout={() => {
-          console.log("hola");
-        }}
       >
         <View className="px-2 py-2 flex-1 dark:bg-zinc-900">
           <ReturnButton onPress={closeModal} />
