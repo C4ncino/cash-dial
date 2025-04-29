@@ -39,6 +39,12 @@ const TinyBaseProvider = ({ children }: Props) => {
           currentBalance: 100,
           currency: "0",
         },
+        "2": {
+          name: "BBVA Credit",
+          type: 3,
+          currentBalance: 100,
+          currency: "0",
+        },
       })
       .setTable("transfers", {
         "0": {
@@ -60,10 +66,11 @@ const TinyBaseProvider = ({ children }: Props) => {
       })
       .setTable("expenses", {
         "0": {
-          idAccount: "0",
+          idAccount: "2",
           idCategory: "2",
           amount: 100,
           currency: "0",
+          msi: 6,
           date: new Date(2025, 3, 24, 15, 27, 0).getTime(),
         },
       })
