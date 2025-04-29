@@ -45,6 +45,7 @@ const TinyBaseProvider = ({ children }: Props) => {
           idFrom: "0",
           idTo: "1",
           amount: 100,
+          currency: "0",
           date: new Date(2025, 3, 24, 15, 30, 0).getTime(),
         },
       })
@@ -53,6 +54,7 @@ const TinyBaseProvider = ({ children }: Props) => {
           idAccount: "0",
           idCategory: "1",
           amount: 100,
+          currency: "0",
           date: new Date(2025, 3, 24, 15, 33, 0).getTime(),
         },
       })
@@ -61,6 +63,7 @@ const TinyBaseProvider = ({ children }: Props) => {
           idAccount: "0",
           idCategory: "2",
           amount: 100,
+          currency: "0",
           date: new Date(2025, 3, 24, 15, 27, 0).getTime(),
         },
       })

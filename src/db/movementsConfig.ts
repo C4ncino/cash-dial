@@ -4,7 +4,7 @@ const incomesConfig: TableConfig = {
   amount: { type: "number" },
   currency: { type: "string" },
   date: { type: "number", default: Date.now() },
-  description: { type: "string", default: "" },
+  description: { type: "string", default: undefined },
 };
 
 const expensesConfig: TableConfig = {
@@ -14,7 +14,7 @@ const expensesConfig: TableConfig = {
   currency: { type: "string" },
   msi: { type: "number", default: 0 },
   date: { type: "number", default: Date.now() },
-  description: { type: "string", default: "" },
+  description: { type: "string", default: undefined },
 };
 
 const transfersConfig: TableConfig = {
@@ -23,7 +23,7 @@ const transfersConfig: TableConfig = {
   amount: { type: "number" },
   currency: { type: "string" },
   date: { type: "number", default: Date.now() },
-  description: { type: "string", default: "" },
+  description: { type: "string", default: undefined },
 };
 
 const templatesConfig: TableConfig = {
@@ -31,7 +31,7 @@ const templatesConfig: TableConfig = {
   idCategory: { type: "string" },
   amount: { type: "number" },
   currency: { type: "string" },
-  description: { type: "string", default: "" },
+  description: { type: "string", default: undefined },
 };
 
 const indexes: Index[] = [
