@@ -8,6 +8,7 @@ import ExpenseCard from "./expenses/Card";
 import TransferCard from "./transfers/Card";
 import { Fragment, useState } from "react";
 import useModal from "@/hooks/useModal";
+import EditMovement from "./EditMovement";
 
 const MovementsLanding = () => {
   const { getById, useAll } = useTinybase();
@@ -57,6 +58,7 @@ const MovementsLanding = () => {
   const movements = getMovements();
 
   return (
+    <>
     <View className="w-full px-4 py-4 rounded-md bg-zinc-100 dark:bg-zinc-950">
       <Text className="text-2xl font-semibold dark:text-white pb-2">
         Movements
@@ -98,6 +100,9 @@ const MovementsLanding = () => {
 
       <Link className="justify-end" href="/movements" label="Mostrar más" />
     </View>
+    
+    <EditMovement visible={visible} closeModal={closeModal} movementId={id} type={type} />
+    </>
   );
 };
 

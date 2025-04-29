@@ -112,6 +112,27 @@ export const ACCOUNT_TYPES = {
   },
 } as const;
 
+export enum MOVEMENT_TYPES_ID {
+  EXPENSE,
+  INCOME,
+  TRANSFER,
+}
+
+export const MOVEMENT_TYPES  ={
+  0: {
+    id: 0,
+    name: "Gasto",
+  },
+  1: {
+    id: 1,
+    name: "Ingreso",
+  },
+  2: {
+    id: 2,
+    name: "Transferencia",
+  },
+} as const;
+
 export const DAYS = [
   { id: "1" },
   { id: "2" },

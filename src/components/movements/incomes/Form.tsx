@@ -14,12 +14,14 @@ import { formatNumber } from "@/utils/formatters";
 
 interface Props extends PropsMovementsForm {}
 
-const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
-  const { create } = useTinybase();
+const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
+  const { create, getById, update } = useTinybase();
+
+  const data = getById("incomes", movementId as Id);
 
   const { values, setFieldValue, resetForm, validate } = useForm<
     Row<"incomes">
-  >({
+  >(data || {
     idAccount: "",
     idCategory: "",
     amount: 0,
@@ -28,16 +30,19 @@ const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
   });
 
   const onSubmit = () => {
-    create("incomes", values);
-    resetForm();
+    if (movementId) update("incomes", movementId, values);
+    else {
+      create("incomes", values);
+      resetForm();
+    }
   };
 
   useEffect(() => {
-    setOnSubmit(() => onSubmit);
-  }, []);
-
-  useEffect(() => {
-    setCanSubmit(validate());
+    if (validate() && values.amount > 0){
+      setCanSubmit(true);
+      setOnSubmit(() => onSubmit);
+    }
+    else setCanSubmit(false);
   }, [values]);
 
   return (
@@ -63,6 +68,7 @@ const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
             setFieldValue("amount", value);
             e.target.setNativeProps({ text: formatNumber(value) });
           }}
+          onLayout={(e) => e.target.setNativeProps({ text: formatNumber(values.amount) })}
           selectTextOnFocus={true}
         />
         <CurrencySelect

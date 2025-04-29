@@ -7,39 +7,31 @@ import ExpensesForm from "./expenses/Form";
 import TransfersForm from "./transfers/Form";
 
 import SegmentedControl from "@/forms/SegmentedControl";
+import { MOVEMENT_TYPES, MOVEMENT_TYPES_ID } from "@/db/ui";
 
-interface Props extends Omit<PropsBaseModal, "onSubmit" | "canSubmit"> {}
+interface Props extends Omit<PropsBaseModal, "onSubmit" | "canSubmit"> {
+  type: MOVEMENT_TYPES_ID;
+  movementId?: Id;
+}
 
-const movementTypes = [
-  {
-    id: 0,
-    name: "Gasto",
-  },
-  {
-    id: 1,
-    name: "Ingreso",
-  },
-  {
-    id: 2,
-    name: "Transferencia",
-  },
-];
-
-const Form = ({ ...props }: Props) => {
-  const [type, setType] = useState(0);
+const Form = ({type = MOVEMENT_TYPES_ID.EXPENSE, movementId, closeModal, ...props }: Props) => {
+  const [movementType, setType] = useState(type);
   const [onSubmit, setOnSubmit] = useState(() => () => {});
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const formProps = { setOnSubmit, setCanSubmit };
+  const formProps = { setOnSubmit, setCanSubmit, movementId };  
 
   return (
     <BaseModal
       {...props}
       onSubmit={() => {
         onSubmit();
-        props.closeModal();
+        closeModal();
       }}
       canSubmit={canSubmit}
+      closeModal={() => {
+        closeModal();
+      }}
     >
       <KeyboardAvoidingView
         className="flex-1"
@@ -51,14 +43,19 @@ const Form = ({ ...props }: Props) => {
           keyboardShouldPersistTaps="handled"
         >
           <SegmentedControl
-            data={movementTypes}
-            value={type}
-            onChange={(v) => setType(v as number)}
+            data={Object.values(MOVEMENT_TYPES)}
+            value={movementType}
+            onChange={(v) => {
+              setType(v as MOVEMENT_TYPES_ID )
+              setOnSubmit(() => () => {});
+              setCanSubmit(false);
+            }}
+            readonly={!!movementId}
           />
 
-          {type === 0 ? (
+          {movementType === MOVEMENT_TYPES_ID.EXPENSE ? (
             <ExpensesForm {...formProps} />
-          ) : type === 1 ? (
+          ) : movementType === MOVEMENT_TYPES_ID.INCOME ? (
             <IncomesForm {...formProps} />
           ) : (
             <TransfersForm {...formProps} />

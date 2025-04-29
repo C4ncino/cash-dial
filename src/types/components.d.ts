@@ -11,4 +11,5 @@ interface PropsBaseModal {
 interface PropsMovementsForm {
     setOnSubmit: React.Dispatch<React.SetStateAction<() => void>>;
     setCanSubmit: React.Dispatch<React.SetStateAction<boolean>>;
+    movementId?: Id;
 }

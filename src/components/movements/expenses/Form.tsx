@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Button, View } from "react-native";
 import { useEffect, useState } from "react";
 
 import Input from "@/forms/Input";
@@ -16,32 +16,43 @@ import useTinybase from "@/hooks/useDatabase";
 
 interface Props extends PropsMovementsForm {}
 
-const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
-  const { create, getById } = useTinybase();
+const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
+  const { create, getById, update } = useTinybase();
 
-  const [isCredit, setIsCredit] = useState(false);
+  const data = getById("expenses", movementId as Id);
+
+  const [isCredit, setIsCredit] = useState(() => {
+    if (!data) return false;
+
+    const account = getById("accounts", data.idAccount);
+    return account?.type === ACCOUNT_TYPES_ID.CREDIT;
+  });
   const { values, setFieldValue, resetForm, validate } = useForm<
     Row<"expenses">
-  >({
+  >( data || {
     idAccount: "",
     idCategory: "",
     msi: 0,
-    amount: 0,
+    amount: NaN,
     currency: "0",
     date: Date.now(),
   });
 
-  const onSubmit = () => {
-    create("expenses", values);
-    resetForm();
+  const onSubmit = () => {    
+    if (movementId)
+      update("expenses", movementId, values);
+    else {
+      create("expenses", values);
+      resetForm();
+    }
   };
 
   useEffect(() => {
-    setOnSubmit(() => onSubmit);
-  }, []);
-
-  useEffect(() => {
-    setCanSubmit(validate());
+    if (validate() && values.amount > 0){
+      setCanSubmit(true);
+      setOnSubmit(() => onSubmit);
+    }
+    else setCanSubmit(false);
   }, [values]);
 
   return (
@@ -71,6 +82,9 @@ const Form = ({ setOnSubmit, setCanSubmit }: Props) => {
             setFieldValue("amount", value);
             e.target.setNativeProps({ text: formatNumber(value) });
           }}
+          onLayout={(e) =>
+            e.target.setNativeProps({ text: formatNumber(values.amount) })
+          }
           selectTextOnFocus={true}
         />
         <CurrencySelect
