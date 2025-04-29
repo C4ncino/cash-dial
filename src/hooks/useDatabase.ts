@@ -25,7 +25,9 @@ const useTinybase: () => UseTinyBase = () => {
   const getById = <T extends TableId>(tableName: T, id: Id) => {
     if (!store) return null;
 
-    return store.getRow(tableName, id) as Table<T>[string];
+    const row = store.getRow(tableName, id) as Table<T>[string];
+
+    return Object.keys(row).length === 0 ? null : row;
   };
 
   const useAll = (tableName: TableId) => {
