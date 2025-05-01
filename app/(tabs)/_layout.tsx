@@ -1,7 +1,5 @@
 import { Tabs } from "expo-router";
 import { useColorScheme } from "nativewind";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   HomeSimpleDoor,
   StatsUpSquare,
@@ -10,6 +8,7 @@ import {
 } from "iconoir-react-native";
 
 import colors from "tailwindcss/colors";
+import { View } from "react-native";
 
 const Layout = () => {
   const { colorScheme } = useColorScheme();
@@ -31,10 +30,9 @@ const Layout = () => {
       }}
       screenLayout={(props) => {
         return (
-          <SafeAreaView className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
-            <StatusBar animated style="auto" />
+          <View className="min-h-full bg-zinc-50 dark:bg-zinc-900">
             {props.children}
-          </SafeAreaView>
+          </View>
         );
       }}
     >
