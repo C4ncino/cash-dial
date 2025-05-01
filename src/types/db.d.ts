@@ -167,6 +167,11 @@ type Movement = {
   date: number,
 };
 
+type MovementsByDate = {
+  date: number;
+  data: Movement[];
+}
+
 type QueryParams<T extends TableId> =
   | {
     type: "select";
