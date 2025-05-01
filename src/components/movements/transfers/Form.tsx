@@ -21,13 +21,15 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
 
   const { values, setFieldValue, resetForm, validate } = useForm<
     Row<"transfers">
-  >( data || {
-    idFrom: "",
-    idTo: "",
-    amount: 0,
-    currency: "0",
-    date: Date.now(),
-  });
+  >(
+    data || {
+      idFrom: "",
+      idTo: "",
+      amount: 0,
+      currency: "0",
+      date: Date.now(),
+    }
+  );
 
   const onSubmit = () => {
     if (movementId) update("transfers", movementId, values);
@@ -38,11 +40,10 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
   };
 
   useEffect(() => {
-    if (validate() && values.amount > 0){
+    if (validate() && values.amount > 0) {
       setCanSubmit(true);
       setOnSubmit(() => onSubmit);
-    }
-    else setCanSubmit(false);
+    } else setCanSubmit(false);
   }, [values]);
 
   return (
@@ -65,12 +66,9 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
           label="Monto"
           type="number"
           placeholder="0.00"
-          onEndEditing={(e) => {
-            const value = Number(e.nativeEvent.text.replaceAll(",", ""));
-            setFieldValue("amount", value);
-            e.target.setNativeProps({ text: formatNumber(value) });
-          }}
-          onLayout={(e) => e.target.setNativeProps({ text: formatNumber(values.amount) })}
+          value={formatNumber(values.amount)}
+          onChangeText={(s) => setFieldValue("amount", s.replaceAll(",", ""))}
+          onBlur={() => setFieldValue("amount", Number(values.amount))}
           selectTextOnFocus={true}
         />
         <CurrencySelect

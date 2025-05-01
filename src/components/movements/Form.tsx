@@ -10,16 +10,21 @@ import SegmentedControl from "@/forms/SegmentedControl";
 import { MOVEMENT_TYPES, MOVEMENT_TYPES_ID } from "@/db/ui";
 
 interface Props extends Omit<PropsBaseModal, "onSubmit" | "canSubmit"> {
-  type: MOVEMENT_TYPES_ID;
+  type?: MOVEMENT_TYPES_ID;
   movementId?: Id;
 }
 
-const Form = ({type = MOVEMENT_TYPES_ID.EXPENSE, movementId, closeModal, ...props }: Props) => {
+const Form = ({
+  type = MOVEMENT_TYPES_ID.EXPENSE,
+  movementId,
+  closeModal,
+  ...props
+}: Props) => {
   const [movementType, setType] = useState(type);
   const [onSubmit, setOnSubmit] = useState(() => () => {});
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const formProps = { setOnSubmit, setCanSubmit, movementId };  
+  const formProps = { setOnSubmit, setCanSubmit, movementId };
 
   return (
     <BaseModal
@@ -46,7 +51,7 @@ const Form = ({type = MOVEMENT_TYPES_ID.EXPENSE, movementId, closeModal, ...prop
             data={Object.values(MOVEMENT_TYPES)}
             value={movementType}
             onChange={(v) => {
-              setType(v as MOVEMENT_TYPES_ID )
+              setType(v as MOVEMENT_TYPES_ID);
               setOnSubmit(() => () => {});
               setCanSubmit(false);
             }}
