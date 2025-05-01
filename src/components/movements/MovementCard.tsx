@@ -32,8 +32,6 @@ const MovementCard = ({
   const { dateShort, time } = useDate(date || 0);
   const textLength = title.length + amount.toString().length;
 
-  console.log(textLength);
-
   const amountColor =
     type === "in"
       ? colors.green[500]
