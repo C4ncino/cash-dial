@@ -1,8 +1,5 @@
-import {
-  DataTransferUp,
-  DotArrowRight,
-} from "iconoir-react-native";
 import { View, Text } from "react-native";
+import { DataTransferUp, DotArrowRight } from "iconoir-react-native";
 
 import useTinybase from "@/hooks/useDatabase";
 import MovementCard from "@/movements/MovementCard";

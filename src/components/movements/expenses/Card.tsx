@@ -9,7 +9,6 @@ import {
 import useTinybase from "@/hooks/useDatabase";
 import MovementCard from "@/movements/MovementCard";
 
-
 interface Props {
   movementId: Id;
   showTime?: boolean;

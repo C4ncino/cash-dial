@@ -3,6 +3,8 @@ import React from "react";
 import useDate from "@/hooks/useDate";
 import colors from "tailwindcss/colors";
 import { Minus, Plus } from "iconoir-react-native";
+import { formatNumber, formatShortAmount } from "@/utils/formatters";
+import useTinybase from "@/hooks/useDatabase";
 
 interface Props {
   id: Id;
@@ -28,6 +30,10 @@ const MovementCard = ({
   onPress,
 }: Props) => {
   const { dateShort, time } = useDate(date || 0);
+  const textLength = title.length + amount.toString().length;
+
+  console.log(textLength);
+
   const amountColor =
     type === "in"
       ? colors.green[500]
@@ -63,10 +69,12 @@ const MovementCard = ({
             )
           )}
           <Text
-            className="text-3xl font-semibold"
+            className="text-2xl font-semibold"
             style={{ color: amountColor }}
           >
-            {amount}
+            {textLength > 25
+              ? formatShortAmount(amount)
+              : formatNumber(amount, 1000)}
           </Text>
         </View>
         <Text className="dark:text-zinc-400 text-sm text-right">

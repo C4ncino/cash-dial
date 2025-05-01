@@ -26,6 +26,32 @@ export function formatInt(value: number) {
     );
 }
 
+export function formatShortAmount(value: number) {
+    const absNum = Math.abs(value);
+    let shortNumber = '';
+    let suffix = '';
+
+    if (absNum >= 1e9) {
+        shortNumber = (value / 1e9).toFixed(2);
+        suffix = 'B';
+    }
+    else if (absNum >= 1e6) {
+        shortNumber = (value / 1e6).toFixed(2);
+        suffix = 'M';
+    }
+    else if (absNum >= 1e3) {
+        shortNumber = (value / 1e3).toFixed(2);
+        suffix = 'K';
+    }
+    else
+        return value.toString();
+
+    if (shortNumber.endsWith('.00'))
+        shortNumber = shortNumber.slice(0, -3);
+
+    return shortNumber + suffix;
+}
+
 function hyphenateSpanishWord(word: string) {
     const vowels = "aeiouáéíóú";
     const strongVowels = "aeoáéó";
