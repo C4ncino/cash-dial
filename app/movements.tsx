@@ -49,7 +49,7 @@ const Movements = () => {
         </View>
       </View>
       <SectionList
-        className="px-6"
+        className="px-6 max-w-2xl mx-auto"
         sections={movements}
         keyExtractor={(item) => item.date.toString()}
         renderItem={({ item }) => {

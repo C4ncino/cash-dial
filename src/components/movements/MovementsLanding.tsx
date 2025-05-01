@@ -21,9 +21,9 @@ const MovementsLanding = () => {
 
   return (
     <>
-      <View className="w-full px-4 py-4 rounded-md bg-zinc-100 dark:bg-zinc-950">
+      <View className="w-full max-w-2xl mx-auto px-4 py-4 rounded-md bg-zinc-100 dark:bg-zinc-950">
         <Text className="text-2xl font-semibold dark:text-white pb-2">
-          Movements
+          Últimos movimientos
         </Text>
 
         {movements.slice(0, 3).map((movement, i) => (
