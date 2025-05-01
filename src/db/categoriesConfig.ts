@@ -60,7 +60,7 @@ export const data = {
   "34": { idFather: "2", name: "Hipoteca" },
   "35": { idFather: "2", name: "Servicios Públicos" },
   "36": { idFather: "2", name: "Mantenimiento" },
-  "37": { idFather: "2", name: "Seguro de propiedad" },
+  "37": { idFather: "2", name: "Seguro" },
 
   // Vehículos y Transporte
   "38": { idFather: "3", name: "Gasolina" },
@@ -112,15 +112,15 @@ export const data = {
 
   // Inversiones
   "74": { idFather: "9", name: "Bienes Raíces" },
-  "75": { idFather: "9", name: "Inversiones Financieras" },
+  "75": { idFather: "9", name: "Financieras" },
   "76": { idFather: "9", name: "Ahorro" },
 
   // Ingresos
   "77": { idFather: "10", name: "Sueldo" },
   "78": { idFather: "10", name: "Facturas" },
-  "79": { idFather: "10", name: "Intereses y Dividendos" },
+  "79": { idFather: "10", name: "Inversiones" },
   "80": { idFather: "10", name: "Venta" },
-  "81": { idFather: "10", name: "Ingreso de Alquiler" },
+  "81": { idFather: "10", name: "Alquiler" },
   "82": { idFather: "10", name: "Préstamos" },
   "83": { idFather: "10", name: "Cheques" },
   "84": { idFather: "10", name: "Reembolsos" },
