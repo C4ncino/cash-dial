@@ -1,5 +1,4 @@
 import colors from "tailwindcss/colors";
-import { useColorScheme } from "nativewind";
 import { Calendar } from "iconoir-react-native";
 import { View, Text, Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -9,6 +8,7 @@ import Label from "./Label";
 import useDate from "@/hooks/useDate";
 import useModal from "@/hooks/useModal";
 import { lang } from "@/utils/formatters";
+import { useSystemContext } from "@/contexts/hooks";
 
 interface Props {
   label?: string;
@@ -17,8 +17,7 @@ interface Props {
 }
 
 const DatePicker = ({ label, value, onSelect }: Props) => {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useSystemContext();
 
   const { dateObject, dateLong } = useDate(value);
   const { openModal, closeModal, visible } = useModal();

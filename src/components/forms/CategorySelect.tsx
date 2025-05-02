@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useColorScheme } from "nativewind";
 import { NavArrowRight } from "iconoir-react-native";
 import { View, Text, Pressable, Modal } from "react-native";
 
@@ -11,6 +10,7 @@ import ReturnButton from "@/widgets/ReturnButton";
 
 import useModal from "@/hooks/useModal";
 import useDatabase from "@/hooks/useDatabase";
+import { useSystemContext } from "@/contexts/hooks";
 
 import {
   CATEGORY_ICONS,
@@ -18,7 +18,6 @@ import {
   CategoryColorKey,
   CategoryIconKey,
 } from "@/db/ui";
-import { getCategoriesTree } from "@/utils/categories";
 
 interface Props {
   value: string;
@@ -26,10 +25,9 @@ interface Props {
 }
 
 const CategorySelect = ({ value, onSelect }: Props) => {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark, categories } = useSystemContext();
 
-  const { getAll, getById } = useDatabase();
+  const { getById } = useDatabase();
   const { openModal, closeModal, visible } = useModal();
 
   const category = useMemo(() => getById("categories", value), [value]);
@@ -40,18 +38,6 @@ const CategorySelect = ({ value, onSelect }: Props) => {
     CATEGORY_COLORS[
       (category?.idFather as CategoryColorKey) || (value as CategoryColorKey)
     ];
-
-  const categories = useMemo(() => {
-    const categories = new Map();
-
-    getAll("categories").forEach((id) => {
-      const account = getById("categories", id);
-      if (!account) return;
-      categories.set(id, { id, children: [], ...account });
-    });
-
-    return getCategoriesTree(categories);
-  }, []);
 
   return (
     <>

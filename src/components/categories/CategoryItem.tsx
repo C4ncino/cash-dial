@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useColorScheme } from "nativewind";
 import { Text, TouchableHighlight, View } from "react-native";
 import { NavArrowDown, NavArrowRight } from "iconoir-react-native";
 
@@ -11,6 +10,7 @@ import {
   CategoryColorKey,
   CategoryIconKey,
 } from "@/db/ui";
+import { useSystemContext } from "@/contexts/hooks";
 
 interface Props extends CategoryNode {
   onPress: (id: string) => void;
@@ -19,8 +19,7 @@ interface Props extends CategoryNode {
 
 const CategoryItem = ({ id, name, children, onPress, fatherColor }: Props) => {
   const [childrenOpen, setChildrenOpen] = useState(false);
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useSystemContext();
 
   const icon = CATEGORY_ICONS[id as CategoryIconKey];
   const color = fatherColor || CATEGORY_COLORS[id as CategoryColorKey];

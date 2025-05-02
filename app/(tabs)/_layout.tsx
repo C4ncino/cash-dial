@@ -1,18 +1,17 @@
-import { Tabs } from "expo-router";
-import { useColorScheme } from "nativewind";
 import {
   HomeSimpleDoor,
   StatsUpSquare,
   Clock,
   MoreHorizCircle,
 } from "iconoir-react-native";
+import { Tabs } from "expo-router";
 
 import colors from "tailwindcss/colors";
 import { View } from "react-native";
+import { useSystemContext } from "@/contexts/hooks";
 
 const Layout = () => {
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useSystemContext();
 
   return (
     <Tabs

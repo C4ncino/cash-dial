@@ -1,7 +1,8 @@
-import { Text, Pressable, PressableProps, Platform } from "react-native";
 import React from "react";
 import { ArrowLeft, NavArrowLeft } from "iconoir-react-native";
-import { useColorScheme } from "nativewind";
+import { Text, Pressable, PressableProps, Platform } from "react-native";
+
+import { useSystemContext } from "@/contexts/hooks";
 
 interface Props extends PressableProps {}
 
@@ -15,8 +16,7 @@ const ReturnButton = (props: Props) => {
     );
   }
 
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useSystemContext();
 
   return (
     <Pressable className="flex-row items-center p-1 m-2 gap-2" {...props}>

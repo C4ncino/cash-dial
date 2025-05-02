@@ -4,7 +4,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { NavArrowDown, NavArrowRight } from "iconoir-react-native";
 
 import Label from "./Label";
-import { useColorScheme } from "nativewind";
+import { useSystemContext } from "@/contexts/hooks";
 
 import colors from "tailwindcss/colors";
 
@@ -39,8 +39,7 @@ const Select = <T,>({
   maxHeight = 300,
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useSystemContext();
 
   return (
     <View>
