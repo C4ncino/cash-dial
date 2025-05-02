@@ -1,11 +1,17 @@
 Cash Dial:
-    ✔ Create add account Modal @done(25-03-31 21:31)
-        ☐ Add delete Modal 
-    ✔ Add Categories values @done(25-04-01 17:21)
-    
-    ☐ Create custom tab bar
-
-    ☐ Implement Store Values Schema
-
-    ☐ Create a System Context
-        ☐ Implement Currency API calls
+    Accounts: 
+        ☐ elimination method
+    Movements:
+        ☐ sum/rest to account
+        ☐ sum/rest to budget
+        ☐ elimination method 
+        ☐ check light mode cards
+    Budget: 
+        ☐ expenses query
+        ☐ pagination
+        ☐ expense cards
+    General:
+        ☐ System Context
+            ☐ Have current week, month and year
+            ☐ Have categories tree
+            ☐ initialization sequence
