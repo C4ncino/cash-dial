@@ -7,11 +7,19 @@ Cash Dial:
         ☐ elimination method 
         ☐ check light mode cards
     Budget: 
-        ☐ expenses query
         ☐ pagination
+        ☐ expenses query
         ☐ expense cards
+    Planning Page:
+        ☐ plannings creation From
+        ☐ plannings cards
+        ☐ plannings landing card
+        ☐ budget card in page
+    Stats Page:
+        ☐ set tasks
     General:
-        ☐ System Context
-            ☐ Have current week, month and year
-            ☐ Have categories tree
-            ☐ initialization sequence
+        System Context:
+            ✔ Have current week, month and year @done(25-05-02 13:05)
+            ✔ Have categories tree @done(25-05-02 13:03)
+            Initialization sequence:
+                ☐ Review budgets times
