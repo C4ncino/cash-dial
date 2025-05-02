@@ -26,7 +26,7 @@ const BaseModal = ({
       <View className="px-2 py-2 flex-1 dark:bg-zinc-900">
         <View
           role="presentation"
-          className="py-2 my-2 flex-row items-center px-4 ios:px-0"
+          className="py-2 my-2 flex-row items-center justify-between px-4 ios:px-0"
         >
           <View className="w-1/4">
             <Button
