@@ -74,6 +74,41 @@ const TinyBaseProvider = ({ children }: Props) => {
           date: new Date(2025, 3, 24, 15, 27, 0).getTime(),
         },
       })
+      .setTable("budgets", {
+        "0": {
+          idCategory: "5",
+          name: "Presupuesto 1",
+          amountLimit: 500,
+          type: 0,
+          currency: "0",
+        },
+        "1": {
+          idCategory: "55",
+          name: "Presupuesto 2",
+          amountLimit: 8000,
+          type: 1,
+          currency: "0",
+        },
+        "2": {
+          idCategory: "30",
+          name: "Presupuesto 3",
+          amountLimit: 500320,
+          type: 2,
+          currency: "0",
+        },
+      })
+      .setTable("historicBudgets", {
+        "0": {
+          idBudget: "0",
+          startDate: new Date(2025, 3, 24, 15, 30, 0).getTime(),
+          amountSpent: 100,
+        },
+        "1": {
+          idBudget: "0",
+          startDate: new Date(2025, 3, 28, 15, 30, 0).getTime(),
+          amountSpent: 200,
+        },
+      })
   );
 
   const storeIndexes = createIndexes(store);

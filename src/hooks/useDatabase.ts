@@ -42,9 +42,28 @@ const useTinybase: () => UseTinyBase = () => {
     return useRow(tableName, id) as Table<T>[string];
   };
 
-  const query = <T extends TableId>(
+  const compare = (operator: Operator, valueA: DatabaseType, valueB: DatabaseType) => {
+    switch (operator) {
+      case ">":
+        return valueA > valueB;
+      case "<":
+        return valueA < valueB;
+      case ">=":
+        return valueA >= valueB;
+      case "<=":
+        return valueA <= valueB;
+      case "!=":
+        return valueA !== valueB;
+      case "==":
+        return valueA === valueB;
+      default:
+        return false;
+    }
+  }
+
+  const query = <T extends TableId, U extends TableId>(
     tableName: T,
-    ...args: QueryParams<T>[]
+    ...args: QueryParams<T, U>[]
   ) => {
     if (!queries) return { ids: [], results: {} };
 
@@ -74,7 +93,7 @@ const useTinybase: () => UseTinyBase = () => {
 
               if (arg.joinTable) firstArgs.unshift(arg.joinTable);
 
-              if (arg.operator === "==") where(...firstArgs, arg.value);
+              if (arg.operator === "==" && "value" in arg) where(...firstArgs, arg.value);
               else {
                 if (!arg.joinTable) firstArgs.unshift(tableName);
                 where((getTableCell) => {
@@ -82,20 +101,15 @@ const useTinybase: () => UseTinyBase = () => {
 
                   if (!value) return false;
 
-                  switch (arg.operator) {
-                    case ">":
-                      return value > arg.value;
-                    case "<":
-                      return value < arg.value;
-                    case ">=":
-                      return value >= arg.value;
-                    case "<=":
-                      return value <= arg.value;
-                    case "!=":
-                      return value !== arg.value;
-                    default:
-                      return false;
-                  }
+                  let result = false;
+
+                  if ("value" in arg)
+                    return compare(arg.operator, value, arg.value);
+                  else
+                    for (const val of arg.values)
+                      result ||= compare(arg.operator, value, val);
+
+                  return result;
                 });
               }
 

@@ -172,26 +172,37 @@ type MovementsByDate = {
   data: Movement[];
 }
 
-type QueryParams<T extends TableId> =
+type BudgetHistory = {
+  [k: string]: Row<"historicBudgets">
+}
+
+type Operator = "==" | ">" | "<" | ">=" | "<=" | "!=";
+
+type DatabaseType = number | string | boolean;
+
+type QueryParams<T extends TableId, U extends TableId> =
   | {
     type: "select";
-    joinTable?: TableId;
-    column: CellId<T> | CellId<TableId>;
+    joinTable?: U;
+    column: CellId<T> | CellId<U>;
     as?: string;
   }
   | {
     type: "join";
     table: TableId;
-    on: CellId<TableId>;
+    on: CellId<T>;
     as?: string;
   }
-  | {
+  | ({
     type: "where";
-    joinTable?: TableId;
-    column: CellId<T> | CellId<TableId>;
-    operator: "==" | ">" | "<" | ">=" | "<=" | "!=";
+    joinTable?: U;
+    column: CellId<T> | CellId<U>;
+    operator: Operator;
+  } & ({
     value: number | string | boolean;
-  }
+  } | {
+    values: (number | string | boolean)[];
+  }))
   | {
     type: "group";
     column: CellId<T>;
