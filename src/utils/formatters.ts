@@ -26,21 +26,23 @@ export function formatInt(value: number) {
     );
 }
 
-export function formatShortAmount(value: number) {
+export function formatShortAmount(value: number, needDecimals?: boolean) {
     const absNum = Math.abs(value);
     let shortNumber = '';
     let suffix = '';
 
+    const digits = needDecimals ? 2 : 0;
+
     if (absNum >= 1e9) {
-        shortNumber = (value / 1e9).toFixed(2);
+        shortNumber = (value / 1e9).toFixed(digits);
         suffix = 'B';
     }
     else if (absNum >= 1e6) {
-        shortNumber = (value / 1e6).toFixed(2);
+        shortNumber = (value / 1e6).toFixed(digits);
         suffix = 'M';
     }
     else if (absNum >= 1e3) {
-        shortNumber = (value / 1e3).toFixed(2);
+        shortNumber = (value / 1e3).toFixed(digits);
         suffix = 'K';
     }
     else
