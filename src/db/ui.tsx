@@ -118,7 +118,7 @@ export enum MOVEMENT_TYPES_ID {
   TRANSFER,
 }
 
-export const MOVEMENT_TYPES  ={
+export const MOVEMENT_TYPES = {
   0: {
     id: 0,
     name: "Gasto",
@@ -130,6 +130,27 @@ export const MOVEMENT_TYPES  ={
   2: {
     id: 2,
     name: "Transferencia",
+  },
+} as const;
+
+export enum BUDGET_TYPES_ID {
+  WEEKLY,
+  MONTHLY,
+  YEARLY,
+}
+
+export const BUDGET_TYPES = {
+  0: {
+    id: 0,
+    name: "Semanal",
+  },
+  1: {
+    id: 1,
+    name: "Mensual",
+  },
+  2: {
+    id: 2,
+    name: "Anual",
   },
 } as const;
 

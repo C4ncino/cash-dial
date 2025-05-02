@@ -2,14 +2,13 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 import AccountsCards from "@/accounts/AccountsCards";
 import CreateMovement from "@/components/movements/CreateMovement";
-import useTinybase from "@/hooks/useDatabase";
 import Movements from "@/movements/MovementsLanding";
 import { Plus } from "iconoir-react-native";
 import colors from "tailwindcss/colors";
 import useModal from "@/hooks/useModal";
+import BudgetsCard from "@/components/budget/BudgetsCard";
 
 const Home = () => {
-  const { getAll } = useTinybase();
   const { visible, closeModal, openModal } = useModal();
 
   return (
@@ -23,6 +22,8 @@ const Home = () => {
 
         <AccountsCards />
         <Movements />
+
+        <BudgetsCard />
       </ScrollView>
 
       <CreateMovement visible={visible} closeModal={closeModal} />
