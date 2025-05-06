@@ -1,10 +1,11 @@
 import { CATEGORY_COLORS, CATEGORY_ICONS, CategoryColorKey, CategoryIconKey } from '@/db/ui';
 import useTinybase from './useDatabase';
-import { getHistoric, getIntervalFunction } from '@/utils/budgets';
-import { currentWeek, currentYear } from '@/utils/dates';
+import { getCategoryIds, getHistoric, getIntervalFunction } from '@/utils/budgets';
+import { useSystemContext } from '@/contexts/hooks';
 
 const useBudget = (id: Id) => {
     const { useRowById, getById, query } = useTinybase();
+    const { categories } = useSystemContext()
 
     const budget = useRowById("budgets", id);
 
@@ -31,22 +32,29 @@ const useBudget = (id: Id) => {
 
     const { historic, currentKey } = getHistoric(budget.type, historicQuery)
 
-    const { start, end } = getIntervalFunction(budget.type)(currentYear, currentWeek);
+    const { start, end } = getIntervalFunction(budget.type)();
+
+    const categoryIds = getCategoryIds(budget.idCategory, categories);
 
     const expensesQuery = query(
         "expenses",
         { type: "select", column: "date" },
         { type: "select", column: "idCategory" },
+        {
+            type: "where", column: "idCategory", value: budget.idCategory, operator: "==",
+            or: (categoryIds.length > 0 ? { type: "where", column: "idCategory", values: categoryIds, operator: "==" } : undefined)
+        },
         { type: "where", column: "date", operator: ">=", value: start },
         { type: "where", column: "date", operator: "<=", value: end },
-    )
+    );
 
     return {
         info: budget,
         icon,
         color,
         historic,
-        currentKey
+        currentKey,
+        expensesIds: expensesQuery.ids
     }
 }
 

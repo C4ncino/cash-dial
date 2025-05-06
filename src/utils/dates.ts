@@ -14,20 +14,20 @@ export function getDateData(date: Date) {
     return { day, week, month, year };
 }
 
-export function getYearRange(year: number) {
+export function getYearRange(year = currentYear) {
     const start = new Date(year, 0, 1).getTime(); // 1 de enero
     const end = new Date(year + 1, 0, 1).getTime() - 1; // Fin del 31 de diciembre
     return { start, end };
 }
 
-export function getMonthRange(year: number, month: number) {
+export function getMonthRange(month = currentMonth, year = currentYear) {
     // `month` es de 0 (enero) a 11 (diciembre)
     const start = new Date(year, month, 1).getTime();
     const end = new Date(year, month + 1, 1).getTime() - 1; // Fin del último día del mes
     return { start, end };
 }
 
-export function getWeekRange(year: number, week: number) {
+export function getWeekRange(week = currentWeek, year = currentYear) {
     // Buscar el primer lunes del año ISO
     const simple = new Date(year, 0, 1);
     const dayOfWeek = simple.getDay();

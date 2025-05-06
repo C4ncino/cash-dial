@@ -44,3 +44,23 @@ export function getIntervalFunction(type: BUDGET_TYPES_ID) {
             return getYearRange;
     }
 }
+
+export function getCategoryIds(categoryId: Id, categories: CategoryNode[]) {
+    const category = categories.find(c => c.id === categoryId);
+
+    if (!category) return [];
+    if (category.children.length === 0) return [];
+
+    const ids: Id[] = [];
+
+    category.children.forEach((child) => {
+        if (child.id === categoryId) return;
+
+        ids.push(child.id);
+
+        if (child.children.length > 0)
+            ids.push(...getCategoryIds(child.id, category.children));
+    });
+
+    return ids;
+}
