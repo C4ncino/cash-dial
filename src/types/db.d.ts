@@ -180,6 +180,18 @@ type Operator = "==" | ">" | "<" | ">=" | "<=" | "!=";
 
 type DatabaseType = number | string | boolean;
 
+type WhereClause<T extends TableId, U extends TableId> = ({
+  type: "where";
+  joinTable?: U;
+  column: CellId<T> | CellId<U>;
+  operator: Operator;
+  or?: WhereClause;
+} & ({
+  value: DatabaseType;
+} | {
+  values: DatabaseType[];
+}))
+
 type QueryParams<T extends TableId, U extends TableId> =
   | {
     type: "select";
@@ -193,16 +205,7 @@ type QueryParams<T extends TableId, U extends TableId> =
     on: CellId<T>;
     as?: string;
   }
-  | ({
-    type: "where";
-    joinTable?: U;
-    column: CellId<T> | CellId<U>;
-    operator: Operator;
-  } & ({
-    value: number | string | boolean;
-  } | {
-    values: (number | string | boolean)[];
-  }))
+  | WhereClause<T, U>
   | {
     type: "group";
     column: CellId<T>;
@@ -212,7 +215,7 @@ type QueryParams<T extends TableId, U extends TableId> =
   | {
     type: "having";
     column: CellId<T>;
-    value: number | string | boolean;
+    value: DatabaseType;
   };
 
 type QueryResults = {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { createQueries } from "tinybase/queries";
+import { createQueries, GetTableCell } from "tinybase/queries";
 import { useRow, useSortedRowIds, useStore } from "tinybase/ui-react";
 
 const useTinybase: () => UseTinyBase = () => {
@@ -42,7 +42,7 @@ const useTinybase: () => UseTinyBase = () => {
     return useRow(tableName, id) as Table<T>[string];
   };
 
-  const compare = (operator: Operator, valueA: DatabaseType, valueB: DatabaseType) => {
+  const compare = <T>(operator: Operator, valueA: T, valueB: T) => {
     switch (operator) {
       case ">":
         return valueA > valueB;
@@ -59,6 +59,30 @@ const useTinybase: () => UseTinyBase = () => {
       default:
         return false;
     }
+  }
+
+  const whereQuery = <T extends TableId, U extends TableId>(getTableCell: GetTableCell, tableName: TableId, arg: WhereClause<T, U>): boolean => {
+    const firstArgs: [string, string] | [string] = [arg.column];
+
+    if (arg.joinTable) firstArgs.unshift(arg.joinTable);
+    else firstArgs.unshift(tableName);
+
+    const value = getTableCell(...firstArgs);
+
+    if (!value) return false;
+
+    let result = false;
+
+    if ("value" in arg)
+      result = compare(arg.operator, value, arg.value);
+    else
+      for (const val of arg.values)
+        result ||= compare(arg.operator, value, val);
+
+    if (arg.or)
+      result ||= whereQuery(getTableCell, tableName, arg.or);
+
+    return result;
   }
 
   const query = <T extends TableId, U extends TableId>(
@@ -93,25 +117,8 @@ const useTinybase: () => UseTinyBase = () => {
 
               if (arg.joinTable) firstArgs.unshift(arg.joinTable);
 
-              if (arg.operator === "==" && "value" in arg) where(...firstArgs, arg.value);
-              else {
-                if (!arg.joinTable) firstArgs.unshift(tableName);
-                where((getTableCell) => {
-                  const value = getTableCell(...firstArgs);
-
-                  if (!value) return false;
-
-                  let result = false;
-
-                  if ("value" in arg)
-                    return compare(arg.operator, value, arg.value);
-                  else
-                    for (const val of arg.values)
-                      result ||= compare(arg.operator, value, val);
-
-                  return result;
-                });
-              }
+              if (arg.operator === "==" && "value" in arg && !arg.or) where(...firstArgs, arg.value);
+              else where((getTableCell) => whereQuery(getTableCell, tableName, arg));
 
               break;
 
