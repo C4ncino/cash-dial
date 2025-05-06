@@ -28,9 +28,9 @@ const Progress = ({ max, current, hideLimits = false }: Props) => {
         paddingVertical: hideLimits ? 8 : 0,
       }}
     >
-      {!hideLimits && (
+      {/* {!hideLimits && (
         <Text className="text-zinc-700 dark:text-zinc-300 text-sm">{0}</Text>
-      )}
+      )} */}
 
       <View className="border border-zinc-200 dark:border-zinc-800 h-6 flex-1 ios:rounded-lg rounded-sm">
         <View
@@ -40,7 +40,7 @@ const Progress = ({ max, current, hideLimits = false }: Props) => {
             width: `${percentage > 100 ? 100 : percentage === 0 ? 1 : percentage}%`,
           }}
         >
-          {percentage > 30 && !hideLimits && (
+          {percentage > 25 && !hideLimits && (
             <Text className="text-white text-sm text-right font-medium">
               {formatShortAmount(current)}
             </Text>
