@@ -58,6 +58,7 @@ const Movements = () => {
               <TransferCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.TRANSFER)}
+                showTime
               />
             );
           } else if (item.type === "in") {
@@ -65,6 +66,7 @@ const Movements = () => {
               <IncomeCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.INCOME)}
+                showTime
               />
             );
           } else {
@@ -72,6 +74,7 @@ const Movements = () => {
               <ExpenseCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.EXPENSE)}
+                showTime
               />
             );
           }

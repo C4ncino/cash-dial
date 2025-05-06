@@ -5,6 +5,7 @@ import colors from "tailwindcss/colors";
 import { Minus, Plus } from "iconoir-react-native";
 import { formatNumber, formatShortAmount } from "@/utils/formatters";
 import useTinybase from "@/hooks/useDatabase";
+import { useSystemContext } from "@/contexts/hooks";
 
 interface Props {
   id: Id;
@@ -29,6 +30,7 @@ const MovementCard = ({
   Icon,
   onPress,
 }: Props) => {
+  const { isDark } = useSystemContext();
   const { dateShort, time } = useDate(date || 0);
   const textLength = title.length + amount.toString().length;
 
@@ -37,7 +39,9 @@ const MovementCard = ({
       ? colors.green[500]
       : type === "out"
         ? colors.red[500]
-        : colors.white;
+        : isDark
+          ? colors.white
+          : colors.black;
 
   return (
     <Pressable
@@ -67,7 +71,7 @@ const MovementCard = ({
             )
           )}
           <Text
-            className="text-2xl font-semibold"
+            className="text-2xl font-semibold dark:text-white"
             style={{ color: amountColor }}
           >
             {textLength > 25
