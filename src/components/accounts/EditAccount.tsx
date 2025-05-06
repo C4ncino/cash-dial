@@ -19,10 +19,27 @@ const EditAccount = ({ visible, closeModal, id }: Props) => {
   const [error, setError] = useState("");
 
   const data = getById("accounts", id);
-  const creditData = getById("creditAccounts", id);
+  const creditQuery = query(
+    "creditAccounts",
+    { type: "select", column: "idAccount" },
+    {
+      type: "where",
+      column: "idAccount",
+      value: id,
+      operator: "==",
+    }
+  );
+
+  console.log(data, creditQuery);
 
   if (!data) return null;
-  else if (data.type === ACCOUNT_TYPES_ID.CREDIT && !creditData) return null;
+  else if (
+    data.type === ACCOUNT_TYPES_ID.CREDIT &&
+    creditQuery.ids.length === 0
+  )
+    return null;
+
+  const creditData = getById("creditAccounts", creditQuery.ids[0]);
 
   const { setFieldValue, values, resetForm, validate } =
     useForm<Row<"accounts">>(data);
@@ -53,18 +70,9 @@ const EditAccount = ({ visible, closeModal, id }: Props) => {
       if (isNaN(creditValues.creditLimit))
         return setError(errors.MUST_BE_NUMBER_C);
 
-      const { ids } = query(
-        "creditAccounts",
-        { type: "select", column: "idAccount" },
-        {
-          type: "where",
-          column: "idAccount",
-          value: id,
-          operator: "==",
-        }
-      );
+      const id = creditQuery.ids[0];
 
-      update("creditAccounts", ids[0], { ...creditValues });
+      update("creditAccounts", id, { ...creditValues });
     }
 
     closeModal();
