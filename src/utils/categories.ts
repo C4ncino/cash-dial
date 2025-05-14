@@ -1,3 +1,5 @@
+import { CATEGORY_COLORS, CATEGORY_ICONS, CategoryColorKey, CategoryIconKey } from "@/db/ui";
+
 function addGeneralCategory(node: CategoryNode) {
     if (node.children.length === 0)
         node.children.push({
@@ -34,4 +36,18 @@ export function getCategoriesTree(data: CategoryData) {
     roots.sort((a, b) => Number(a.id) - Number(b.id));
 
     return roots;
+}
+
+export function getUiElements (id: Id, catIdFather?: Id) {
+    const icon = CATEGORY_ICONS[id as CategoryIconKey];
+      const color =
+        CATEGORY_COLORS[
+          (catIdFather as CategoryColorKey) ||
+            (id as CategoryColorKey)
+        ];
+    
+        return {
+            icon,
+            color
+        }
 }
