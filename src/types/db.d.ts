@@ -16,8 +16,8 @@ type Tables = {
     [rowId: Id]: {
       name: string;
       symbol: string;
-      code: string
-    }
+      code: string;
+    };
   };
   accounts: {
     [rowId: Id]: {
@@ -153,75 +153,89 @@ type CellIdCellArray<
   CId = CellId<TId>,
 > = CId extends CellId<TId> ? [cellId: CId, cell: Cell<TId, CId>] : never;
 
-type CategoryData = Map<Id, Row<"categories"> & { id: Id, children: CategoryNode[] }>
+type CategoryData = Map<
+  Id,
+  Row<"categories"> & { id: Id; children: CategoryNode[] }
+>;
 
 type CategoryNode = {
   id: string;
   name: string;
   children: CategoryNode[];
-}
+};
 
 type Movement = {
-  id: Id,
-  type: "in" | "out" | "transfer",
-  date: number,
+  id: Id;
+  type: "in" | "out" | "transfer";
+  date: number;
 };
 
 type MovementsByDate = {
   date: number;
   data: Movement[];
-}
+};
 
 type BudgetHistory = {
-  [k: string]: Row<"historicBudgets">
-}
+  [k: string]: Row<"historicBudgets"> & {
+    prev?: string;
+    next?: string;
+  };
+};
 
 type Operator = "==" | ">" | "<" | ">=" | "<=" | "!=";
 
 type DatabaseType = number | string | boolean;
 
-type WhereClause<T extends TableId, U extends TableId> = ({
+type WhereClause<T extends TableId, U extends TableId> = {
   type: "where";
   joinTable?: U;
   column: CellId<T> | CellId<U>;
   operator: Operator;
   or?: WhereClause;
-} & ({
-  value: DatabaseType;
-} | {
-  values: DatabaseType[];
-}))
+} & (
+  | {
+      value: DatabaseType;
+    }
+  | {
+      values: DatabaseType[];
+    }
+);
 
 type QueryParams<T extends TableId, U extends TableId> =
   | {
-    type: "select";
-    joinTable?: U;
-    column: CellId<T> | CellId<U>;
-    as?: string;
-  }
+      type: "select";
+      joinTable?: U;
+      column: CellId<T> | CellId<U>;
+      as?: string;
+    }
   | {
-    type: "join";
-    table: TableId;
-    on: CellId<T>;
-    as?: string;
-  }
+      type: "join";
+      table: TableId;
+      on: CellId<T>;
+      as?: string;
+    }
   | WhereClause<T, U>
   | {
-    type: "group";
-    column: CellId<T>;
-    aggregate: "sum" | "count" | "avg" | "max" | "min";
-    as?: string;
-  }
+      type: "group";
+      column: CellId<T>;
+      aggregate: "sum" | "count" | "avg" | "max" | "min";
+      as?: string;
+    }
   | {
-    type: "having";
-    column: CellId<T>;
-    value: DatabaseType;
-  };
+      type: "having";
+      column: CellId<T>;
+      value: DatabaseType;
+    };
 
 type QueryResults = {
   ids: Id[];
   results: { [key: Id]: any };
 };
+
+type QueryFunction = <T extends TableId>(
+  tableName: T,
+  ...args: QueryParams<T>[]
+) => QueryResults;
 
 type UseDatabase = {
   create: <T extends TableId>(tableName: T, value: Row<T>) => Id | undefined;
@@ -229,10 +243,7 @@ type UseDatabase = {
   getAll: (tableName: TableId) => Id[];
   getById: <T extends TableId>(tableName: T, id: Id) => Row<T> | null;
 
-  query: <T extends TableId>(
-    tableName: T,
-    ...args: QueryParams<T>[]
-  ) => QueryResults;
+  query: QueryFunction;
 
   update: <T extends TableId>(tableName: T, id: Id, value: Row<T>) => boolean;
 
@@ -242,4 +253,4 @@ type UseDatabase = {
 type UseTinyBase = UseDatabase & {
   useAll: (tableName: TableId) => Id[];
   useRowById: <T extends TableId>(tableName: T, id: Id) => Row<T> | null;
-}
+};
