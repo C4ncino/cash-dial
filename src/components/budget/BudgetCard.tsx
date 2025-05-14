@@ -1,15 +1,7 @@
 import { View, Text, Pressable } from "react-native";
-import React from "react";
-import { BUDGET_TYPES_ID } from "@/db/ui";
 
-import {
-  currentMonth,
-  currentWeek,
-  currentYear,
-  getDateData,
-} from "@/utils/dates";
 import Progress from "@/widgets/Progress";
-import useBudget from "@/hooks/useBudget";
+import useBudget from "@/hooks/useSimpleBudget";
 
 interface Props {
   id: Id;
@@ -21,9 +13,7 @@ const BudgetCard = ({ id, onPress }: Props) => {
 
   if (!budget) return null;
 
-  const { info, historic, icon, color, currentKey } = budget;
-
-  const amount = historic[currentKey] ? historic[currentKey].amountSpent : 0;
+  const { info, icon, color, getAmountSpent } = budget;
 
   return (
     <Pressable onPress={onPress} className="max-w-2xl mx-auto w-full py-3">
@@ -40,7 +30,7 @@ const BudgetCard = ({ id, onPress }: Props) => {
           </Text>
         </View>
 
-        <Progress max={info.amountLimit} current={amount} />
+        <Progress max={info.amountLimit} current={getAmountSpent()} />
       </View>
     </Pressable>
   );

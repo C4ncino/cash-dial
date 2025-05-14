@@ -13,11 +13,23 @@ import { MOVEMENT_TYPES_ID } from "@/db/ui";
 import useMovements from "@/hooks/useMovements";
 import useEditMovement from "@/hooks/useEditMovement";
 
-const MovementsLanding = () => {
+interface Props {
+  onEdit?: () => void;
+  afterEdit?: () => void;
+}
+
+const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
   const { visible, closeModal, type, movementId, onPress } = useEditMovement();
   const movements = useMovements((data) =>
     data.sort((a, b) => b.date - a.date)
   );
+
+  const openModal = (id: Id, movementType: MOVEMENT_TYPES_ID) => {
+    onPress(id, movementType);
+    if (onEdit) {
+      onEdit();
+    }
+  };
 
   return (
     <>
@@ -31,18 +43,22 @@ const MovementsLanding = () => {
             {movement.type === "out" ? (
               <ExpenseCard
                 movementId={movement.id}
-                onPress={(id: string) => onPress(id, MOVEMENT_TYPES_ID.EXPENSE)}
+                onPress={(id: string) =>
+                  openModal(id, MOVEMENT_TYPES_ID.EXPENSE)
+                }
               />
             ) : movement.type === "in" ? (
               <IncomeCard
                 movementId={movement.id}
-                onPress={(id: string) => onPress(id, MOVEMENT_TYPES_ID.INCOME)}
+                onPress={(id: string) =>
+                  openModal(id, MOVEMENT_TYPES_ID.INCOME)
+                }
               />
             ) : (
               <TransferCard
                 movementId={movement.id}
                 onPress={(id: string) =>
-                  onPress(id, MOVEMENT_TYPES_ID.TRANSFER)
+                  openModal(id, MOVEMENT_TYPES_ID.TRANSFER)
                 }
               />
             )}
@@ -54,7 +70,12 @@ const MovementsLanding = () => {
 
       <EditMovement
         visible={visible}
-        closeModal={closeModal}
+        closeModal={() => {
+          if (afterEdit) {
+            afterEdit();
+          }
+          closeModal();
+        }}
         movementId={movementId}
         type={type}
       />

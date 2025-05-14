@@ -1,61 +1,91 @@
-import { CATEGORY_COLORS, CATEGORY_ICONS, CategoryColorKey, CategoryIconKey } from '@/db/ui';
-import useTinybase from './useDatabase';
-import { getCategoryIds, getHistoric, getIntervalFunction } from '@/utils/budgets';
-import { useSystemContext } from '@/contexts/hooks';
+import { useState } from "react";
+
+import {
+  getAmount,
+  getBudgetExpenses,
+  getCategoryIds,
+  getHistoric,
+  getIntervalFunction,
+  getIntervalModifiers,
+} from "@/utils/budgets";
+import useTinybase from "./useDatabase";
+import { useSystemContext } from "@/contexts/hooks";
+import { getUiElements } from "@/utils/categories";
+import { BUDGET_TYPES_ID } from "@/db/ui";
+
+const useHistoric = (type: BUDGET_TYPES_ID, id: Id) => {
+  const { query } = useTinybase();
+
+  const { historic, lastKey } = getHistoric(type, id, query);
+
+  const [currentKey, setCurrentKey] = useState<string>();
+  const [hasPrev, setHasPrev] = useState(lastKey !== "");
+
+  const getPrev = () => {
+    const newKey = currentKey ? historic[currentKey].prev : lastKey;
+    setCurrentKey(newKey);
+    setHasPrev(historic[newKey as string].prev !== undefined);
+  };
+  const getNext = () => {
+    setCurrentKey(historic[currentKey as string].next as string);
+    setHasPrev(true);
+  };
+
+  const historicDate = currentKey && historic[currentKey].startDate;
+
+  const modifiers = historicDate
+    ? getIntervalModifiers(type, new Date(historicDate))
+    : [];
+
+  return {
+    historic,
+    modifiers,
+    pagination: {
+      hasPrev,
+      currentKey,
+      getPrev,
+      getNext,
+    },
+  };
+};
 
 const useBudget = (id: Id) => {
-    const { useRowById, getById, query } = useTinybase();
-    const { categories } = useSystemContext()
+  const { useRowById, getById, query } = useTinybase();
+  const { categories } = useSystemContext();
 
-    const budget = useRowById("budgets", id);
+  const budget = useRowById("budgets", id);
 
-    if (!budget) return null;
+  if (!budget) return null;
 
-    const category = getById("categories", budget.idCategory);
+  const category = getById("categories", budget.idCategory);
+  const categoryIds = getCategoryIds(budget.idCategory, categories);
 
-    if (!category) return null;
+  if (!category) return null;
 
-    const icon = CATEGORY_ICONS[budget.idCategory as CategoryIconKey];
-    const color =
-        CATEGORY_COLORS[
-        (category.idFather as CategoryColorKey) ||
-        (budget.idCategory as CategoryColorKey)
-        ];
+  const { icon, color } = getUiElements(budget.idCategory, category.idFather);
 
-    const historicQuery = query(
-        "historicBudgets",
-        { type: "select", column: "amountSpent" },
-        { type: "select", column: "idBudget" },
-        { type: "select", column: "startDate" },
-        { type: "where", column: "idBudget", value: id, operator: "==" }
-    );
+  const { historic, modifiers, pagination } = useHistoric(budget.type, id);
 
-    const { historic, currentKey } = getHistoric(budget.type, historicQuery)
+  const getInterval = getIntervalFunction(budget.type);
 
-    const { start, end } = getIntervalFunction(budget.type)();
+  const limits =
+    modifiers && modifiers.length > 0
+      ? getInterval(...modifiers)
+      : getInterval();
 
-    const categoryIds = getCategoryIds(budget.idCategory, categories);
+  const expensesIds = getBudgetExpenses(query, id, categoryIds, limits);
 
-    const expensesQuery = query(
-        "expenses",
-        { type: "select", column: "date" },
-        { type: "select", column: "idCategory" },
-        {
-            type: "where", column: "idCategory", value: budget.idCategory, operator: "==",
-            or: (categoryIds.length > 0 ? { type: "where", column: "idCategory", values: categoryIds, operator: "==" } : undefined)
-        },
-        { type: "where", column: "date", operator: ">=", value: start },
-        { type: "where", column: "date", operator: "<=", value: end },
-    );
+  const amount = getAmount(query, id, categoryIds, limits);
 
-    return {
-        info: budget,
-        icon,
-        color,
-        historic,
-        currentKey,
-        expensesIds: expensesQuery.ids
-    }
-}
+  return {
+    info: budget,
+    icon,
+    color,
+    expensesIds,
+    currentAmount: amount,
+    historic,
+    pagination,
+  };
+};
 
-export default useBudget
+export default useBudget;

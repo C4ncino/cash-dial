@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import AccountsCards from "@/accounts/AccountsCards";
@@ -10,6 +11,7 @@ import BudgetsCard from "@/components/budget/BudgetsCard";
 
 const Home = () => {
   const { visible, closeModal, openModal } = useModal();
+  const [reRender, setReRender] = useState(true);
 
   return (
     <>
@@ -21,9 +23,12 @@ const Home = () => {
         </View>
 
         <AccountsCards />
-        <Movements />
+        <Movements
+          onEdit={() => setReRender(!reRender)}
+          afterEdit={() => setReRender(!reRender)}
+        />
 
-        <BudgetsCard />
+        {reRender && <BudgetsCard />}
       </ScrollView>
 
       <CreateMovement visible={visible} closeModal={closeModal} />

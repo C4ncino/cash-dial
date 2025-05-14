@@ -8,6 +8,7 @@ import Progress from "@/components/widgets/Progress";
 import EditBudget from "@/components/budget/EditBudget";
 import useModal from "@/hooks/useModal";
 import Card from "@/components/movements/expenses/Card";
+import Button from "@/components/widgets/Button";
 
 const Budget = () => {
   const { id } = useLocalSearchParams();
@@ -18,18 +19,17 @@ const Budget = () => {
 
   if (!budget) return router.back();
 
-  const { info, icon, color, historic, currentKey, expensesIds } = budget;
+  const {
+    info,
+    icon,
+    color,
+    historic,
+    expensesIds,
+    currentAmount,
+    pagination,
+  } = budget;
+
   const { visible, openModal, closeModal } = useModal();
-
-  const amount = historic[currentKey] ? historic[currentKey].amountSpent : 0;
-
-  const e = [
-    ...expensesIds,
-    ...expensesIds,
-    ...expensesIds,
-    ...expensesIds,
-    ...expensesIds,
-  ];
 
   return (
     <View>
@@ -51,22 +51,40 @@ const Budget = () => {
         </Text>
       </View>
 
+      <View>
+        <Button
+          title="<--"
+          onPress={pagination.getPrev}
+          disabled={!pagination.hasPrev}
+        />
+        <Text className="dark:text-white text-lg font-medium text-center">
+          {pagination.currentKey
+            ? historic[pagination.currentKey as string].startDate
+            : "Actual"}
+        </Text>
+        <Button
+          title="-->"
+          onPress={pagination.getNext}
+          disabled={pagination.currentKey === undefined}
+        />
+      </View>
+
       <Text className="dark:text-white text-lg font-medium text-center">
-        {amount} / {info.amountLimit}
+        {currentAmount} / {info.amountLimit}
       </Text>
 
       <View className="mx-4">
-        <Progress max={info.amountLimit} current={amount} hideLimits />
+        <Progress max={info.amountLimit} current={currentAmount} hideLimits />
       </View>
 
       <View className="gap-1 mt-4">
         <Text className="px-5 text-zinc-700 dark:text-zinc-300 text-2xl font-medium">
-          Movimientos ({e.length})
+          Movimientos ({expensesIds.length})
         </Text>
         <FlatList
           className="max-h-[26rem] mx-3 bg-zinc-100 dark:bg-zinc-950 rounded-md"
           contentContainerClassName="px-3"
-          data={e}
+          data={expensesIds}
           renderItem={({ item }) => (
             <Card movementId={item} onPress={() => {}} />
           )}
