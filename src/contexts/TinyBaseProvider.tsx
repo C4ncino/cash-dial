@@ -46,6 +46,14 @@ const TinyBaseProvider = ({ children }: Props) => {
           currency: "0",
         },
       })
+      .setTable("creditAccounts", {
+        "2": {
+          idAccount: "2",
+          creditLimit: 1000,
+          cutOffDay: 10,
+          paymentDueDay: 15,
+        },
+      })
       .setTable("transfers", {
         "0": {
           idFrom: "0",
@@ -71,7 +79,31 @@ const TinyBaseProvider = ({ children }: Props) => {
           amount: 100,
           currency: "0",
           msi: 6,
-          date: new Date(2025, 3, 24, 15, 27, 0).getTime(),
+          date: new Date(2025, 4, 4, 15, 27, 0).getTime(),
+        },
+        "1": {
+          idAccount: "2",
+          idCategory: "55",
+          amount: 100,
+          currency: "0",
+          msi: 6,
+          date: new Date(2025, 4, 5, 15, 27, 0).getTime(),
+        },
+        "2": {
+          idAccount: "2",
+          idCategory: "5",
+          amount: 50,
+          currency: "0",
+          msi: 6,
+          date: new Date(2025, 4, 5, 15, 28, 0).getTime(),
+        },
+        "3": {
+          idAccount: "2",
+          idCategory: "61",
+          amount: 100,
+          currency: "0",
+          msi: 6,
+          date: new Date(2025, 4, 1, 15, 27, 0).getTime(),
         },
       })
       .setTable("budgets", {
