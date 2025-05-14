@@ -10,7 +10,7 @@ interface Props {
 }
 
 const getColor = (percentage: number) => {
-  if (percentage < 25) return colors.green[500];
+  if (percentage < 25) return colors.green[600];
   if (percentage < 50) return colors.lime[500];
   if (percentage < 75) return colors.amber[400];
   if (percentage < 90) return colors.orange[400];
