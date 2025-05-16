@@ -31,9 +31,6 @@ interface Props extends Omit<PropsBaseModal, "canSubmit"> {
 }
 
 const Form = ({
-  label,
-  visible,
-  closeModal,
   values,
   creditValues,
   validValues,
@@ -41,25 +38,18 @@ const Form = ({
   setFieldValue,
   setCreditFieldValue,
   resetCreditForm,
-  onSubmit,
   ErrorMessage,
-  closeButtonLabel = "Cerrar",
-  submitButtonLabel = "Guardar",
+  ...props
 }: Props) => {
   return (
     <BaseModal
-      visible={visible}
-      closeModal={closeModal}
-      label={label}
-      onSubmit={onSubmit}
-      closeButtonLabel={closeButtonLabel}
-      submitButtonLabel={submitButtonLabel}
       canSubmit={
         (values.type !== ACCOUNT_TYPES_ID.CREDIT && validValues) ||
         (values.type === ACCOUNT_TYPES_ID.CREDIT &&
           validValues &&
           validCreditValues)
       }
+      {...props}
     >
       <ScrollView role="form" contentContainerClassName="pb-16 gap-3 px-4">
         <Input
