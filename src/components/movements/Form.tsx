@@ -22,9 +22,10 @@ const Form = ({
 }: Props) => {
   const [movementType, setType] = useState(type);
   const [onSubmit, setOnSubmit] = useState(() => () => {});
+  const [reset, setReset] = useState(() => () => {});
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const formProps = { setOnSubmit, setCanSubmit, movementId };
+  const formProps = { setOnSubmit, setCanSubmit, movementId, setReset };
 
   return (
     <BaseModal
@@ -35,6 +36,7 @@ const Form = ({
       }}
       canSubmit={canSubmit}
       closeModal={() => {
+        reset();
         closeModal();
       }}
     >

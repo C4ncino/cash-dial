@@ -16,7 +16,7 @@ import useTinybase from "@/hooks/useDatabase";
 
 interface Props extends PropsMovementsForm {}
 
-const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
+const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
   const { create, getById, update } = useTinybase();
 
   const data = getById("expenses", movementId as Id);
@@ -39,6 +39,10 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
       date: Date.now(),
     }
   );
+
+  useEffect(() => {
+    setReset && setReset(resetForm);
+  }, []);
 
   const onSubmit = () => {
     if (typeof values.amount === "string")

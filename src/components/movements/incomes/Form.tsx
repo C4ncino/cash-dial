@@ -14,7 +14,7 @@ import { formatNumber } from "@/utils/formatters";
 
 interface Props extends PropsMovementsForm {}
 
-const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
+const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
   const { create, getById, update } = useTinybase();
 
   const data = getById("incomes", movementId as Id);
@@ -41,6 +41,10 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
       resetForm();
     }
   };
+
+  useEffect(() => {
+    setReset && setReset(resetForm);
+  }, []);
 
   useEffect(() => {
     if (validate() && values.amount > 0) {

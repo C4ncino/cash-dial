@@ -9,21 +9,22 @@ interface Props {
   closeModal: () => void;
 }
 
-const EditBudget = (props: Props) => {
+const EditBudget = ({ closeModal, ...props }: Props) => {
   const { update, getById } = useTinybase();
 
   const budget = getById("budgets", props.id);
 
   if (!budget) return null;
 
-  const { values, setFieldValue, validate } = useForm<Row<"budgets">>(budget);
+  const { values, setFieldValue, validate, resetForm } =
+    useForm<Row<"budgets">>(budget);
 
   const onSubmit = () => {
     if (typeof values.amountLimit === "string")
       values.amountLimit = Number(values.amountLimit);
 
     update("budgets", props.id, values);
-    props.closeModal();
+    closeModal();
   };
 
   return (
@@ -34,6 +35,10 @@ const EditBudget = (props: Props) => {
       setFieldValue={setFieldValue}
       canSubmit={validate() && values.amountLimit > 0}
       onSubmit={onSubmit}
+      closeModal={() => {
+        resetForm();
+        closeModal();
+      }}
       {...props}
     />
   );
