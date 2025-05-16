@@ -132,13 +132,13 @@ const TinyBaseProvider = ({ children }: Props) => {
       .setTable("historicBudgets", {
         "0": {
           idBudget: "0",
-          startDate: new Date(2025, 3, 24, 15, 30, 0).getTime(),
-          amountSpent: 100,
+          startDate: new Date(2025, 3, 28, 15, 30, 0).getTime(),
+          amountLimit: 500,
         },
         "1": {
           idBudget: "0",
-          startDate: new Date(2025, 3, 28, 15, 30, 0).getTime(),
-          amountSpent: 200,
+          startDate: new Date(2025, 4, 5, 0, 0, 0).getTime(),
+          amountLimit: 500,
         },
       })
   );

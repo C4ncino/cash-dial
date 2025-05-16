@@ -1,14 +1,16 @@
-import { View, Text, FlatList } from "react-native";
-
-import Header from "@/components/widgets/Header";
 import colors from "tailwindcss/colors";
+import { View, Text, FlatList } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import useBudget from "@/hooks/useBudget";
-import Progress from "@/components/widgets/Progress";
-import EditBudget from "@/components/budget/EditBudget";
+
+import Header from "@/widgets/Header";
+import Progress from "@/widgets/Progress";
+import EditBudget from "@/budget/EditBudget";
+import Card from "@/movements/expenses/Card";
+import Pagination from "@/widgets/Pagination";
+
+import useDate from "@/hooks/useDate";
 import useModal from "@/hooks/useModal";
-import Card from "@/components/movements/expenses/Card";
-import Button from "@/components/widgets/Button";
+import useBudget from "@/hooks/useBudget";
 
 const Budget = () => {
   const { id } = useLocalSearchParams();
@@ -31,8 +33,18 @@ const Budget = () => {
 
   const { visible, openModal, closeModal } = useModal();
 
+  const { dateShort } = useDate(
+    pagination.currentKey
+      ? historic[pagination.currentKey as string].startDate
+      : 0
+  );
+
+  const limit = pagination.currentKey
+    ? historic[pagination.currentKey].amountLimit
+    : info.amountLimit;
+
   return (
-    <View>
+    <View className="max-w-xl w-full mx-auto">
       <Header
         title=""
         openModal={openModal}
@@ -51,33 +63,35 @@ const Budget = () => {
         </Text>
       </View>
 
-      <View>
-        <Button
-          title="<--"
-          onPress={pagination.getPrev}
-          disabled={!pagination.hasPrev}
-        />
-        <Text className="dark:text-white text-lg font-medium text-center">
-          {pagination.currentKey
-            ? historic[pagination.currentKey as string].startDate
-            : "Actual"}
-        </Text>
-        <Button
-          title="-->"
-          onPress={pagination.getNext}
-          disabled={pagination.currentKey === undefined}
-        />
-      </View>
+      <Pagination
+        canGoBack={pagination.hasPrev}
+        canGoForward={pagination.currentKey !== undefined}
+        backwards={pagination.getPrev}
+        forward={pagination.getNext}
+        label={pagination.currentKey ? dateShort : "Actual"}
+      />
 
-      <Text className="dark:text-white text-lg font-medium text-center">
-        {currentAmount} / {info.amountLimit}
-      </Text>
+      <View className="flex-row items-center justify-between px-8">
+        <Text className="dark:text-white text-2xl font-medium text-center">
+          {currentAmount}
+        </Text>
+        <Text className="dark:text-white text-2xl font-medium text-center">
+          {limit}
+        </Text>
+      </View>
 
       <View className="mx-4">
-        <Progress max={info.amountLimit} current={currentAmount} hideLimits />
+        <Progress max={limit} current={currentAmount} hideLimits />
       </View>
 
-      <View className="gap-1 mt-4">
+      <View className="flex-row items-center justify-between px-8 -mt-1">
+        <Text className="text-zinc-700 dark:text-zinc-200 text-sm">
+          Gastado
+        </Text>
+        <Text className="text-zinc-700 dark:text-zinc-200 text-sm">Límite</Text>
+      </View>
+
+      <View className="gap-1 mt-5">
         <Text className="px-5 text-zinc-700 dark:text-zinc-300 text-2xl font-medium">
           Movimientos ({expensesIds.length})
         </Text>

@@ -125,7 +125,7 @@ type Tables = {
     [rowId: Id]: {
       idBudget: string;
       startDate: number;
-      amountSpent: number;
+      amountLimit: number;
     };
   };
 };

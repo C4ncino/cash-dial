@@ -34,7 +34,7 @@ export function getHistoric(
 ) {
   const historicQuery = query(
     "historicBudgets",
-    { type: "select", column: "amountSpent" },
+    { type: "select", column: "amountLimit" },
     { type: "select", column: "idBudget" },
     { type: "select", column: "startDate" },
     { type: "where", column: "idBudget", value: id, operator: "==" }

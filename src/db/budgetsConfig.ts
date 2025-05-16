@@ -9,7 +9,7 @@ const budgetsConfig: TableConfig = {
 const historicBudgetsConfig: TableConfig = {
   idBudget: { type: "string" },
   startDate: { type: "number" },
-  amountSpent: { type: "number" },
+  amountLimit: { type: "number" },
 };
 
 const indexes: Index[] = [
@@ -35,7 +35,7 @@ const foreignKeys: ForeignKey[] = [
     tableId: "budgets",
     oTableId: "currencies",
     cellId: "currency",
-  }
+  },
 ];
 
 export { budgetsConfig, historicBudgetsConfig, indexes, foreignKeys };

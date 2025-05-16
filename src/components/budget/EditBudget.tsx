@@ -19,6 +19,9 @@ const EditBudget = (props: Props) => {
   const { values, setFieldValue, validate } = useForm<Row<"budgets">>(budget);
 
   const onSubmit = () => {
+    if (typeof values.amountLimit === "string")
+      values.amountLimit = Number(values.amountLimit);
+
     update("budgets", props.id, values);
     props.closeModal();
   };
