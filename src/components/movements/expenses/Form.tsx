@@ -13,11 +13,12 @@ import { formatInt, formatNumber } from "@/utils/formatters";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
+import useMovementForm from "@/hooks/useMovementForm";
 
 interface Props extends PropsMovementsForm {}
 
 const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
-  const { create, getById, update } = useTinybase();
+  const { getById } = useTinybase();
 
   const data = getById("expenses", movementId as Id);
 
@@ -40,27 +41,16 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
     }
   );
 
-  useEffect(() => {
-    setReset && setReset(resetForm);
-  }, []);
-
-  const onSubmit = () => {
-    if (typeof values.amount === "string")
-      values.amount = Number(values.amount);
-
-    if (movementId) update("expenses", movementId, values);
-    else {
-      create("expenses", values);
-      resetForm();
-    }
-  };
-
-  useEffect(() => {
-    if (validate() && values.amount > 0) {
-      setCanSubmit(true);
-      setOnSubmit(() => onSubmit);
-    } else setCanSubmit(false);
-  }, [values]);
+  useMovementForm({
+    table: "expenses",
+    values,
+    movementId,
+    resetForm,
+    validate,
+    setReset,
+    setOnSubmit,
+    setCanSubmit,
+  });
 
   return (
     <>
