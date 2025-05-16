@@ -3,13 +3,14 @@ Cash Dial:
         ☐ elimination method
     Movements:
         ☐ sum/rest to account
-        ☐ sum/rest to budget
-        ☐ elimination method 
+        ✘ sum/rest to budget @cancelled(25-05-16 17:18)
+        ☐ elimination method
         ☐ check light mode cards
     Budget: 
-        ☐ pagination
+        ✔ pagination @done(25-05-16 17:17)
         ✔ expenses query @done(25-05-05 21:59)
         ✔ expense cards @done(25-05-05 21:59)
+        ☐ elimination method
     Planning Page:
         ☐ plannings creation From
         ☐ plannings cards
