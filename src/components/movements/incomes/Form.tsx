@@ -32,6 +32,9 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId }: Props) => {
   );
 
   const onSubmit = () => {
+    if (typeof values.amount === "string")
+      values.amount = Number(values.amount);
+
     if (movementId) update("incomes", movementId, values);
     else {
       create("incomes", values);
