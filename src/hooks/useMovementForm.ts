@@ -29,7 +29,7 @@ const useMovementForm = <T extends MovementTable>(params: Params<T>) => {
   const { create, update } = useTinybase();
 
   useEffect(() => {
-    setReset && setReset(resetForm);
+    setReset && setReset(() => resetForm);
   }, []);
 
   const onSubmit = () => {
