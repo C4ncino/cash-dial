@@ -42,9 +42,7 @@ const AccountSelect = ({ value, onSelect, label = "Cuenta" }: Props) => {
             >
               {type.icon("#fff", 20)}
             </View>
-            <Text className="bg-white dark:text-white dark:bg-zinc-900">
-              {item.name}
-            </Text>
+            <Text className="dark:text-white bg-transparent">{item.name}</Text>
           </View>
         );
       }}
@@ -66,7 +64,7 @@ const AccountSelect = ({ value, onSelect, label = "Cuenta" }: Props) => {
         );
       }}
       onSelect={(item) => onSelect(item.id)}
-      maxHeight={160}
+      maxHeight={175}
     />
   );
 };
