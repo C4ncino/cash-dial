@@ -1,11 +1,7 @@
 import { View, Text, Pressable } from "react-native";
-import React from "react";
+
 import useDate from "@/hooks/useDate";
-import colors from "tailwindcss/colors";
-import { Minus, Plus } from "iconoir-react-native";
-import { formatNumber, formatShortAmount } from "@/utils/formatters";
-import useTinybase from "@/hooks/useDatabase";
-import { useSystemContext } from "@/contexts/hooks";
+import AmountText from "@/widgets/AmountText";
 
 interface Props {
   id: Id;
@@ -30,18 +26,8 @@ const MovementCard = ({
   Icon,
   onPress,
 }: Props) => {
-  const { isDark } = useSystemContext();
   const { dateShort, time } = useDate(date || 0);
   const textLength = title.length + amount.toString().length;
-
-  const amountColor =
-    type === "in"
-      ? colors.green[500]
-      : type === "out"
-        ? colors.red[500]
-        : isDark
-          ? colors.white
-          : colors.black;
 
   return (
     <Pressable
@@ -57,28 +43,7 @@ const MovementCard = ({
       </View>
 
       <View>
-        <View className="flex-row items-center justify-end">
-          {type === "in" ? (
-            <Plus color={amountColor} width={24} height={24} strokeWidth={2} />
-          ) : (
-            type === "out" && (
-              <Minus
-                color={amountColor}
-                width={24}
-                height={24}
-                strokeWidth={2}
-              />
-            )
-          )}
-          <Text
-            className="text-2xl font-semibold dark:text-white"
-            style={{ color: amountColor }}
-          >
-            {textLength > 25
-              ? formatShortAmount(amount)
-              : formatNumber(amount, 1000)}
-          </Text>
-        </View>
+        <AmountText type={type} amount={amount} needShort={textLength > 25} />
         <Text className="dark:text-zinc-400 text-sm text-right">
           {showTime ? time : dateShort}
         </Text>
