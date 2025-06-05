@@ -18,11 +18,17 @@ interface Props {
   readonly?: boolean;
 }
 
-const SegmentedControl = ({ label, data, value, onChange, readonly }: Props) => {
+const SegmentedControl = ({
+  label,
+  data,
+  value,
+  onChange,
+  readonly,
+}: Props) => {
   return (
     <View>
       <Label label={label} />
-      <View className="flex-row">
+      <View className="flex-row mt-1">
         {data.map((item, i) => (
           <SegmentedControlButton
             key={item.id}

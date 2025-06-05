@@ -16,7 +16,7 @@ const DaySelect = ({ value, onSelect }: Props) => {
       placeholder="Elija un día"
       labelField="id"
       valueField="id"
-      data={DAYS}
+      data={DAYS.slice(0, 28)}
       renderItem={(item) => (
         <Text className="bg-white dark:text-white dark:bg-zinc-900 text-xl px-4 py-2">
           {item.id}

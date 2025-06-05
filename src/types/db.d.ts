@@ -95,14 +95,18 @@ type Tables = {
       currency: string;
       date: number;
       type: number;
-      isRecurring: boolean;
+      recurringType: number;
     };
   };
   recurringPlannings: {
-    [rowId: Id]: { idPlanning: string; endDate: number; interval: number };
+    [rowId: Id]: {
+      idPlanning: string;
+      interval: number;
+      times: number;
+    };
   };
   payDaysPlannings: {
-    [rowId: Id]: { idPlanning: string; day: number; month: number };
+    [rowId: Id]: { idPlanning: string; day: number; month?: number };
   };
   historicPlannings: {
     [rowId: Id]: {
@@ -181,6 +185,11 @@ type BudgetHistory = {
     next?: string;
   };
 };
+
+type PlanningsForm = Row<"plannings"> &
+  Omit<Row<"recurringPlannings">, "idPlanning"> & {
+    payDaysData?: Omit<Row<"payDaysPlannings">, "idPlanning">[];
+  };
 
 type Operator = "==" | ">" | "<" | ">=" | "<=" | "!=";
 

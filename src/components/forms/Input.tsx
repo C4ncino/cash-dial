@@ -80,7 +80,7 @@ const Input = ({
     <View className={`${props.maxLength && "relative"} ${className}`}>
       <Label label={label} />
       <TextInput
-        className="h-12 px-2 border rounded-md dark:text-white placeholder:text-zinc-600 dark:placeholder:text-zinc-400"
+        className={`h-12 px-2 border rounded-md dark:text-white placeholder:text-zinc-600 dark:placeholder:text-zinc-400 ${props.readOnly && "border-zinc-500 text-zinc-500"}`}
         {...configProps}
         {...props}
         placeholder={placeholder}

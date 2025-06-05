@@ -6,13 +6,13 @@ const planningsConfig: TableConfig = {
   currency: { type: "string" },
   date: { type: "number" },
   type: { type: "number" },
-  isRecurring: { type: "boolean" },
+  recurringType: { type: "number" },
 };
 
 const recurringPlanningsConfig: TableConfig = {
   idPlanning: { type: "string" },
-  endDate: { type: "number" },
-  interval: { type: "number" },
+  interval: { type: "number", default: 1 },
+  times: { type: "number" },
 };
 
 const payDaysPlanningsConfig: TableConfig = {
@@ -83,7 +83,7 @@ const foreignKeys: ForeignKey[] = [
     tableId: "plannings",
     oTableId: "currencies",
     cellId: "currency",
-  }
+  },
 ];
 
 export {

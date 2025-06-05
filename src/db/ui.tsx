@@ -154,6 +154,47 @@ export const BUDGET_TYPES = {
   },
 } as const;
 
+export enum PLANNINGS_TYPES_ID {
+  UNIQUE,
+  DAILY,
+  WEEKLY,
+  MONTHLY,
+  YEARLY,
+}
+
+export const PLANNINGS_TYPES = {
+  0: {
+    id: 0,
+    name: "Único",
+    singular: undefined,
+    plural: undefined,
+  },
+  1: {
+    id: 1,
+    name: "Diario",
+    singular: "día",
+    plural: "días",
+  },
+  2: {
+    id: 2,
+    name: "Semanal",
+    singular: "semana",
+    plural: "semanas",
+  },
+  3: {
+    id: 3,
+    name: "Mensual",
+    singular: "mes",
+    plural: "meses",
+  },
+  4: {
+    id: 4,
+    name: "Anual",
+    singular: "año",
+    plural: "años",
+  },
+} as const;
+
 export const DAYS = [
   { id: "1" },
   { id: "2" },
@@ -183,7 +224,40 @@ export const DAYS = [
   { id: "26" },
   { id: "27" },
   { id: "28" },
-];
+  { id: "29" },
+  { id: "30" },
+  { id: "31" },
+] as const;
+
+export const MONTHS = [
+  { id: "Enero" },
+  { id: "Febrero" },
+  { id: "Marzo" },
+  { id: "Abril" },
+  { id: "Mayo" },
+  { id: "Junio" },
+  { id: "Julio" },
+  { id: "Agosto" },
+  { id: "Septiembre" },
+  { id: "Octubre" },
+  { id: "Noviembre" },
+  { id: "Diciembre" },
+] as const;
+
+export const MONTH_DAYS = {
+  Enero: 31,
+  Febrero: 28,
+  Marzo: 31,
+  Abril: 30,
+  Mayo: 31,
+  Junio: 30,
+  Julio: 31,
+  Agosto: 31,
+  Septiembre: 30,
+  Octubre: 31,
+  Noviembre: 30,
+  Diciembre: 31,
+} as const;
 
 export const CATEGORY_ICONS = {
   // Comida y Bebida
