@@ -1,6 +1,7 @@
 Cash Dial:
     Accounts: 
         ☐ elimination method
+        ☐ create planning for credit Card
     Movements:
         ☐ sum/rest to account
         ✘ sum/rest to budget @cancelled(25-05-16 17:18)
@@ -11,8 +12,10 @@ Cash Dial:
         ✔ expenses query @done(25-05-05 21:59)
         ✔ expense cards @done(25-05-05 21:59)
         ☐ elimination method
+        ☐ creation of historic at begin of the week
     Planning Page:
-        ☐ plannings creation From
+        ✔ plannings creation From @done(25-06-05 13:17)
+        ☐ elimination method
         ☐ plannings cards
         ☐ plannings landing card
         ☐ budget card in page
