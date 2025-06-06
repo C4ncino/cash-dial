@@ -8,6 +8,8 @@ import { Plus } from "iconoir-react-native";
 import colors from "tailwindcss/colors";
 import useModal from "@/hooks/useModal";
 import BudgetsCard from "@/components/budget/BudgetsCard";
+import CreatePlanning from "@/components/plannigs/CreatePlanning";
+import PlanningCards from "@/components/plannigs/PlanningCards";
 
 const Home = () => {
   const { visible, closeModal, openModal } = useModal();
@@ -29,6 +31,9 @@ const Home = () => {
         />
 
         {reRender && <BudgetsCard />}
+
+        <CreatePlanning />
+        <PlanningCards />
       </ScrollView>
 
       <CreateMovement visible={visible} closeModal={closeModal} />
