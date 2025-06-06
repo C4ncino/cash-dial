@@ -50,6 +50,7 @@ const Form = ({ values, setFieldValue, onSubmit, ...props }: Props) => {
             label="Nombre"
             value={values.name}
             onChangeText={(s) => setFieldValue("name", s)}
+            maxLength={16}
           />
 
           <View className="flex-row justify-between items-end">
@@ -81,14 +82,28 @@ const Form = ({ values, setFieldValue, onSubmit, ...props }: Props) => {
             onSelect={(s) => setFieldValue("idCategory", s)}
           />
 
+          {values.recurringType !== PLANNINGS_TYPES_ID.UNIQUE && (
+            <DatePicker
+              label="Fecha inicial"
+              value={values.startDate}
+              onSelect={(v) => setFieldValue("startDate", v)}
+            />
+          )}
+
           <DatePicker
             label={
               values.recurringType === PLANNINGS_TYPES_ID.UNIQUE
                 ? "Fecha"
                 : "Fecha final"
             }
-            value={values.endDate}
-            onSelect={(v) => setFieldValue("endDate", v)}
+            needReset
+            placeholder={
+              values.recurringType === PLANNINGS_TYPES_ID.UNIQUE
+                ? undefined
+                : "Nunca"
+            }
+            value={values.date}
+            onSelect={(v) => setFieldValue("date", v)}
           />
 
           <SegmentedControl
@@ -106,6 +121,8 @@ const Form = ({ values, setFieldValue, onSubmit, ...props }: Props) => {
               else setFieldValue("times", 1);
 
               setFieldValue("payDaysData", []);
+              setFieldValue("startDate", Date.now());
+              setFieldValue("date", undefined);
             }}
           />
 

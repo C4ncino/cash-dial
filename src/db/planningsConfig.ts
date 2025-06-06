@@ -12,7 +12,8 @@ const planningsConfig: TableConfig = {
 const recurringPlanningsConfig: TableConfig = {
   idPlanning: { type: "string" },
   interval: { type: "number", default: 1 },
-  times: { type: "number" },
+  times: { type: "number", default: 1 },
+  startDate: { type: "number" },
 };
 
 const payDaysPlanningsConfig: TableConfig = {
@@ -23,6 +24,7 @@ const payDaysPlanningsConfig: TableConfig = {
 
 const historicPlanningsConfig: TableConfig = {
   idPlanning: { type: "string" },
+  isPending: { type: "boolean", default: true },
   date: { type: "number" },
   amount: { type: "number" },
   idOrigin: { type: "number" },

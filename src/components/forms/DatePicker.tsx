@@ -1,6 +1,6 @@
 import colors from "tailwindcss/colors";
-import { Calendar, Clock } from "iconoir-react-native";
 import { View, Text, Pressable } from "react-native";
+import { Calendar, Clock, Xmark } from "iconoir-react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Label from "./Label";
@@ -9,15 +9,25 @@ import useDate from "@/hooks/useDate";
 import useModal from "@/hooks/useModal";
 import { lang } from "@/utils/formatters";
 import { useSystemContext } from "@/contexts/hooks";
+import { currentDay, currentMonth, currentYear } from "@/utils/dates";
 
 interface Props {
   label?: string;
+  placeholder?: string;
   value?: number;
-  onSelect: (value: number) => void;
+  onSelect: (value: number | undefined) => void;
+  needReset?: boolean;
   mode?: "date" | "time" | "datetime";
 }
 
-const DatePicker = ({ label, value, onSelect, mode = "date" }: Props) => {
+const DatePicker = ({
+  label,
+  placeholder = "Elija una fecha",
+  value,
+  onSelect,
+  needReset,
+  mode = "date",
+}: Props) => {
   const { isDark } = useSystemContext();
 
   const { dateObject, dateLong, time, dateShort } = useDate(
@@ -26,6 +36,8 @@ const DatePicker = ({ label, value, onSelect, mode = "date" }: Props) => {
   const { openModal, closeModal, visible } = useModal();
 
   const handleConfirm = (date: Date) => {
+    if (mode === "date") date.setHours(0, 0, 0, 0);
+
     onSelect(date.getTime());
     closeModal();
   };
@@ -33,6 +45,13 @@ const DatePicker = ({ label, value, onSelect, mode = "date" }: Props) => {
   const getText = () => {
     switch (mode) {
       case "date":
+        if (
+          dateObject.getDate() === currentDay &&
+          dateObject.getMonth() === currentMonth &&
+          dateObject.getFullYear() === currentYear
+        )
+          return `Hoy, ${dateLong}`;
+
         return dateLong;
       case "time":
         return time;
@@ -50,22 +69,33 @@ const DatePicker = ({ label, value, onSelect, mode = "date" }: Props) => {
           onPress={openModal}
         >
           <Text className="dark:text-white">
-            {value ? getText() : "Elija una fecha"}
+            {value ? getText() : placeholder}
           </Text>
 
-          {mode === "time" ? (
-            <Clock
-              height={24}
-              width={24}
-              color={isDark ? colors.white : colors.zinc[900]}
-            />
-          ) : (
-            <Calendar
-              width={24}
-              height={24}
-              color={isDark ? colors.white : colors.zinc[900]}
-            />
-          )}
+          <View className="flex-row items-center">
+            {needReset && value !== undefined && (
+              <Pressable
+                className="w-12 h-12 items-center justify-center"
+                onPress={() => onSelect(undefined)}
+              >
+                <Xmark width={24} height={24} color={colors.red[500]} />
+              </Pressable>
+            )}
+
+            {mode === "time" ? (
+              <Clock
+                height={24}
+                width={24}
+                color={isDark ? colors.white : colors.zinc[900]}
+              />
+            ) : (
+              <Calendar
+                width={24}
+                height={24}
+                color={isDark ? colors.white : colors.zinc[900]}
+              />
+            )}
+          </View>
         </Pressable>
       </View>
       <DateTimePickerModal

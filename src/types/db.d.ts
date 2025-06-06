@@ -93,7 +93,7 @@ type Tables = {
       name: string;
       amount: number;
       currency: string;
-      date: number;
+      date?: number;
       type: number;
       recurringType: number;
     };
@@ -103,6 +103,7 @@ type Tables = {
       idPlanning: string;
       interval: number;
       times: number;
+      startDate: number;
     };
   };
   payDaysPlannings: {
@@ -112,7 +113,8 @@ type Tables = {
     [rowId: Id]: {
       idPlanning: string;
       date: number;
-      amount: number;
+      isPending?: boolean;
+      amount?: number;
       idOrigin?: number;
     };
   };
