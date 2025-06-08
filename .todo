@@ -13,15 +13,19 @@ Cash Dial:
         ✔ expense cards @done(25-05-05 21:59)
         ☐ elimination method
         ☐ creation of historic at begin of the week
+        ☐ selection of 3 more critical budgets
     Planning Page:
         ✔ plannings creation From @done(25-06-05 13:17)
         ☐ elimination method
-        ☐ plannings cards
-        ☐ plannings landing card
+        ✔ plannings cards @done(25-06-07 18:42)
+        ✔ plannings landing card @done(25-06-07 18:42)
+        ☐ selection of the 3 more urgent plannings
+        ☐ create plannings solo view, with historic
         ☐ budget card in page
     Stats Page:
         ☐ set tasks
     General:
+        ☐ Refractor components
         System Context:
             ✔ Have current week, month and year @done(25-05-02 13:05)
             ✔ Have categories tree @done(25-05-02 13:03)
