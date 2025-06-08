@@ -2,12 +2,12 @@ import { View } from "react-native";
 
 import Form from "./Form";
 import Button from "@/widgets/Button";
+import { PLANNINGS_TYPES_ID } from "@/db/ui";
+import { getNextPayDate } from "@/utils/plannings";
+
 import useForm from "@/hooks/useForm";
 import useModal from "@/hooks/useModal";
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
 import useTinybase from "@/hooks/useDatabase";
-import { getNextPayDate } from "@/utils/plannings";
-import { now } from "@/utils/dates";
 
 const CreatePlanning = () => {
   const { openModal, closeModal, visible } = useModal();
