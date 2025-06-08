@@ -59,9 +59,13 @@ const useTinybase: () => UseTinyBase = () => {
       default:
         return false;
     }
-  }
+  };
 
-  const whereQuery = <T extends TableId, U extends TableId>(getTableCell: GetTableCell, tableName: TableId, arg: WhereClause<T, U>): boolean => {
+  const whereQuery = <T extends TableId, U extends TableId>(
+    getTableCell: GetTableCell,
+    tableName: TableId,
+    arg: WhereClause<T, U>
+  ): boolean => {
     const firstArgs: [string, string] | [string] = [arg.column];
 
     if (arg.joinTable) firstArgs.unshift(arg.joinTable);
@@ -73,17 +77,15 @@ const useTinybase: () => UseTinyBase = () => {
 
     let result = false;
 
-    if ("value" in arg)
-      result = compare(arg.operator, value, arg.value);
+    if ("value" in arg) result = compare(arg.operator, value, arg.value);
     else
       for (const val of arg.values)
         result ||= compare(arg.operator, value, val);
 
-    if (arg.or)
-      result ||= whereQuery(getTableCell, tableName, arg.or);
+    if (arg.or) result ||= whereQuery(getTableCell, tableName, arg.or);
 
     return result;
-  }
+  };
 
   const query = <T extends TableId, U extends TableId>(
     tableName: T,
@@ -117,8 +119,12 @@ const useTinybase: () => UseTinyBase = () => {
 
               if (arg.joinTable) firstArgs.unshift(arg.joinTable);
 
-              if (arg.operator === "==" && "value" in arg && !arg.or) where(...firstArgs, arg.value);
-              else where((getTableCell) => whereQuery(getTableCell, tableName, arg));
+              if (arg.operator === "==" && "value" in arg && !arg.or)
+                where(...firstArgs, arg.value);
+              else
+                where((getTableCell) =>
+                  whereQuery(getTableCell, tableName, arg)
+                );
 
               break;
 

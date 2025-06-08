@@ -23,10 +23,6 @@
       },
       "package": "com.anonymous.cashdial"
     },
-    "plugins": [
-      "expo-router",
-      "expo-sqlite",
-      "expo-localization"
-    ]
+    "plugins": ["expo-router", "expo-sqlite", "expo-localization"]
   }
 }

@@ -1,4 +1,4 @@
 import { useContext } from "react";
 import { SystemContext } from "./SystemProvider";
 
-export const useSystemContext = () => useContext(SystemContext)
+export const useSystemContext = () => useContext(SystemContext);

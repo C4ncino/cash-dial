@@ -128,6 +128,6 @@ export const data = {
   "86": { idFather: "10", name: "Regalos" },
 
   // Otros
-}
+};
 
 export { categoriesConfig, indexes, foreignKeys };

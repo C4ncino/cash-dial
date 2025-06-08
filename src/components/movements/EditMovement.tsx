@@ -8,9 +8,11 @@ interface Props {
   type: MOVEMENT_TYPES_ID;
 }
 
-const EditMovement = (props: Props) =>  (
+const EditMovement = (props: Props) => (
   <>
-    {props.visible && <Form {...props} label="Editar registro" closeButtonLabel="Cancelar" /> }
+    {props.visible && (
+      <Form {...props} label="Editar registro" closeButtonLabel="Cancelar" />
+    )}
   </>
 );
 

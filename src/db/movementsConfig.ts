@@ -113,7 +113,7 @@ const foreignKeys: ForeignKey[] = [
     tableId: "templates",
     oTableId: "currencies",
     cellId: "currency",
-  }
+  },
 ];
 
 export {

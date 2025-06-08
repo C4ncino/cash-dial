@@ -37,14 +37,32 @@ const SegmentedControlButton = ({
         borderTopRightRadius: isLast ? 6 : 0,
         borderBottomRightRadius: isLast ? 6 : 0,
         borderColor: readonly ? colors.zinc[500] : colors.blue[500],
-        backgroundColor: readonly && isCurrent ? colors.zinc[500] : isCurrent ? colors.blue[500] : colors.transparent,
+        backgroundColor:
+          readonly && isCurrent
+            ? colors.zinc[500]
+            : isCurrent
+              ? colors.blue[500]
+              : colors.transparent,
       }}
     >
-      {icon && icon(isCurrent ? colors.white : readonly ? colors.zinc[500] : colors.blue[500])}
+      {icon &&
+        icon(
+          isCurrent
+            ? colors.white
+            : readonly
+              ? colors.zinc[500]
+              : colors.blue[500]
+        )}
       <Text
         className={`font-semibold group-active:text-white ${isCurrent && "text-white"}
         `}
-        style={{ color: isCurrent ? colors.white : readonly ? colors.zinc[500] : colors.blue[500] }}
+        style={{
+          color: isCurrent
+            ? colors.white
+            : readonly
+              ? colors.zinc[500]
+              : colors.blue[500],
+        }}
       >
         {name}
       </Text>

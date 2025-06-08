@@ -10,7 +10,7 @@ import {
 import useTinybase from "@/hooks/useDatabase";
 import { getCategoriesTree } from "@/utils/categories";
 
-interface Props extends PropsWithChildren { }
+interface Props extends PropsWithChildren {}
 
 export const SystemContext = createContext<SystemContextModel>({
   isDark: false,
@@ -39,7 +39,7 @@ const SystemProvider = ({ children }: Props) => {
     return getCategoriesTree(categories);
   }, []);
 
-  const init = async () => { };
+  const init = async () => {};
 
   useEffect(() => {
     init();
