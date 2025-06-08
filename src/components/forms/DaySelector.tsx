@@ -1,9 +1,10 @@
 import { View, Text, Pressable } from "react-native";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 
 interface Props {
   type: "week" | "month";
   onChange: (days: number[]) => void;
+  values?: number[];
 }
 
 const WEEK_DAYS = [
@@ -21,12 +22,13 @@ const MONTH_DAYS = [
   23, 24, 25, 26, 27, 28,
 ] as const;
 
-const DaySelector = ({ onChange, type }: Props) => {
-  const [selectedDays, setSelectedDays] = useState<number[]>([]);
-  const DAYS = useMemo(() => {
-    setSelectedDays([]);
-    return type === "week" ? WEEK_DAYS : MONTH_DAYS;
-  }, [type]);
+const DaySelector = ({ onChange, type, values = [] }: Props) => {
+  const [selectedDays, setSelectedDays] = useState<number[]>(values);
+
+  const DAYS = useMemo(
+    () => (type === "week" ? WEEK_DAYS : MONTH_DAYS),
+    [type]
+  );
 
   const handlePress = (day: number) => {
     const addedDay = type === "week" ? day : day + 1;
@@ -39,13 +41,10 @@ const DaySelector = ({ onChange, type }: Props) => {
     onChange(newDays);
   };
 
-  const isDaySelected = (day: number) => {
-    if (type === "week") {
-      return selectedDays.includes(day);
-    }
-
-    return selectedDays.includes(day + 1);
-  };
+  const isDaySelected = (day: number) =>
+    type === "week"
+      ? selectedDays.includes(day)
+      : selectedDays.includes(day + 1);
 
   return (
     <View className="flex-row justify-center flex-wrap gap-3 w-full my-5 max-w-lg mx-auto">

@@ -15,28 +15,24 @@ interface Props {
 
 const NextDate = ({ idPlanning, recurringType }: Props) => {
   const { isDark } = useSystemContext();
-  const { query, getById } = useTinybase();
+  const { query, useRowById, getById } = useTinybase();
 
   const isDaily = recurringType === PLANNINGS_TYPES_ID.DAILY;
 
-  const historicPlanning = useMemo(
-    () =>
-      getById(
-        "historicPlannings",
-        query(
-          "historicPlannings",
-          { type: "select", column: "idPlanning" },
-          { type: "select", column: "isPending" },
-          {
-            type: "where",
-            column: "idPlanning",
-            operator: "==",
-            value: idPlanning,
-          },
-          { type: "where", column: "isPending", operator: "==", value: true }
-        ).ids[0]
-      ),
-    []
+  const historicPlanning = useRowById(
+    "historicPlannings",
+    query(
+      "historicPlannings",
+      { type: "select", column: "idPlanning" },
+      { type: "select", column: "isPending" },
+      {
+        type: "where",
+        column: "idPlanning",
+        operator: "==",
+        value: idPlanning,
+      },
+      { type: "where", column: "isPending", operator: "==", value: true }
+    ).ids[0]
   );
 
   if (!historicPlanning) return null;

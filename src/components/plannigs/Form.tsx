@@ -14,6 +14,7 @@ import { formatNumber } from "@/utils/formatters";
 import { MOVEMENT_TYPES, PLANNINGS_TYPES, PLANNINGS_TYPES_ID } from "@/db/ui";
 
 interface Props extends PropsBaseModal {
+  isEditing?: boolean;
   values: PlanningsForm;
   setFieldValue: (
     field: keyof PlanningsForm,
@@ -21,7 +22,13 @@ interface Props extends PropsBaseModal {
   ) => void;
 }
 
-const Form = ({ values, setFieldValue, onSubmit, ...props }: Props) => {
+const Form = ({
+  values,
+  setFieldValue,
+  onSubmit,
+  isEditing,
+  ...props
+}: Props) => {
   return (
     <BaseModal
       {...props}
@@ -124,6 +131,7 @@ const Form = ({ values, setFieldValue, onSubmit, ...props }: Props) => {
               setFieldValue("startDate", Date.now());
               setFieldValue("date", undefined);
             }}
+            readonly={isEditing}
           />
 
           <RecurrenceForm {...{ values, setFieldValue }} />

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 import NextDate from "./NextDate";
 import useTinybase from "@/hooks/useDatabase";
@@ -8,9 +8,10 @@ import { PLANNINGS_TYPES, PLANNINGS_TYPES_ID } from "@/db/ui";
 
 interface Props {
   id: string;
+  onPress: () => void;
 }
 
-const Card = ({ id }: Props) => {
+const Card = ({ id, onPress }: Props) => {
   const { useRowById, getById } = useTinybase();
 
   const data = useRowById("plannings", id) as Row<"plannings">;
@@ -28,7 +29,10 @@ const Card = ({ id }: Props) => {
   const { icon, color } = getUiElements(data.idCategory, category?.idFather);
 
   return (
-    <View className="py-3 flex-row items-center border-t border-zinc-300 dark:border-zinc-700 gap-2">
+    <Pressable
+      className="py-3 flex-row items-center border-t border-zinc-300 dark:border-zinc-700 gap-2"
+      onPress={onPress}
+    >
       <View
         className="w-12 h-12 rounded-md justify-center items-center"
         style={{ backgroundColor: color }}
@@ -64,7 +68,7 @@ const Card = ({ id }: Props) => {
           <NextDate idPlanning={id} {...data} />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

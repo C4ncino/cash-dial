@@ -1,11 +1,16 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Link from "@/widgets/Link";
 import useTinybase from "@/hooks/useDatabase";
 import Card from "./Card";
+import EditPlanning from "./EditPlannig";
+import useModal from "@/hooks/useModal";
 
 const PlanningCards = () => {
   const { useAll } = useTinybase();
+
+  const [id, setId] = useState<string>();
+  const { visible, closeModal, openModal } = useModal();
 
   const plannings = useAll("plannings");
 
@@ -16,10 +21,28 @@ const PlanningCards = () => {
       </Text>
 
       {plannings.map((id) => (
-        <Card key={id} id={id} />
+        <Card
+          key={id}
+          id={id}
+          onPress={() => {
+            setId(id);
+            openModal();
+          }}
+        />
       ))}
 
       <Link className="justify-end" href="/plannings" label="Mostrar más" />
+
+      {id && (
+        <EditPlanning
+          id={id}
+          visible={visible}
+          closeModal={() => {
+            closeModal();
+            setId(undefined);
+          }}
+        />
+      )}
     </View>
   );
 };

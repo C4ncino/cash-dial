@@ -25,6 +25,8 @@ const RecurrenceForm = ({ values, setFieldValue }: Props) => {
   const isMonthly = values.recurringType === PLANNINGS_TYPES_ID.MONTHLY;
   const isYearly = values.recurringType === PLANNINGS_TYPES_ID.YEARLY;
 
+  console.log(values.payDaysData);
+
   return (
     <View>
       <View className="flex-row items-center gap-2 pt-2 px-2">
@@ -64,6 +66,7 @@ const RecurrenceForm = ({ values, setFieldValue }: Props) => {
 
       {(isWeekly || isMonthly) && (
         <DaySelector
+          values={values.payDaysData?.map((d) => d.day)}
           onChange={(days) => {
             setFieldValue("times", days.length);
             setFieldValue(
@@ -76,14 +79,14 @@ const RecurrenceForm = ({ values, setFieldValue }: Props) => {
       )}
 
       {isYearly && (
-        // TODO: add creation and deletion logic
         <View className="gap-3 my-4">
-          {Array.from({ length: values.times }).map((_, i) => (
-            <View className="flex-row gap-2 items-center" key={i}>
+          {values.payDaysData?.map((data, i) => (
+            <View
+              className="flex-row gap-2 items-center"
+              key={JSON.stringify(data)}
+            >
               <DayMonthSelect
-                value={
-                  values.payDaysData?.[i] as { day: number; month: number }
-                }
+                value={data as { day: number; month: number }}
                 onChange={(day, month) => {
                   setFieldValue(
                     "payDaysData",
@@ -96,9 +99,14 @@ const RecurrenceForm = ({ values, setFieldValue }: Props) => {
 
               <Pressable
                 onPress={() => {
+                  const data =
+                    values.payDaysData?.filter((_, j) => j !== i) || [];
+
+                  console.log(data);
+
                   setFieldValue(
                     "payDaysData",
-                    values.payDaysData?.splice(i, 1)
+                    values.payDaysData?.filter((_, j) => j !== i) || []
                   );
                   setFieldValue("times", values.times - 1);
                 }}

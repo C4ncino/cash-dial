@@ -52,19 +52,18 @@ const CreatePlanning = () => {
   };
 
   const onSubmit = () => {
-    const planningId = create("plannings", { ...values });
-
-    create("recurringPlannings", {
-      idPlanning: planningId as string,
-      ...values,
-    });
-
     const isUnique = values.recurringType === PLANNINGS_TYPES_ID.UNIQUE;
     const isDaily = values.recurringType === PLANNINGS_TYPES_ID.DAILY;
 
-    let nextDate = 0;
+    const planningId = create("plannings", { ...values });
 
-    console.log(values);
+    if (!isUnique)
+      create("recurringPlannings", {
+        idPlanning: planningId as string,
+        ...values,
+      });
+
+    let nextDate = 0;
 
     if (isUnique) nextDate = values.date as number;
     else if (isDaily) nextDate = values.startDate;
