@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import Link from "@/widgets/Link";
 import useTinybase from "@/hooks/useDatabase";
 import Card from "./Card";
-import EditPlanning from "./EditPlannig";
+
 import useModal from "@/hooks/useModal";
+import EditPlanning from "./EditPlanning";
 
 const PlanningCards = () => {
   const { useAll } = useTinybase();
