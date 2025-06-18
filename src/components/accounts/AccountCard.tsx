@@ -42,7 +42,9 @@ const AccountCard = ({ id, onPress }: Props) => {
         </Text>
       </View>
 
-      <Text className="text-2xl text-right font-medium dark:text-white line-clamp-1">
+      <Text
+        className={`text-2xl text-right font-medium ${data.currentBalance < 0 ? "text-red-500" : "dark:text-white"} line-clamp-1`}
+      >
         {formatNumber(data.currentBalance, 99999999)}
       </Text>
       <Text className="text-right text-lg font-light dark:text-white -mt-1">

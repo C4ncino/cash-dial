@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { View } from "react-native";
-import { useEffect, useState } from "react";
 
 import Input from "@/forms/Input";
 import TextArea from "@/forms/TextArea";
@@ -18,7 +18,7 @@ import useMovementForm from "@/hooks/useMovementForm";
 interface Props extends PropsMovementsForm {}
 
 const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
-  const { getById } = useTinybase();
+  const { getById, update } = useTinybase();
 
   const data = getById("expenses", movementId as Id);
 
@@ -41,6 +41,18 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
     }
   );
 
+  const updateAccounts = () => {
+    const account = getById("accounts", values.idAccount as Id);
+
+    if (!account) return;
+
+    update("accounts", values.idAccount as Id, {
+      ...account,
+      currentBalance:
+        account.currentBalance - values.amount + (data?.amount || 0),
+    });
+  };
+
   useMovementForm({
     table: "expenses",
     values,
@@ -50,6 +62,7 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
     setReset,
     setOnSubmit,
     setCanSubmit,
+    updateAccounts,
   });
 
   return (

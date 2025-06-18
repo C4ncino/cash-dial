@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { View } from "react-native";
 
 import Input from "@/forms/Input";
@@ -10,13 +9,14 @@ import CategorySelect from "@/forms/CategorySelect";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
-import { formatNumber } from "@/utils/formatters";
 import useMovementForm from "@/hooks/useMovementForm";
+
+import { formatNumber } from "@/utils/formatters";
 
 interface Props extends PropsMovementsForm {}
 
 const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
-  const { getById } = useTinybase();
+  const { getById, update } = useTinybase();
 
   const data = getById("incomes", movementId as Id);
 
@@ -32,6 +32,17 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
     }
   );
 
+  const updateAccounts = () => {
+    const account = getById("accounts", values.idAccount as Id);
+    if (!account) return;
+
+    update("accounts", values.idAccount as Id, {
+      ...account,
+      currentBalance:
+        account.currentBalance + values.amount - (data?.amount || 0),
+    });
+  };
+
   useMovementForm({
     table: "incomes",
     values,
@@ -41,6 +52,7 @@ const Form = ({ setOnSubmit, setCanSubmit, movementId, setReset }: Props) => {
     setReset,
     setOnSubmit,
     setCanSubmit,
+    updateAccounts,
   });
 
   return (

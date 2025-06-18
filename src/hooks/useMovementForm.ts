@@ -9,6 +9,7 @@ interface Params<T extends MovementTable> {
   movementId?: Id;
   resetForm: () => void;
   validate: () => boolean;
+  updateAccounts: () => void;
   setReset?: (resetForm: () => void) => void;
   setOnSubmit: (onSubmit: () => void) => void;
   setCanSubmit: (canSubmit: boolean) => void;
@@ -24,6 +25,7 @@ const useMovementForm = <T extends MovementTable>(params: Params<T>) => {
     setReset,
     setOnSubmit,
     setCanSubmit,
+    updateAccounts,
   } = params;
 
   const { create, update } = useTinybase();
@@ -35,6 +37,8 @@ const useMovementForm = <T extends MovementTable>(params: Params<T>) => {
   const onSubmit = () => {
     if (typeof values.amount === "string")
       values.amount = Number(values.amount);
+
+    updateAccounts();
 
     if (movementId) update(table, movementId, values);
     else {
