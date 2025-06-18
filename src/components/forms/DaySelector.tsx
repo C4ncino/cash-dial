@@ -1,10 +1,11 @@
 import { View, Text, Pressable } from "react-native";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 interface Props {
   type: "week" | "month";
   onChange: (days: number[]) => void;
   values?: number[];
+  readonly?: boolean;
 }
 
 const WEEK_DAYS = [
@@ -22,8 +23,12 @@ const MONTH_DAYS = [
   23, 24, 25, 26, 27, 28,
 ] as const;
 
-const DaySelector = ({ onChange, type, values = [] }: Props) => {
+const DaySelector = ({ onChange, type, values = [], readonly }: Props) => {
   const [selectedDays, setSelectedDays] = useState<number[]>(values);
+
+  useEffect(() => {
+    setSelectedDays(values);
+  }, [values]);
 
   const DAYS = useMemo(
     () => (type === "week" ? WEEK_DAYS : MONTH_DAYS),
@@ -52,7 +57,7 @@ const DaySelector = ({ onChange, type, values = [] }: Props) => {
         <Pressable
           key={day}
           className={`w-10 h-10 justify-center border-2 rounded-full ${isDaySelected(i) ? "bg-blue-500 border-blue-500" : "border-zinc-800 dark:border-white"}`}
-          onPress={() => handlePress(i)}
+          onPress={() => (readonly ? null : handlePress(i))}
         >
           <Text
             className={`${isDaySelected(i) ? "text-white" : ""} dark:text-white text-center`}

@@ -2,14 +2,13 @@ import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import AccountsCards from "@/accounts/AccountsCards";
-import CreateMovement from "@/components/movements/CreateMovement";
+import CreateMovement from "@/movements/CreateMovement";
 import Movements from "@/movements/MovementsLanding";
 import { Plus } from "iconoir-react-native";
 import colors from "tailwindcss/colors";
 import useModal from "@/hooks/useModal";
-import BudgetsCard from "@/components/budget/BudgetsCard";
-import CreatePlanning from "@/components/plannings/CreatePlanning";
-import PlanningCards from "@/components/plannings/PlanningCards";
+import BudgetsCard from "@/budget/BudgetsCard";
+import PlanningCards from "@/plannings/PlanningCards";
 
 const Home = () => {
   const { visible, closeModal, openModal } = useModal();
@@ -25,15 +24,15 @@ const Home = () => {
         </View>
 
         <AccountsCards />
+
+        <PlanningCards />
+
         <Movements
           onEdit={() => setReRender(!reRender)}
           afterEdit={() => setReRender(!reRender)}
         />
 
         {reRender && <BudgetsCard />}
-
-        <CreatePlanning />
-        <PlanningCards />
       </ScrollView>
 
       <CreateMovement visible={visible} closeModal={closeModal} />

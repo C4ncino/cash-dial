@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import colors from "tailwindcss/colors";
 
 import { PLANNINGS_TYPES_ID } from "@/db/ui";
@@ -10,10 +10,17 @@ import { useSystemContext } from "@/contexts/hooks";
 
 interface Props {
   idPlanning: string;
+  type: number;
   recurringType: PLANNINGS_TYPES_ID;
+  fontSize?: "sm" | "base" | "lg" | "xl" | "2xl";
 }
 
-const NextDate = ({ idPlanning, recurringType }: Props) => {
+const NextDate = ({
+  idPlanning,
+  type,
+  recurringType,
+  fontSize = "sm",
+}: Props) => {
   const { isDark } = useSystemContext();
   const { query, useRowById, getById } = useTinybase();
 
@@ -110,13 +117,37 @@ const NextDate = ({ idPlanning, recurringType }: Props) => {
         : colors.zinc[700];
 
   return (
-    <Text className="text-sm" style={{ color }}>
-      Pagar {isToday ? "hoy !!" : isTomorrow ? "mañana" : `en ${diffDays} días`}
+    <Text style={{ color, ...styles[fontSize] }}>
+      {type === 1 ? "Pago" : "Pagar"}{" "}
+      {isToday ? "hoy !!" : isTomorrow ? "mañana" : `en ${diffDays} días`}
       {isDaily &&
         dailyPays &&
         ` (${dailyPays.paid}\u200A/\u200A${dailyPays.missing})`}
     </Text>
   );
 };
+
+const styles = StyleSheet.create({
+  sm: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  base: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  lg: {
+    fontSize: 18,
+    lineHeight: 28,
+  },
+  xl: {
+    fontSize: 20,
+    lineHeight: 28,
+  },
+  "2xl": {
+    fontSize: 24,
+    lineHeight: 32,
+  },
+});
 
 export default NextDate;

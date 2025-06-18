@@ -1,16 +1,16 @@
-import { View } from "react-native";
-
 import Form from "./Form";
-import Button from "@/widgets/Button";
 import { PLANNINGS_TYPES_ID } from "@/db/ui";
 import { getNextPayDate } from "@/utils/plannings";
 
 import useForm from "@/hooks/useForm";
-import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
 
-const CreatePlanning = () => {
-  const { openModal, closeModal, visible } = useModal();
+interface Props {
+  closeModal: () => void;
+  visible: boolean;
+}
+
+const CreatePlanning = (props: Props) => {
   const { create } = useTinybase();
 
   const { values, setFieldValue, validate, resetForm } = useForm<PlanningsForm>(
@@ -88,20 +88,18 @@ const CreatePlanning = () => {
       date: nextDate,
     });
 
-    closeModal();
+    props.closeModal();
     resetForm();
   };
 
   return (
-    <View>
-      <Button title="Crear" onPress={openModal} />
-      <Form
-        submitButtonLabel="Crear"
-        label="Planificación"
-        {...{ visible, values, setFieldValue, onSubmit, closeModal }}
-        canSubmit={validateValues()}
-      />
-    </View>
+    <Form
+      submitButtonLabel="Crear"
+      label="Planificación"
+      {...props}
+      {...{ values, setFieldValue, onSubmit }}
+      canSubmit={validateValues()}
+    />
   );
 };
 

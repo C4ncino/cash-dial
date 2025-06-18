@@ -1,19 +1,12 @@
+import { router } from "expo-router";
 import { View, Text } from "react-native";
-import React, { useState } from "react";
 
 import Card from "./Card";
-import EditPlanning from "./EditPlanning";
-
 import Link from "@/widgets/Link";
-import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
 
 const PlanningCards = () => {
   const { useAll } = useTinybase();
-
-  const [id, setId] = useState<string>();
-  const { visible, closeModal, openModal } = useModal();
-
   const plannings = useAll("plannings");
 
   return (
@@ -26,25 +19,11 @@ const PlanningCards = () => {
         <Card
           key={id}
           id={id}
-          onPress={() => {
-            setId(id);
-            openModal();
-          }}
+          onPress={() => router.push(`/plannings/${id}`)}
         />
       ))}
 
       <Link className="justify-end" href="/plannings" label="Mostrar más" />
-
-      {id && (
-        <EditPlanning
-          id={id}
-          visible={visible}
-          closeModal={() => {
-            closeModal();
-            setId(undefined);
-          }}
-        />
-      )}
     </View>
   );
 };
