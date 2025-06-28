@@ -6,9 +6,10 @@ import useBudget from "@/hooks/useSimpleBudget";
 interface Props {
   id: Id;
   onPress?: () => void;
+  onLongPress?: () => void;
 }
 
-const BudgetCard = ({ id, onPress }: Props) => {
+const BudgetCard = ({ id, onPress, onLongPress }: Props) => {
   const budget = useBudget(id);
 
   if (!budget) return null;
@@ -16,7 +17,11 @@ const BudgetCard = ({ id, onPress }: Props) => {
   const { info, icon, color, getAmountSpent } = budget;
 
   return (
-    <Pressable onPress={onPress} className="max-w-2xl mx-auto w-full py-3">
+    <Pressable
+      onPress={onPress}
+      onLongPress={onLongPress}
+      className="max-w-2xl mx-auto w-full py-3"
+    >
       <View className="w-full gap-2">
         <View className="flex-row items-center justify-between mx-4">
           <View

@@ -100,7 +100,13 @@ const Budget = () => {
           contentContainerClassName="px-3"
           data={expensesIds}
           renderItem={({ item }) => (
-            <Card movementId={item} onPress={() => {}} />
+            <Card
+              movementId={item}
+              onPress={() => {}}
+              onLongPress={() => {}}
+              setOnDelete={() => {}}
+              showTime={false}
+            />
           )}
         />
       </View>

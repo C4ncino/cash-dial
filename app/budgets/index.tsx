@@ -1,21 +1,38 @@
-import { View, Text, FlatList } from "react-native";
-import React from "react";
-import Header from "@/components/widgets/Header";
-import useModal from "@/hooks/useModal";
-import CreateBudget from "@/components/budget/CreateBudget";
-import useTinybase from "@/hooks/useDatabase";
-import BudgetCard from "@/components/budget/BudgetCard";
+import { useState } from "react";
 import { router } from "expo-router";
+import { View, FlatList } from "react-native";
+
+import Header from "@/widgets/Header";
+import BudgetCard from "@/budget/BudgetCard";
+import DeleteModal from "@/widgets/DeleteModal";
+import CreateBudget from "@/budget/CreateBudget";
+
+import useModal from "@/hooks/useModal";
+import useTinybase from "@/hooks/useDatabase";
 
 const Budgets = () => {
-  const { visible, openModal, closeModal } = useModal();
-  const { useAll } = useTinybase();
+  const createModal = useModal();
+  const deleteModal = useModal();
+  const { useAll, remove, query } = useTinybase();
+  const [selectedId, setSelectedId] = useState<Id>();
 
   const budgets = useAll("budgets");
 
+  const handleDelete = () => {
+    remove("budgets", selectedId as Id);
+
+    query(
+      "historicBudgets",
+      { type: "select", column: "idBudget" },
+      { type: "where", column: "idBudget", value: selectedId, operator: "==" }
+    ).ids.forEach((id) => remove("historicBudgets", id));
+
+    deleteModal.closeModal();
+  };
+
   return (
     <View>
-      <Header title="Presupuestos" openModal={openModal} />
+      <Header title="Presupuestos" openModal={createModal.openModal} />
 
       <FlatList
         contentContainerClassName="px-5"
@@ -25,6 +42,10 @@ const Budgets = () => {
           <BudgetCard
             id={item}
             onPress={() => router.push(`/budgets/${item}`)}
+            onLongPress={() => {
+              setSelectedId(item);
+              deleteModal.openModal();
+            }}
           />
         )}
         ItemSeparatorComponent={() => (
@@ -32,7 +53,12 @@ const Budgets = () => {
         )}
       />
 
-      <CreateBudget visible={visible} closeModal={closeModal} />
+      <CreateBudget {...createModal} />
+      <DeleteModal
+        text="Seguro que desea eliminar este presupuesto? No podrá deshacerlo."
+        onDelete={handleDelete}
+        {...deleteModal}
+      />
     </View>
   );
 };
