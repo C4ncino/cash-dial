@@ -9,6 +9,7 @@ import {
 } from "@/utils/dates";
 import useTinybase from "@/hooks/useDatabase";
 import { getCategoriesTree } from "@/utils/categories";
+import { getFirstDay, needNewBudget } from "@/utils/budgets";
 
 interface Props extends PropsWithChildren {}
 
@@ -19,8 +20,15 @@ export const SystemContext = createContext<SystemContextModel>({
 });
 
 const SystemProvider = ({ children }: Props) => {
-  const { getAll, getById } = useTinybase();
+  const { getAll, getById, create, query } = useTinybase();
   const { colorScheme } = useColorScheme();
+
+  const currentDateInfo = {
+    day: currentDay,
+    week: currentWeek,
+    month: currentMonth,
+    year: currentYear,
+  };
 
   const categories = useMemo(() => {
     const categories = new Map();
@@ -34,7 +42,34 @@ const SystemProvider = ({ children }: Props) => {
     return getCategoriesTree(categories);
   }, []);
 
-  const init = async () => {};
+  const init = async () => {
+    getAll("budgets").forEach((id) => {
+      const budget = getById("budgets", id);
+      if (!budget) return;
+
+      const historicQuery = query(
+        "historicBudgets",
+        { type: "select", column: "idBudget" },
+        { type: "select", column: "startDate" },
+        { type: "where", column: "idBudget", value: id, operator: "==" }
+      );
+
+      const lastId = historicQuery.ids[historicQuery.ids.length - 1];
+
+      if (
+        needNewBudget(
+          budget.type,
+          currentDateInfo,
+          historicQuery.results[lastId].startDate
+        )
+      )
+        create("historicBudgets", {
+          idBudget: id,
+          startDate: getFirstDay(budget.type, currentDateInfo),
+          amountLimit: budget.amountLimit,
+        });
+    });
+  };
 
   useEffect(() => {
     init();
@@ -43,12 +78,7 @@ const SystemProvider = ({ children }: Props) => {
   const systemContext = {
     isDark: colorScheme === "dark",
     categories,
-    currentDateInfo: {
-      day: currentDay,
-      week: currentWeek,
-      month: currentMonth,
-      year: currentYear,
-    },
+    currentDateInfo,
   };
 
   return (

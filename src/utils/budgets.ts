@@ -2,6 +2,7 @@ import { BUDGET_TYPES_ID } from "@/db/ui";
 import {
   getDateData,
   getMonthRange,
+  getWeekNumber,
   getWeekRange,
   getYearRange,
 } from "./dates";
@@ -172,4 +173,43 @@ export function getAmount(
   );
 
   return results["0"] ? results["0"].amountSpent : 0;
+}
+
+export function needNewBudget(
+  type: BUDGET_TYPES_ID,
+  currentDateInfo: DateData,
+  currentHistoricDate: number
+) {
+  const historicDate = getDateData(new Date(currentHistoricDate));
+
+  switch (type) {
+    case BUDGET_TYPES_ID.WEEKLY:
+      if (currentDateInfo.week !== historicDate.week) return true;
+      break;
+
+    case BUDGET_TYPES_ID.MONTHLY:
+      if (currentDateInfo.month !== historicDate.month) return true;
+      break;
+
+    case BUDGET_TYPES_ID.YEARLY:
+      if (currentDateInfo.year !== historicDate.year) return true;
+      break;
+  }
+
+  return false;
+}
+
+export function getFirstDay(type: BUDGET_TYPES_ID, date: DateData) {
+  const { year, week, month } = date;
+
+  switch (type) {
+    case BUDGET_TYPES_ID.WEEKLY:
+      return new Date(year, 0, (week - 1) * 7).getTime();
+
+    case BUDGET_TYPES_ID.MONTHLY:
+      return new Date(year, month, 1).getTime();
+
+    case BUDGET_TYPES_ID.YEARLY:
+      return new Date(year, 0, 1).getTime();
+  }
 }

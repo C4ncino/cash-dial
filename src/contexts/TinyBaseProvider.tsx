@@ -114,20 +114,20 @@ const TinyBaseProvider = ({ children }: Props) => {
           type: 0,
           currency: "0",
         },
-        "1": {
-          idCategory: "55",
-          name: "Presupuesto 2",
-          amountLimit: 8000,
-          type: 1,
-          currency: "0",
-        },
-        "2": {
-          idCategory: "30",
-          name: "Presupuesto 3",
-          amountLimit: 500320,
-          type: 2,
-          currency: "0",
-        },
+        // "1": {
+        //   idCategory: "55",
+        //   name: "Presupuesto 2",
+        //   amountLimit: 8000,
+        //   type: 1,
+        //   currency: "0",
+        // },
+        // "2": {
+        //   idCategory: "30",
+        //   name: "Presupuesto 3",
+        //   amountLimit: 500320,
+        //   type: 2,
+        //   currency: "0",
+        // },
       })
       .setTable("historicBudgets", {
         "0": {
