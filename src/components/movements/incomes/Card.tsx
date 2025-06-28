@@ -63,7 +63,7 @@ const Card = ({ movementId, setOnDelete, onLongPress, ...props }: Props) => {
       )}
       onDelete={() => {
         onLongPress();
-        setOnDelete(() => () => deleteMovement);
+        setOnDelete(() => deleteMovement);
       }}
       {...props}
     />
