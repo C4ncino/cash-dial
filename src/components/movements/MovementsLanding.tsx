@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { View, Text } from "react-native";
 
 import IncomeCard from "./incomes/Card";
@@ -9,7 +9,9 @@ import EditMovement from "./EditMovement";
 
 import Link from "@/widgets/Link";
 import { MOVEMENT_TYPES_ID } from "@/db/ui";
+import DeleteModal from "@/widgets/DeleteModal";
 
+import useModal from "@/hooks/useModal";
 import useMovements from "@/hooks/useMovements";
 import useEditMovement from "@/hooks/useEditMovement";
 
@@ -20,9 +22,12 @@ interface Props {
 
 const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
   const { visible, closeModal, type, movementId, onPress } = useEditMovement();
+  const deleteModal = useModal();
   const movements = useMovements((data) =>
     data.sort((a, b) => b.date - a.date)
   );
+
+  const [onDelete, setOnDelete] = useState(() => () => {});
 
   const openModal = (id: Id, movementType: MOVEMENT_TYPES_ID) => {
     onPress(id, movementType);
@@ -42,6 +47,8 @@ const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
           <Fragment key={i}>
             {movement.type === "out" ? (
               <ExpenseCard
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 movementId={movement.id}
                 onPress={(id: string) =>
                   openModal(id, MOVEMENT_TYPES_ID.EXPENSE)
@@ -49,6 +56,8 @@ const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
               />
             ) : movement.type === "in" ? (
               <IncomeCard
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 movementId={movement.id}
                 onPress={(id: string) =>
                   openModal(id, MOVEMENT_TYPES_ID.INCOME)
@@ -56,6 +65,8 @@ const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
               />
             ) : (
               <TransferCard
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 movementId={movement.id}
                 onPress={(id: string) =>
                   openModal(id, MOVEMENT_TYPES_ID.TRANSFER)
@@ -78,6 +89,12 @@ const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
         }}
         movementId={movementId}
         type={type}
+      />
+
+      <DeleteModal
+        onDelete={onDelete}
+        text="Seguro que desea eliminar este movimiento? No podrá deshacerlo."
+        {...deleteModal}
       />
     </>
   );

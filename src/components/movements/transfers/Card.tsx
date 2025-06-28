@@ -7,11 +7,13 @@ import MovementCard from "@/movements/MovementCard";
 interface Props {
   movementId: Id;
   showTime?: boolean;
+  onLongPress: () => void;
+  setOnDelete: React.Dispatch<React.SetStateAction<() => void>>;
   onPress: (id: Id) => void;
 }
 
-const Card = ({ movementId, ...props }: Props) => {
-  const { useRowById, getById } = useTinybase();
+const Card = ({ movementId, setOnDelete, onLongPress, ...props }: Props) => {
+  const { useRowById, getById, remove, update } = useTinybase();
   const data = useRowById("transfers", movementId);
 
   if (!data) return null;
@@ -20,6 +22,18 @@ const Card = ({ movementId, ...props }: Props) => {
   const destiny = getById("accounts", data.idTo);
 
   if (!origin || !destiny) return null;
+
+  const deleteMovement = () => {
+    remove("transfers", movementId);
+    update("accounts", data.idFrom as Id, {
+      ...origin,
+      currentBalance: origin.currentBalance + data.amount,
+    });
+    update("accounts", data.idTo as Id, {
+      ...destiny,
+      currentBalance: destiny.currentBalance - data.amount,
+    });
+  };
 
   return (
     <MovementCard
@@ -45,6 +59,10 @@ const Card = ({ movementId, ...props }: Props) => {
           <DataTransferUp width={24} height={24} color="#fff" />
         </View>
       )}
+      onDelete={() => {
+        onLongPress();
+        setOnDelete(() => () => deleteMovement);
+      }}
       {...props}
     />
   );

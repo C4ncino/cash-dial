@@ -12,11 +12,13 @@ import MovementCard from "@/movements/MovementCard";
 interface Props {
   movementId: Id;
   showTime?: boolean;
+  onLongPress: () => void;
+  setOnDelete: React.Dispatch<React.SetStateAction<() => void>>;
   onPress: (id: Id) => void;
 }
 
-const Card = ({ movementId, ...props }: Props) => {
-  const { useRowById, getById } = useTinybase();
+const Card = ({ movementId, setOnDelete, onLongPress, ...props }: Props) => {
+  const { useRowById, getById, remove, update } = useTinybase();
   const data = useRowById("incomes", movementId);
 
   if (!data) return null;
@@ -35,6 +37,14 @@ const Card = ({ movementId, ...props }: Props) => {
 
   if (!account) return null;
 
+  const deleteMovement = () => {
+    remove("incomes", movementId);
+    update("accounts", data.idAccount as Id, {
+      ...account,
+      currentBalance: account.currentBalance - data.amount,
+    });
+  };
+
   return (
     <MovementCard
       type="in"
@@ -51,6 +61,10 @@ const Card = ({ movementId, ...props }: Props) => {
           {CATEGORY_ICONS[data.idCategory as CategoryIconKey]("#fff", 24)}
         </View>
       )}
+      onDelete={() => {
+        onLongPress();
+        setOnDelete(() => () => deleteMovement);
+      }}
       {...props}
     />
   );

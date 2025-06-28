@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { router } from "expo-router";
 import colors from "tailwindcss/colors";
 import { View, Text, SectionList } from "react-native";
 
 import Button from "@/widgets/Button";
 import DateTitle from "@/widgets/DateTitle";
-import IncomeCard from "@/movements/incomes/Card";
-
+import DeleteModal from "@/widgets/DeleteModal";
 import ReturnButton from "@/widgets/ReturnButton";
+
+import IncomeCard from "@/movements/incomes/Card";
 import EditMovement from "@/movements/EditMovement";
 import ExpenseCard from "@/movements/expenses/Card";
 import TransferCard from "@/movements/transfers/Card";
@@ -20,7 +22,8 @@ import useMovements from "@/hooks/useMovements";
 import useEditMovement from "@/hooks/useEditMovement";
 
 const Movements = () => {
-  const { visible, closeModal, openModal } = useModal();
+  const createModal = useModal();
+  const deleteModal = useModal();
   const {
     visible: editVisible,
     closeModal: editCloseModal,
@@ -29,6 +32,7 @@ const Movements = () => {
     onPress,
   } = useEditMovement();
 
+  const [onDelete, setOnDelete] = useState(() => () => {});
   const movements = useMovements(groupMovementsByDate) as MovementsByDate[];
 
   return (
@@ -44,7 +48,7 @@ const Movements = () => {
             style="outline"
             title="Crear"
             color={colors.green[500]}
-            onPress={openModal}
+            onPress={createModal.openModal}
           />
         </View>
       </View>
@@ -58,6 +62,8 @@ const Movements = () => {
               <TransferCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.TRANSFER)}
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 showTime
               />
             );
@@ -66,6 +72,8 @@ const Movements = () => {
               <IncomeCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.INCOME)}
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 showTime
               />
             );
@@ -74,6 +82,8 @@ const Movements = () => {
               <ExpenseCard
                 movementId={item.id}
                 onPress={(id) => onPress(id, MOVEMENT_TYPES_ID.EXPENSE)}
+                onLongPress={deleteModal.openModal}
+                setOnDelete={setOnDelete}
                 showTime
               />
             );
@@ -88,7 +98,12 @@ const Movements = () => {
         visible={editVisible}
         closeModal={editCloseModal}
       />
-      <CreateMovement visible={visible} closeModal={closeModal} />
+      <CreateMovement {...createModal} />
+      <DeleteModal
+        onDelete={onDelete}
+        text="Seguro que desea eliminar este movimiento? No podrá deshacerlo."
+        {...deleteModal}
+      />
     </View>
   );
 };

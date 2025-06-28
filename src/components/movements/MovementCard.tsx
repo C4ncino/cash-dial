@@ -13,6 +13,7 @@ interface Props {
   showTime?: boolean;
   Icon: () => JSX.Element;
   onPress: (id: Id) => void;
+  onDelete?: () => void;
 }
 
 const MovementCard = ({
@@ -25,29 +26,44 @@ const MovementCard = ({
   showTime,
   Icon,
   onPress,
+  onDelete = () => {},
 }: Props) => {
   const { dateShort, time } = useDate(date || 0);
   const textLength = title.length + amount.toString().length;
 
   return (
     <Pressable
-      className="w-full flex-row justify-between items-center py-2 border-t border-zinc-500 dark:border-zinc-700"
+      className=""
       onPress={() => onPress(id)}
+      onLongPress={() => onDelete()}
     >
-      <View className="flex-row gap-2">
-        {Icon && Icon()}
-        <View className="ps-px">
-          <Text className="dark:text-white text-xl font-medium">{title}</Text>
-          {Subtitle && Subtitle()}
-        </View>
-      </View>
+      {({ pressed }) => (
+        <View
+          className="w-full flex-row justify-between items-center py-2 border-t border-zinc-500 dark:border-zinc-700"
+          style={{ opacity: pressed ? 0.5 : 1 }}
+        >
+          <View className="flex-row gap-2">
+            {Icon && Icon()}
+            <View className="ps-px">
+              <Text className="dark:text-white text-xl font-medium">
+                {title}
+              </Text>
+              {Subtitle && Subtitle()}
+            </View>
+          </View>
 
-      <View>
-        <AmountText type={type} amount={amount} needShort={textLength > 25} />
-        <Text className="dark:text-zinc-400 text-sm text-right">
-          {showTime ? time : dateShort}
-        </Text>
-      </View>
+          <View>
+            <AmountText
+              type={type}
+              amount={amount}
+              needShort={textLength > 25}
+            />
+            <Text className="dark:text-zinc-400 text-sm text-right">
+              {showTime ? time : dateShort}
+            </Text>
+          </View>
+        </View>
+      )}
     </Pressable>
   );
 };
