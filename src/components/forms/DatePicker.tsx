@@ -9,7 +9,6 @@ import useDate from "@/hooks/useDate";
 import useModal from "@/hooks/useModal";
 import { lang } from "@/utils/formatters";
 import { useSystemContext } from "@/contexts/hooks";
-import { currentDay, currentMonth, currentYear } from "@/utils/dates";
 
 interface Props {
   label?: string;
@@ -28,7 +27,9 @@ const DatePicker = ({
   needReset,
   mode = "date",
 }: Props) => {
-  const { isDark } = useSystemContext();
+  const { isDark, currentDateInfo } = useSystemContext();
+
+  const { day, month, year } = currentDateInfo;
 
   const { dateObject, dateLong, time, dateShort } = useDate(
     value ?? Date.now()
@@ -46,9 +47,9 @@ const DatePicker = ({
     switch (mode) {
       case "date":
         if (
-          dateObject.getDate() === currentDay &&
-          dateObject.getMonth() === currentMonth &&
-          dateObject.getFullYear() === currentYear
+          dateObject.getDate() === day &&
+          dateObject.getMonth() === month &&
+          dateObject.getFullYear() === year
         )
           return `Hoy, ${dateLong}`;
 

@@ -15,12 +15,7 @@ interface Props extends PropsWithChildren {}
 export const SystemContext = createContext<SystemContextModel>({
   isDark: false,
   categories: [],
-  currentDateInfo: {
-    day: currentDay,
-    week: currentWeek,
-    month: currentMonth,
-    year: currentYear,
-  },
+  currentDateInfo: { day: 0, week: 0, month: 0, year: 0 },
 });
 
 const SystemProvider = ({ children }: Props) => {
@@ -48,6 +43,12 @@ const SystemProvider = ({ children }: Props) => {
   const systemContext = {
     isDark: colorScheme === "dark",
     categories,
+    currentDateInfo: {
+      day: currentDay,
+      week: currentWeek,
+      month: currentMonth,
+      year: currentYear,
+    },
   };
 
   return (

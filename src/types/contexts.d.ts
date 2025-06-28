@@ -8,5 +8,5 @@ type DateData = {
 interface SystemContextModel {
   isDark: boolean;
   categories: CategoryNode[];
-  currentDateInfo?: DateData;
+  currentDateInfo: DateData;
 }
