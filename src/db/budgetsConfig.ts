@@ -4,6 +4,7 @@ const budgetsConfig: TableConfig = {
   amountLimit: { type: "number" },
   type: { type: "number" },
   currency: { type: "string" },
+  startDate: { type: "number" },
 };
 
 const historicBudgetsConfig: TableConfig = {

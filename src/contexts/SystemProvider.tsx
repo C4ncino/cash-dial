@@ -54,15 +54,15 @@ const SystemProvider = ({ children }: Props) => {
         { type: "where", column: "idBudget", value: id, operator: "==" }
       );
 
-      const lastId = historicQuery.ids[historicQuery.ids.length - 1];
+      let startDate = budget.startDate as number;
+      const hasHistoric = historicQuery.ids.length > 0;
 
-      if (
-        needNewBudget(
-          budget.type,
-          currentDateInfo,
-          historicQuery.results[lastId].startDate
-        )
-      )
+      if (hasHistoric) {
+        const lastId = historicQuery.ids[historicQuery.ids.length - 1];
+        startDate = historicQuery.results[lastId].startDate;
+      }
+
+      if (needNewBudget(budget.type, currentDateInfo, startDate, hasHistoric))
         create("historicBudgets", {
           idBudget: id,
           startDate: getFirstDay(budget.type, currentDateInfo),

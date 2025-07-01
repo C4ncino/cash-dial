@@ -178,21 +178,23 @@ export function getAmount(
 export function needNewBudget(
   type: BUDGET_TYPES_ID,
   currentDateInfo: DateData,
-  currentHistoricDate: number
+  currentHistoricDate: number,
+  isHistoric: boolean
 ) {
   const historicDate = getDateData(new Date(currentHistoricDate));
+  const diff = isHistoric ? 2 : 1;
 
   switch (type) {
     case BUDGET_TYPES_ID.WEEKLY:
-      if (currentDateInfo.week !== historicDate.week) return true;
+      if (currentDateInfo.week === historicDate.week + diff) return true;
       break;
 
     case BUDGET_TYPES_ID.MONTHLY:
-      if (currentDateInfo.month !== historicDate.month) return true;
+      if (currentDateInfo.month === historicDate.month + diff) return true;
       break;
 
     case BUDGET_TYPES_ID.YEARLY:
-      if (currentDateInfo.year !== historicDate.year) return true;
+      if (currentDateInfo.year === historicDate.year + diff) return true;
       break;
   }
 
@@ -204,12 +206,19 @@ export function getFirstDay(type: BUDGET_TYPES_ID, date: DateData) {
 
   switch (type) {
     case BUDGET_TYPES_ID.WEEKLY:
-      return new Date(year, 0, (week - 1) * 7).getTime();
+      const simple = new Date(year, 0, 1);
+      const dayOfWeek = simple.getDay();
+
+      const weekStart = new Date(simple);
+      const diff = dayOfWeek <= 4 ? -dayOfWeek : 7 - dayOfWeek;
+      weekStart.setDate(simple.getDate() + diff + (week - 2) * 7);
+
+      return weekStart.getTime();
 
     case BUDGET_TYPES_ID.MONTHLY:
-      return new Date(year, month, 1).getTime();
+      return new Date(year, month - 1, 1).getTime();
 
     case BUDGET_TYPES_ID.YEARLY:
-      return new Date(year, 0, 1).getTime();
+      return new Date(year - 1, 0, 1).getTime();
   }
 }

@@ -1,6 +1,7 @@
 import { lang, clockFormat } from "@/utils/formatters";
 
 export function getWeekNumber(date: Date) {
+  date.setHours(0, 0, 0, 0);
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
   const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
   return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);

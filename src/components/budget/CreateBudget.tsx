@@ -1,8 +1,6 @@
 import useTinybase from "@/hooks/useDatabase";
 import Form from "./Form";
 import useForm from "@/hooks/useForm";
-import { useSystemContext } from "@/contexts/hooks";
-import { getFirstDay } from "@/utils/budgets";
 
 interface Props {
   visible: boolean;
@@ -11,7 +9,6 @@ interface Props {
 
 const CreateBudget = (props: Props) => {
   const { create } = useTinybase();
-  const { currentDateInfo } = useSystemContext();
   const { values, setFieldValue, validate, resetForm } = useForm<
     Row<"budgets">
   >({
@@ -20,15 +17,11 @@ const CreateBudget = (props: Props) => {
     amountLimit: 0,
     type: 0,
     currency: "0",
+    startDate: Date.now(),
   });
 
   const onSubmit = () => {
     const id = create("budgets", values);
-    create("historicBudgets", {
-      idBudget: id as Id,
-      startDate: getFirstDay(values.type, currentDateInfo),
-      amountLimit: values.amountLimit,
-    });
     resetForm();
     props.closeModal();
   };

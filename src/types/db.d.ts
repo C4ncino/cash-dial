@@ -125,6 +125,7 @@ type Tables = {
       amountLimit: number;
       type: number;
       currency: string;
+      startDate?: number;
     };
   };
   historicBudgets: {
