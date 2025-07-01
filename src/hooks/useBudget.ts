@@ -73,9 +73,14 @@ const useBudget = (id: Id) => {
       ? getInterval(...modifiers)
       : getInterval();
 
-  const expensesIds = getBudgetExpenses(query, id, categoryIds, limits);
+  const expensesIds = getBudgetExpenses(
+    query,
+    budget.idCategory,
+    categoryIds,
+    limits
+  );
 
-  const amount = getAmount(query, id, categoryIds, limits);
+  const amount = getAmount(query, budget.idCategory, categoryIds, limits);
 
   return {
     info: budget,
