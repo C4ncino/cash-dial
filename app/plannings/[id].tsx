@@ -1,10 +1,14 @@
 import colors from "tailwindcss/colors";
-import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
+import { Calendar } from "iconoir-react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
 
 import Header from "@/widgets/Header";
-import AmountText from "@/widgets/AmountText";
 import NextDate from "@/plannings/NextDate";
+import DaySelector from "@/forms/DaySelector";
+import AmountText from "@/widgets/AmountText";
+import ConfirmForm from "@/plannings/ConfirmForm";
+import HistoricCard from "@/plannings/HistoricCard";
 import EditPlanning from "@/plannings/EditPlanning";
 
 import {
@@ -18,15 +22,10 @@ import { getUiElements } from "@/utils/categories";
 
 import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
-import DaySelector from "@/components/forms/DaySelector";
-import { Calendar } from "iconoir-react-native";
-import ConfirmForm from "@/components/plannings/ConfirmForm";
-import useDate from "@/hooks/useDate";
-import HistoricCard from "@/components/plannings/HistoricCard";
 
 const planning = () => {
   const { id } = useLocalSearchParams();
-  const { useRowById, getById, query } = useTinybase();
+  const { useRowById, getById, query, useAll } = useTinybase();
   const editModal = useModal();
   const confirmModal = useModal();
 
@@ -186,44 +185,46 @@ const planning = () => {
         </View>
       )}
 
-      <View className="flex-row gap-4 my-2 mx-4">
-        <View className="flex-1 flex-row items-center gap-2 bg-zinc-100 dark:bg-zinc-950 p-2 rounded-md">
-          <View
-            className="items-center p-1 rounded-md"
-            style={{ backgroundColor: colors.blue[600] }}
-          >
-            <Calendar width={20} height={20} color="#fff" />
+      {!isUnique && (
+        <View className="flex-row gap-4 my-2 mx-4">
+          <View className="flex-1 flex-row items-center gap-2 bg-zinc-100 dark:bg-zinc-950 p-2 rounded-md">
+            <View
+              className="items-center p-1 rounded-md"
+              style={{ backgroundColor: colors.blue[600] }}
+            >
+              <Calendar width={20} height={20} color="#fff" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-zinc-700 dark:text-zinc-300 text-xs italic">
+                Desde
+              </Text>
+              <Text className="dark:text-white font-semibold w-full">
+                {new Date(
+                  recurringInfo?.startDate as number
+                ).toLocaleDateString()}
+              </Text>
+            </View>
           </View>
-          <View className="flex-1">
-            <Text className="text-zinc-700 dark:text-zinc-300 text-xs italic">
-              Desde
-            </Text>
-            <Text className="dark:text-white font-semibold w-full">
-              {new Date(
-                recurringInfo?.startDate as number
-              ).toLocaleDateString()}
-            </Text>
+          <View className="flex-1 flex-row items-center gap-2 bg-zinc-100 dark:bg-zinc-950 p-2 rounded-md">
+            <View
+              className="items-center p-1 rounded-md"
+              style={{ backgroundColor: colors.red[500] }}
+            >
+              <Calendar width={20} height={20} color="#fff" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-zinc-700 dark:text-zinc-300 text-xs italic">
+                Hasta
+              </Text>
+              <Text className="dark:text-white font-medium w-full">
+                {info.date
+                  ? new Date(info.date as number).toLocaleDateString()
+                  : "Nunca"}
+              </Text>
+            </View>
           </View>
         </View>
-        <View className="flex-1 flex-row items-center gap-2 bg-zinc-100 dark:bg-zinc-950 p-2 rounded-md">
-          <View
-            className="items-center p-1 rounded-md"
-            style={{ backgroundColor: colors.red[500] }}
-          >
-            <Calendar width={20} height={20} color="#fff" />
-          </View>
-          <View className="flex-1">
-            <Text className="text-zinc-700 dark:text-zinc-300 text-xs italic">
-              Hasta
-            </Text>
-            <Text className="dark:text-white font-medium w-full">
-              {info.date
-                ? new Date(info.date as number).toLocaleDateString()
-                : "Nunca"}
-            </Text>
-          </View>
-        </View>
-      </View>
+      )}
 
       <View className="flex-row gap-4 my-2 mx-4">
         <View className="flex-1 flex-row items-center gap-2 bg-zinc-100 dark:bg-zinc-950 p-2 rounded-md">
@@ -267,7 +268,7 @@ const planning = () => {
           </Text>
           <FlatList
             data={history}
-            keyExtractor={(item) => item.date.toString() as string}
+            keyExtractor={(item, i) => item.date.toString() + i.toString()}
             renderItem={({ item }) => (
               <HistoricCard
                 date={item.date}
@@ -287,7 +288,7 @@ const planning = () => {
       )}
 
       <EditPlanning id={id as Id} {...editModal} />
-      <ConfirmForm {...confirmModal} />
+      <ConfirmForm id={id as Id} {...confirmModal} />
     </View>
   );
 };

@@ -3,6 +3,7 @@ type DateData = {
   week: number;
   month: number;
   year: number;
+  timestamp: number;
 };
 
 interface SystemContextModel {

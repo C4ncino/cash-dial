@@ -21,9 +21,10 @@ const NextDate = ({
   recurringType,
   fontSize = "sm",
 }: Props) => {
-  const { isDark } = useSystemContext();
+  const { isDark, currentDateInfo } = useSystemContext();
   const { query, useRowById, getById } = useTinybase();
 
+  const isUnique = recurringType === PLANNINGS_TYPES_ID.UNIQUE;
   const isDaily = recurringType === PLANNINGS_TYPES_ID.DAILY;
 
   const historicPlanning = useRowById(
@@ -45,9 +46,9 @@ const NextDate = ({
   if (!historicPlanning) return null;
 
   // TODO: Test after add completing payment form
-  const dailyPays = useMemo(() => {
-    if (!isDaily) return null;
+  let dailyPays = null;
 
+  if (isDaily) {
     const { start, end } = getDayRange(historicPlanning.date);
 
     const config = getById(
@@ -98,28 +99,34 @@ const NextDate = ({
       }
     );
 
-    return { paid: todayPay.ids.length, missing: config?.times };
-  }, []);
+    dailyPays = { paid: todayPay.ids.length, missing: config?.times };
+  }
 
-  const today = new Date();
-  const diffTime = historicPlanning.date - today.getTime();
+  const diffTime = historicPlanning.date - currentDateInfo.timestamp;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   const isToday = IsToday(historicPlanning.date);
   const isTomorrow = IsTomorrow(historicPlanning.date);
 
-  const color = isToday
-    ? colors.red[500]
-    : isTomorrow
-      ? colors.amber[500]
-      : isDark
-        ? colors.zinc[300]
-        : colors.zinc[700];
+  const color =
+    diffDays < 0 || isToday
+      ? colors.red[500]
+      : isTomorrow
+        ? colors.amber[500]
+        : isDark
+          ? colors.zinc[300]
+          : colors.zinc[700];
 
   return (
     <Text style={{ color, ...styles[fontSize] }}>
       {type === 1 ? "Pago" : "Pagar"}{" "}
-      {isToday ? "hoy !!" : isTomorrow ? "mañana" : `en ${diffDays} días`}
+      {diffDays < 0
+        ? "ahora !!"
+        : isToday
+          ? "hoy !"
+          : isTomorrow
+            ? "mañana"
+            : `en ${diffDays} días`}
       {isDaily &&
         dailyPays &&
         ` (${dailyPays.paid}\u200A/\u200A${dailyPays.missing})`}

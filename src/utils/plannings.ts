@@ -5,14 +5,16 @@ export function getNextPayDate(
   recurringType: PLANNINGS_TYPES_ID,
   startDate: number,
   interval: number,
-  payDays: Omit<Row<"payDaysPlannings">, "idPlanning">[]
+  payDays: Omit<Row<"payDaysPlannings">, "idPlanning">[],
+  againToday = false
 ) {
   let nextDay = 0;
+  const ONE_DAY = 86400000;
 
   switch (recurringType) {
     case PLANNINGS_TYPES_ID.DAILY:
-      if (interval > 1) return startDate;
-      return startDate + 86400000 * interval;
+      if (againToday) return startDate;
+      return startDate + ONE_DAY * interval;
 
     case PLANNINGS_TYPES_ID.WEEKLY:
       payDays.forEach(({ day }) => {
@@ -43,5 +45,8 @@ export function getNextPayDate(
       break;
   }
 
-  return nextDay;
+  const date = new Date(nextDay);
+  date.setHours(0, 0, 0, 0);
+
+  return date.getTime();
 }

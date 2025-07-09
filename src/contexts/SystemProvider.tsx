@@ -2,6 +2,7 @@ import { useColorScheme } from "nativewind";
 import { createContext, PropsWithChildren, useEffect, useMemo } from "react";
 
 import {
+  currentTimestamp,
   currentDay,
   currentMonth,
   currentWeek,
@@ -16,7 +17,7 @@ interface Props extends PropsWithChildren {}
 export const SystemContext = createContext<SystemContextModel>({
   isDark: false,
   categories: [],
-  currentDateInfo: { day: 0, week: 0, month: 0, year: 0 },
+  currentDateInfo: { day: 0, week: 0, month: 0, year: 0, timestamp: 0 },
 });
 
 const SystemProvider = ({ children }: Props) => {
@@ -24,6 +25,7 @@ const SystemProvider = ({ children }: Props) => {
   const { colorScheme } = useColorScheme();
 
   const currentDateInfo = {
+    timestamp: currentTimestamp,
     day: currentDay,
     week: currentWeek,
     month: currentMonth,

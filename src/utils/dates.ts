@@ -1,5 +1,3 @@
-import { lang, clockFormat } from "@/utils/formatters";
-
 export function getWeekNumber(date: Date) {
   date.setHours(0, 0, 0, 0);
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
@@ -114,6 +112,8 @@ export function IsTomorrow(timestamp: number) {
 }
 
 export const now = new Date();
+now.setHours(0, 0, 0, 0);
+export const currentTimestamp = now.getTime();
 export const currentDay = now.getDate(); // 1-indexado day of month
 export const currentWeek = getWeekNumber(now);
 export const currentMonth = now.getMonth(); // 0-indexado: enero = 0
