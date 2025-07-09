@@ -1,9 +1,9 @@
-import { View, Text } from "react-native";
-import React from "react";
-import useDate from "@/hooks/useDate";
-import AmountText from "../widgets/AmountText";
-import { CheckCircleSolid } from "iconoir-react-native";
 import colors from "tailwindcss/colors";
+import { View, Text } from "react-native";
+import { CheckCircleSolid } from "iconoir-react-native";
+
+import useDate from "@/hooks/useDate";
+import AmountText from "@/widgets/AmountText";
 
 interface Props {
   amount: number;

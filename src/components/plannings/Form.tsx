@@ -13,6 +13,8 @@ import RecurrenceForm from "./RecurrenceForm";
 import { formatNumber } from "@/utils/formatters";
 import { MOVEMENT_TYPES, PLANNINGS_TYPES, PLANNINGS_TYPES_ID } from "@/db/ui";
 
+import useRecurringType from "@/hooks/useRecurringType";
+
 interface Props extends PropsBaseModal {
   isEditing?: boolean;
   values: PlanningsForm;
@@ -29,6 +31,8 @@ const Form = ({
   isEditing,
   ...props
 }: Props) => {
+  const { isUnique } = useRecurringType(values.recurringType);
+
   return (
     <BaseModal
       {...props}
@@ -89,7 +93,7 @@ const Form = ({
             onSelect={(s) => setFieldValue("idCategory", s)}
           />
 
-          {values.recurringType !== PLANNINGS_TYPES_ID.UNIQUE && (
+          {!isUnique && (
             <DatePicker
               label="Fecha inicial"
               value={values.startDate}
@@ -98,17 +102,9 @@ const Form = ({
           )}
 
           <DatePicker
-            label={
-              values.recurringType === PLANNINGS_TYPES_ID.UNIQUE
-                ? "Fecha"
-                : "Fecha final"
-            }
+            label={isUnique ? "Fecha" : "Fecha final"}
             needReset
-            placeholder={
-              values.recurringType === PLANNINGS_TYPES_ID.UNIQUE
-                ? undefined
-                : "Nunca"
-            }
+            placeholder={isUnique ? undefined : "Nunca"}
             value={values.date}
             onSelect={(v) => setFieldValue("date", v)}
           />

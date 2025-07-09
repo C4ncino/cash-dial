@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { Text, StyleSheet } from "react-native";
 import colors from "tailwindcss/colors";
+import { Text, StyleSheet } from "react-native";
 
 import { PLANNINGS_TYPES_ID } from "@/db/ui";
 import { getDayRange, IsToday, IsTomorrow } from "@/utils/dates";
 
 import useTinybase from "@/hooks/useDatabase";
 import { useSystemContext } from "@/contexts/hooks";
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   idPlanning: string;
@@ -24,8 +24,7 @@ const NextDate = ({
   const { isDark, currentDateInfo } = useSystemContext();
   const { query, useRowById, getById } = useTinybase();
 
-  const isUnique = recurringType === PLANNINGS_TYPES_ID.UNIQUE;
-  const isDaily = recurringType === PLANNINGS_TYPES_ID.DAILY;
+  const { isDaily } = useRecurringType(recurringType);
 
   const historicPlanning = useRowById(
     "historicPlannings",
@@ -45,7 +44,6 @@ const NextDate = ({
 
   if (!historicPlanning) return null;
 
-  // TODO: Test after add completing payment form
   let dailyPays = null;
 
   if (isDaily) {

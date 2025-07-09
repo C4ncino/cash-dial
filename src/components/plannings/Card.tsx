@@ -1,10 +1,12 @@
 import { View, Text, Pressable } from "react-native";
 
 import NextDate from "./NextDate";
-import useTinybase from "@/hooks/useDatabase";
 import AmountText from "@/widgets/AmountText";
+
 import { getUiElements } from "@/utils/categories";
-import { PLANNINGS_TYPES, PLANNINGS_TYPES_ID } from "@/db/ui";
+
+import useTinybase from "@/hooks/useDatabase";
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   id: string;
@@ -16,9 +18,7 @@ const Card = ({ id, onPress }: Props) => {
 
   const data = useRowById("plannings", id) as Row<"plannings">;
 
-  const recurringType =
-    PLANNINGS_TYPES[data.recurringType as PLANNINGS_TYPES_ID];
-  const isUnique = data.recurringType === PLANNINGS_TYPES_ID.UNIQUE;
+  const { recurringType, isUnique } = useRecurringType(data.recurringType);
 
   const account = getById("accounts", data.idAccount);
 

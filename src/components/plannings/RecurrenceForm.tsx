@@ -7,7 +7,8 @@ import DaySelector from "@/forms/DaySelector";
 import DayMonthSelect from "@/forms/DayMonthSelect";
 
 import { formatInt } from "@/utils/formatters";
-import { PLANNINGS_TYPES, PLANNINGS_TYPES_ID } from "@/db/ui";
+
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   values: PlanningsForm;
@@ -18,14 +19,15 @@ interface Props {
 }
 
 const RecurrenceForm = ({ values, setFieldValue }: Props) => {
-  if (values.recurringType === PLANNINGS_TYPES_ID.UNIQUE) return null;
+  const {
+    recurringType: type,
+    isUnique,
+    isWeekly,
+    isMonthly,
+    isYearly,
+  } = useRecurringType(values.recurringType);
 
-  const type = PLANNINGS_TYPES[values.recurringType as PLANNINGS_TYPES_ID];
-  const isWeekly = values.recurringType === PLANNINGS_TYPES_ID.WEEKLY;
-  const isMonthly = values.recurringType === PLANNINGS_TYPES_ID.MONTHLY;
-  const isYearly = values.recurringType === PLANNINGS_TYPES_ID.YEARLY;
-
-  console.log(values.payDaysData);
+  if (isUnique) return null;
 
   return (
     <View>

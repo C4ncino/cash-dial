@@ -1,9 +1,9 @@
 import Form from "./Form";
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
 import { getNextPayDate } from "@/utils/plannings";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   closeModal: () => void;
@@ -29,22 +29,18 @@ const CreatePlanning = (props: Props) => {
     }
   );
 
+  const { isUnique, isDaily } = useRecurringType(values.recurringType);
+
   const validateValues = () => {
     if (!validate()) return false;
     else if (values.amount <= 0) return false;
-    else if (
-      values.recurringType === PLANNINGS_TYPES_ID.UNIQUE &&
-      (values.date === 0 || values.date === undefined)
-    )
+    else if (isUnique && (values.date === 0 || values.date === undefined))
       return false;
-    else if (values.recurringType !== PLANNINGS_TYPES_ID.UNIQUE) {
+    else if (!isUnique) {
       if (values.interval <= 0) return false;
       else if (values.times <= 0) return false;
 
-      if (
-        values.recurringType !== PLANNINGS_TYPES_ID.DAILY &&
-        (!values.payDaysData || values.payDaysData.length === 0)
-      )
+      if (!isDaily && (!values.payDaysData || values.payDaysData.length === 0))
         return false;
     }
 
@@ -52,9 +48,6 @@ const CreatePlanning = (props: Props) => {
   };
 
   const onSubmit = () => {
-    const isUnique = values.recurringType === PLANNINGS_TYPES_ID.UNIQUE;
-    const isDaily = values.recurringType === PLANNINGS_TYPES_ID.DAILY;
-
     const planningId = create("plannings", { ...values });
 
     if (!isUnique)

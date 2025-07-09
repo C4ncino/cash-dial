@@ -4,28 +4,25 @@ import { router, useLocalSearchParams } from "expo-router";
 import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
 
 import Header from "@/widgets/Header";
-import NextDate from "@/plannings/NextDate";
-import DaySelector from "@/forms/DaySelector";
 import AmountText from "@/widgets/AmountText";
+
+import DaySelector from "@/forms/DaySelector";
+
+import NextDate from "@/plannings/NextDate";
 import ConfirmForm from "@/plannings/ConfirmForm";
 import HistoricCard from "@/plannings/HistoricCard";
 import EditPlanning from "@/plannings/EditPlanning";
 
-import {
-  ACCOUNT_TYPES,
-  ACCOUNT_TYPES_ID,
-  MONTHS,
-  PLANNINGS_TYPES,
-  PLANNINGS_TYPES_ID,
-} from "@/db/ui";
 import { getUiElements } from "@/utils/categories";
+import { ACCOUNT_TYPES, ACCOUNT_TYPES_ID, MONTHS } from "@/db/ui";
 
 import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
+import useRecurringType from "@/hooks/useRecurringType";
 
 const planning = () => {
   const { id } = useLocalSearchParams();
-  const { useRowById, getById, query, useAll } = useTinybase();
+  const { useRowById, getById, query } = useTinybase();
   const editModal = useModal();
   const confirmModal = useModal();
 
@@ -45,10 +42,8 @@ const planning = () => {
 
   const type = ACCOUNT_TYPES[account.type as ACCOUNT_TYPES_ID];
 
-  const isUnique = info.recurringType === PLANNINGS_TYPES_ID.UNIQUE;
-  const isDaily = info.recurringType === PLANNINGS_TYPES_ID.DAILY;
-  const isWeekly = info.recurringType === PLANNINGS_TYPES_ID.WEEKLY;
-  const isYearly = info.recurringType === PLANNINGS_TYPES_ID.YEARLY;
+  const { recurringType, isUnique, isDaily, isWeekly, isYearly } =
+    useRecurringType(info.recurringType);
 
   const recurringInfo = useRowById(
     "recurringPlannings",
@@ -66,9 +61,6 @@ const planning = () => {
       }
     ).ids[0]
   );
-
-  const recurringType =
-    PLANNINGS_TYPES[info?.recurringType as PLANNINGS_TYPES_ID];
 
   const payDays = query(
     "payDaysPlannings",

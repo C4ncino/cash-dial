@@ -1,14 +1,17 @@
 import { KeyboardAvoidingView, ScrollView, Platform, Text } from "react-native";
 
 import BaseModal from "@/BaseModal";
-import useTinybase from "@/hooks/useDatabase";
-import useForm from "@/hooks/useForm";
-import Input from "../forms/Input";
-import { formatNumber } from "@/utils/formatters";
-import DatePicker from "../forms/DatePicker";
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
-import { getNextPayDate } from "@/utils/plannings";
+
+import Input from "@/forms/Input";
+import DatePicker from "@/forms/DatePicker";
+
 import { getDayRange } from "@/utils/dates";
+import { formatNumber } from "@/utils/formatters";
+import { getNextPayDate } from "@/utils/plannings";
+
+import useForm from "@/hooks/useForm";
+import useTinybase from "@/hooks/useDatabase";
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   id: Id;
@@ -42,9 +45,10 @@ const ConfirmForm = ({ id, ...props }: Props) => {
     return null;
   }
 
+  const { isUnique, isDaily } = useRecurringType(planning.recurringType);
+
   let date = planning.date;
-  if (planning.recurringType !== PLANNINGS_TYPES_ID.UNIQUE)
-    date = historicPlanning.date;
+  if (!isUnique) date = historicPlanning.date;
 
   const { values, setFieldValue, validate } = useForm<ConfirmPlanning>({
     date: date as number,
@@ -75,7 +79,7 @@ const ConfirmForm = ({ id, ...props }: Props) => {
         msi: 0,
       });
 
-    if (planning.recurringType !== PLANNINGS_TYPES_ID.UNIQUE) {
+    if (isUnique) {
       const { ids, results } = query(
         "recurringPlannings",
         {
@@ -129,7 +133,7 @@ const ConfirmForm = ({ id, ...props }: Props) => {
 
       let needRepeatToday = false;
 
-      if (planning.recurringType === PLANNINGS_TYPES_ID.DAILY) {
+      if (isDaily) {
         const { start, end } = getDayRange(date as number);
 
         const todayPay = query(

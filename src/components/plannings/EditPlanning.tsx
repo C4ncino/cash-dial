@@ -1,10 +1,10 @@
 import Form from "./Form";
 
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
 import { getNextPayDate } from "@/utils/plannings";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
+import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   id: Id;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const EditPlanning = ({ id, visible, closeModal }: Props) => {
-  const { update, getById, query, remove, create, getAll } = useTinybase();
+  const { update, getById, query, remove, create } = useTinybase();
 
   const planning = getById("plannings", id) as Row<"plannings">;
 
@@ -39,8 +39,7 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
     return { day: data.day, month: data.month };
   });
 
-  const isUnique = planning.recurringType === PLANNINGS_TYPES_ID.UNIQUE;
-  const isDaily = planning.recurringType === PLANNINGS_TYPES_ID.DAILY;
+  const { isUnique, isDaily } = useRecurringType(planning.recurringType);
 
   if (typeof planning === null) closeModal();
   if (!isUnique && typeof recurringPlanning === null) closeModal();
@@ -74,8 +73,6 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
   };
 
   const onSubmit = () => {
-    console.log(values);
-
     update("plannings", id, { ...values });
 
     if (!isUnique)
