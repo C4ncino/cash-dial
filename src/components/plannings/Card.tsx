@@ -6,7 +6,7 @@ import AmountText from "@/widgets/AmountText";
 import { getUiElements } from "@/utils/categories";
 
 import useTinybase from "@/hooks/useDatabase";
-import useRecurringType from "@/hooks/useRecurringType";
+import usePlanning from "@/hooks/usePlanning";
 
 interface Props {
   id: string;
@@ -14,19 +14,24 @@ interface Props {
 }
 
 const Card = ({ id, onPress }: Props) => {
-  const { useRowById, getById } = useTinybase();
+  const { getById } = useTinybase();
 
-  const data = useRowById("plannings", id) as Row<"plannings">;
+  const { planning, recurringType } = usePlanning(id);
 
-  const { recurringType, isUnique } = useRecurringType(data.recurringType);
+  const { details, isUnique } = recurringType;
 
-  const account = getById("accounts", data.idAccount);
+  if (!planning) return null;
 
-  const category = getById("categories", data.idCategory);
+  const account = getById("accounts", planning.idAccount);
 
-  if (!data || !account || !category) return null;
+  const category = getById("categories", planning.idCategory);
 
-  const { icon, color } = getUiElements(data.idCategory, category?.idFather);
+  if (!account || !category) return null;
+
+  const { icon, color } = getUiElements(
+    planning.idCategory,
+    category?.idFather
+  );
 
   return (
     <Pressable
@@ -43,20 +48,20 @@ const Card = ({ id, onPress }: Props) => {
       <View className="flex-1">
         <View className="flex-row justify-between">
           <Text className="dark:text-white font-medium text-lg">
-            {data.name}
+            {planning.name}
           </Text>
 
           <View className="flex-row items-end">
             <AmountText
-              type={data.type === 0 ? "out" : "in"}
-              amount={data.amount}
-              needShort={data.amount > 999_999}
+              type={planning.type === 0 ? "out" : "in"}
+              amount={planning.amount}
+              needShort={planning.amount > 999_999}
               fontSize="base"
             />
             {!isUnique && (
               <Text className="text-zinc-500 pb-px mb-px">
                 {"\u200A/\u200A"}
-                {recurringType.name}
+                {details.name}
               </Text>
             )}
           </View>
@@ -65,7 +70,7 @@ const Card = ({ id, onPress }: Props) => {
         <View className="flex-row justify-between ">
           <Text className="text-sm text-zinc-500">{account.name}</Text>
 
-          <NextDate idPlanning={id} {...data} />
+          <NextDate idPlanning={id} {...planning} />
         </View>
       </View>
     </Pressable>

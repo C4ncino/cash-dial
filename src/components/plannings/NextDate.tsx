@@ -1,110 +1,31 @@
 import colors from "tailwindcss/colors";
 import { Text, StyleSheet } from "react-native";
 
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
-import { getDayRange, IsToday, IsTomorrow } from "@/utils/dates";
+import { IsToday, IsTomorrow } from "@/utils/dates";
 
-import useTinybase from "@/hooks/useDatabase";
+import usePlanning from "@/hooks/usePlanning";
 import { useSystemContext } from "@/contexts/hooks";
-import useRecurringType from "@/hooks/useRecurringType";
 
 interface Props {
   idPlanning: string;
   type: number;
-  recurringType: PLANNINGS_TYPES_ID;
   fontSize?: "sm" | "base" | "lg" | "xl" | "2xl";
 }
 
-const NextDate = ({
-  idPlanning,
-  type,
-  recurringType,
-  fontSize = "sm",
-}: Props) => {
+const NextDate = ({ idPlanning, type, fontSize = "sm" }: Props) => {
   const { isDark, currentDateInfo } = useSystemContext();
-  const { query, useRowById, getById } = useTinybase();
 
-  const { isDaily } = useRecurringType(recurringType);
+  const { currentPending, dailyPays, recurringType } = usePlanning(idPlanning);
 
-  const historicPlanning = useRowById(
-    "historicPlannings",
-    query(
-      "historicPlannings",
-      { type: "select", column: "idPlanning" },
-      { type: "select", column: "isPending" },
-      {
-        type: "where",
-        column: "idPlanning",
-        operator: "==",
-        value: idPlanning,
-      },
-      { type: "where", column: "isPending", operator: "==", value: true }
-    ).ids[0]
-  );
+  if (!currentPending) return null;
 
-  if (!historicPlanning) return null;
+  const { isDaily } = recurringType;
 
-  let dailyPays = null;
-
-  if (isDaily) {
-    const { start, end } = getDayRange(historicPlanning.date);
-
-    const config = getById(
-      "recurringPlannings",
-      query(
-        "recurringPlannings",
-        {
-          type: "select",
-          column: "idPlanning",
-        },
-        {
-          type: "where",
-          column: "idPlanning",
-          operator: "==",
-          value: idPlanning,
-        }
-      ).ids[0]
-    );
-
-    const todayPay = query(
-      "historicPlannings",
-      { type: "select", column: "idPlanning" },
-      { type: "select", column: "date" },
-      { type: "select", column: "isPending" },
-      {
-        type: "where",
-        column: "idPlanning",
-        operator: "==",
-        value: idPlanning,
-      },
-      {
-        type: "where",
-        column: "date",
-        operator: ">=",
-        value: start,
-      },
-      {
-        type: "where",
-        column: "date",
-        operator: "<=",
-        value: end,
-      },
-      {
-        type: "where",
-        column: "isPending",
-        operator: "==",
-        value: false,
-      }
-    );
-
-    dailyPays = { paid: todayPay.ids.length, missing: config?.times };
-  }
-
-  const diffTime = historicPlanning.date - currentDateInfo.timestamp;
+  const diffTime = currentPending.date - currentDateInfo.timestamp;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  const isToday = IsToday(historicPlanning.date);
-  const isTomorrow = IsTomorrow(historicPlanning.date);
+  const isToday = IsToday(currentPending.date);
+  const isTomorrow = IsTomorrow(currentPending.date);
 
   const color =
     diffDays < 0 || isToday

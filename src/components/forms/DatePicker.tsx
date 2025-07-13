@@ -17,6 +17,7 @@ interface Props {
   onSelect: (value: number | undefined) => void;
   needReset?: boolean;
   mode?: "date" | "time" | "datetime";
+  minimumDate?: Date;
 }
 
 const DatePicker = ({
@@ -26,6 +27,7 @@ const DatePicker = ({
   onSelect,
   needReset,
   mode = "date",
+  minimumDate = new Date(),
 }: Props) => {
   const { isDark, currentDateInfo } = useSystemContext();
 
@@ -100,7 +102,7 @@ const DatePicker = ({
         </Pressable>
       </View>
       <DateTimePickerModal
-        minimumDate={new Date()}
+        minimumDate={minimumDate}
         locale={lang}
         date={dateObject}
         isVisible={visible}

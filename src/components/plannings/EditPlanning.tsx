@@ -4,7 +4,7 @@ import { getNextPayDate } from "@/utils/plannings";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
-import useRecurringType from "@/hooks/useRecurringType";
+import usePlanning from "@/hooks/usePlanning";
 
 interface Props {
   id: Id;
@@ -13,46 +13,34 @@ interface Props {
 }
 
 const EditPlanning = ({ id, visible, closeModal }: Props) => {
-  const { update, getById, query, remove, create } = useTinybase();
+  const { update, remove, create } = useTinybase();
 
-  const planning = getById("plannings", id) as Row<"plannings">;
+  const {
+    planning,
+    recurringInfo,
+    recurringInfoId,
+    currentPendingId,
+    payDaysIds,
+    payDays,
+    recurringType,
+  } = usePlanning(id);
 
-  const recurringPlanningId = query(
-    "recurringPlannings",
-    { type: "select", column: "idPlanning" },
-    { type: "where", column: "idPlanning", operator: "==", value: id }
-  ).ids[0];
+  if (!planning || !recurringInfo) return null;
 
-  const recurringPlanning = getById(
-    "recurringPlannings",
-    recurringPlanningId
-  ) as Row<"recurringPlannings">;
-
-  const payDaysDataIds = query(
-    "payDaysPlannings",
-    { type: "select", column: "idPlanning" },
-    { type: "where", column: "idPlanning", operator: "==", value: id }
-  ).ids;
-
-  const payDaysData = payDaysDataIds.map((id) => {
-    const data = getById("payDaysPlannings", id) as Row<"payDaysPlannings">;
-    return { day: data.day, month: data.month };
-  });
-
-  const { isUnique, isDaily } = useRecurringType(planning.recurringType);
+  const { isUnique, isDaily } = recurringType;
 
   if (typeof planning === null) closeModal();
-  if (!isUnique && typeof recurringPlanning === null) closeModal();
+  if (!isUnique && typeof recurringInfo === null) closeModal();
 
   const { values, setFieldValue, validate, resetForm } = useForm<PlanningsForm>(
     {
       ...planning,
 
-      interval: isUnique ? 1 : recurringPlanning.interval,
-      times: isUnique ? 1 : recurringPlanning.times,
-      startDate: isUnique ? 0 : recurringPlanning.startDate,
+      interval: isUnique ? 1 : recurringInfo.interval,
+      times: isUnique ? 1 : recurringInfo.times,
+      startDate: isUnique ? 0 : recurringInfo.startDate,
 
-      payDaysData: isUnique || isDaily ? undefined : [...payDaysData],
+      payDaysData: isUnique || isDaily ? undefined : [...payDays],
     }
   );
 
@@ -76,29 +64,21 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
     update("plannings", id, { ...values });
 
     if (!isUnique)
-      update("recurringPlannings", recurringPlanningId, {
+      update("recurringPlannings", recurringInfoId, {
         idPlanning: id,
         ...values,
       });
-
-    const idHistoric = query(
-      "historicPlannings",
-      { type: "select", column: "idPlanning" },
-      { type: "select", column: "isPending" },
-      { type: "where", column: "idPlanning", operator: "==", value: id },
-      { type: "where", column: "isPending", operator: "==", value: true }
-    ).ids[0];
 
     let nextDate = 0;
 
     if (isUnique && values.date !== planning.date)
       nextDate = values.date as number;
-    else if (isDaily && values.startDate !== recurringPlanning.startDate)
+    else if (isDaily && values.startDate !== recurringInfo.startDate)
       nextDate = values.startDate;
     else if (!isUnique && !isDaily && values.payDaysData !== undefined) {
       values.payDaysData.map((d, i) => {
-        if (i < payDaysDataIds.length)
-          update("payDaysPlannings", payDaysDataIds[i], {
+        if (i < payDaysIds.length)
+          update("payDaysPlannings", payDaysIds[i], {
             idPlanning: id,
             ...d,
           });
@@ -109,8 +89,8 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
           });
       });
 
-      if (payDaysDataIds.length > values.payDaysData.length)
-        payDaysDataIds
+      if (payDaysIds.length > values.payDaysData.length)
+        payDaysIds
           .slice(values.payDaysData.length)
           .forEach((id) => remove("payDaysPlannings", id));
 
@@ -122,10 +102,8 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
       );
     }
 
-    console.log(nextDate);
-
-    if (nextDate !== 0 && idHistoric !== undefined)
-      update("historicPlannings", idHistoric, {
+    if (nextDate !== 0 && currentPendingId !== undefined)
+      update("historicPlannings", currentPendingId, {
         idPlanning: id,
         date: nextDate,
       });

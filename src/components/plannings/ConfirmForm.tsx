@@ -5,13 +5,12 @@ import BaseModal from "@/BaseModal";
 import Input from "@/forms/Input";
 import DatePicker from "@/forms/DatePicker";
 
-import { getDayRange } from "@/utils/dates";
 import { formatNumber } from "@/utils/formatters";
 import { getNextPayDate } from "@/utils/plannings";
 
 import useForm from "@/hooks/useForm";
 import useTinybase from "@/hooks/useDatabase";
-import useRecurringType from "@/hooks/useRecurringType";
+import usePlanning from "@/hooks/usePlanning";
 
 interface Props {
   id: Id;
@@ -26,29 +25,27 @@ type ConfirmPlanning = {
 };
 
 const ConfirmForm = ({ id, ...props }: Props) => {
-  const { useRowById, query, update, create } = useTinybase();
+  const { update, create } = useTinybase();
 
-  const planning = useRowById("plannings", id);
+  const {
+    planning,
+    currentPendingId,
+    currentPending,
+    recurringType,
+    payDays,
+    recurringInfo,
+    dailyPays,
+  } = usePlanning(id);
 
-  const idHistoric = query(
-    "historicPlannings",
-    { type: "select", column: "idPlanning" },
-    { type: "select", column: "isPending" },
-    { type: "where", column: "idPlanning", operator: "==", value: id },
-    { type: "where", column: "isPending", operator: "==", value: true }
-  ).ids[0];
-
-  const historicPlanning = useRowById("historicPlannings", idHistoric);
-
-  if (!planning || !historicPlanning) {
+  if (!planning || !currentPending || !recurringInfo) {
     props.closeModal();
     return null;
   }
 
-  const { isUnique, isDaily } = useRecurringType(planning.recurringType);
+  const { isUnique } = recurringType;
 
   let date = planning.date;
-  if (!isUnique) date = historicPlanning.date;
+  if (!isUnique) date = currentPending.date;
 
   const { values, setFieldValue, validate } = useForm<ConfirmPlanning>({
     date: date as number,
@@ -56,7 +53,7 @@ const ConfirmForm = ({ id, ...props }: Props) => {
   });
 
   const onSubmit = () => {
-    update("historicPlannings", idHistoric, {
+    update("historicPlannings", currentPendingId, {
       idPlanning: id,
       isPending: false,
       amount: values.amount,
@@ -79,103 +76,13 @@ const ConfirmForm = ({ id, ...props }: Props) => {
         msi: 0,
       });
 
-    if (isUnique) {
-      const { ids, results } = query(
-        "recurringPlannings",
-        {
-          type: "select",
-          column: "idPlanning",
-        },
-        {
-          type: "select",
-          column: "interval",
-        },
-        {
-          type: "select",
-          column: "times",
-        },
-        {
-          type: "where",
-          column: "idPlanning",
-          operator: "==",
-          value: id,
-        }
-      );
-
-      const recurringInfo = results[ids[0]];
-
-      const { ids: _, results: historicResults } = query(
-        "payDaysPlannings",
-        {
-          type: "select",
-          column: "idPlanning",
-        },
-        {
-          type: "select",
-          column: "day",
-        },
-        {
-          type: "select",
-          column: "month",
-        },
-        {
-          type: "where",
-          column: "idPlanning",
-          operator: "==",
-          value: id,
-        }
-      );
-
-      const payDays = Object.values(historicResults).map(({ day, month }) => ({
-        day,
-        month,
-      }));
-
-      let needRepeatToday = false;
-
-      if (isDaily) {
-        const { start, end } = getDayRange(date as number);
-
-        const todayPay = query(
-          "historicPlannings",
-          { type: "select", column: "idPlanning" },
-          { type: "select", column: "date" },
-          { type: "select", column: "isPending" },
-          {
-            type: "where",
-            column: "idPlanning",
-            operator: "==",
-            value: id,
-          },
-          {
-            type: "where",
-            column: "date",
-            operator: ">=",
-            value: start,
-          },
-          {
-            type: "where",
-            column: "date",
-            operator: "<=",
-            value: end,
-          },
-          {
-            type: "where",
-            column: "isPending",
-            operator: "==",
-            value: false,
-          }
-        );
-
-        needRepeatToday = todayPay.ids.length < recurringInfo.times;
-      }
-
+    if (!isUnique) {
       const nextDate = getNextPayDate(
         planning.recurringType,
         date as number,
         recurringInfo.interval,
         payDays,
-        needRepeatToday
+        !((dailyPays?.paid as number) + 1 === dailyPays?.missing)
       );
 
       create("historicPlannings", {
@@ -228,6 +135,7 @@ const ConfirmForm = ({ id, ...props }: Props) => {
             label="Fecha de pago"
             value={date}
             onSelect={(v) => setFieldValue("date", v)}
+            minimumDate={new Date(date as number)}
           />
         </ScrollView>
       </KeyboardAvoidingView>

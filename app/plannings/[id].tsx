@@ -18,89 +18,36 @@ import { ACCOUNT_TYPES, ACCOUNT_TYPES_ID, MONTHS } from "@/db/ui";
 
 import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
-import useRecurringType from "@/hooks/useRecurringType";
+import usePlanning from "@/hooks/usePlanning";
 
 const planning = () => {
   const { id } = useLocalSearchParams();
-  const { useRowById, getById, query } = useTinybase();
+  const { getById } = useTinybase();
+
   const editModal = useModal();
   const confirmModal = useModal();
 
   if (!id) return router.back();
 
-  const info = useRowById("plannings", id as Id);
+  const { planning, recurringType, recurringInfo, payDays, history } =
+    usePlanning(id as Id);
 
-  if (!info) return router.back();
+  if (!planning) return router.back();
 
-  const account = getById("accounts", info.idAccount);
+  const account = getById("accounts", planning.idAccount);
 
-  const category = getById("categories", info.idCategory);
+  const category = getById("categories", planning.idCategory);
 
   if (!account || !category) return router.back();
 
-  const { icon, color } = getUiElements(info.idCategory, category?.idFather);
+  const { icon, color } = getUiElements(
+    planning.idCategory,
+    category?.idFather
+  );
 
   const type = ACCOUNT_TYPES[account.type as ACCOUNT_TYPES_ID];
 
-  const { recurringType, isUnique, isDaily, isWeekly, isYearly } =
-    useRecurringType(info.recurringType);
-
-  const recurringInfo = useRowById(
-    "recurringPlannings",
-    query(
-      "recurringPlannings",
-      {
-        type: "select",
-        column: "idPlanning",
-      },
-      {
-        type: "where",
-        column: "idPlanning",
-        operator: "==",
-        value: id,
-      }
-    ).ids[0]
-  );
-
-  const payDays = query(
-    "payDaysPlannings",
-    {
-      type: "select",
-      column: "idPlanning",
-    },
-    {
-      type: "where",
-      column: "idPlanning",
-      operator: "==",
-      value: id,
-    }
-  ).ids.map((id) => getById("payDaysPlannings", id) as Row<"payDaysPlannings">);
-
-  const history = query(
-    "historicPlannings",
-    {
-      type: "select",
-      column: "idPlanning",
-    },
-    {
-      type: "select",
-      column: "isPending",
-    },
-    {
-      type: "where",
-      column: "idPlanning",
-      operator: "==",
-      value: id,
-    },
-    {
-      type: "where",
-      column: "isPending",
-      operator: "==",
-      value: false,
-    }
-  ).ids.map(
-    (id) => getById("historicPlannings", id) as Row<"historicPlannings">
-  );
+  const { details, isUnique, isDaily, isWeekly, isYearly } = recurringType;
 
   return (
     <View className="max-w-xl w-full mx-auto">
@@ -112,17 +59,17 @@ const planning = () => {
       />
 
       <Text className="dark:text-white text-3xl font-semibold text-center my-1">
-        {info.name}
+        {planning.name}
       </Text>
 
       <View className="items-center">
         <AmountText
-          type={info.type === 0 ? "out" : "in"}
-          amount={info.amount}
-          needShort={info.amount > 999_999_999_999}
+          type={planning.type === 0 ? "out" : "in"}
+          amount={planning.amount}
+          needShort={planning.amount > 999_999_999_999}
         />
 
-        <NextDate fontSize="base" idPlanning={id as Id} {...info} />
+        <NextDate fontSize="base" idPlanning={id as Id} {...planning} />
       </View>
 
       <Pressable
@@ -171,8 +118,8 @@ const planning = () => {
             {recurringInfo?.times}{" "}
             {(recurringInfo?.times as number) > 1 ? "veces" : "vez"} cada{" "}
             {(recurringInfo?.interval as number) > 1
-              ? recurringType.plural
-              : recurringType.singular}
+              ? details.plural
+              : details.singular}
           </Text>
         </View>
       )}
@@ -209,8 +156,8 @@ const planning = () => {
                 Hasta
               </Text>
               <Text className="dark:text-white font-medium w-full">
-                {info.date
-                  ? new Date(info.date as number).toLocaleDateString()
+                {planning.date
+                  ? new Date(planning.date as number).toLocaleDateString()
                   : "Nunca"}
               </Text>
             </View>
@@ -259,13 +206,14 @@ const planning = () => {
             Historial
           </Text>
           <FlatList
+            className="mt-2"
             data={history}
             keyExtractor={(item, i) => item.date.toString() + i.toString()}
             renderItem={({ item }) => (
               <HistoricCard
                 date={item.date}
                 amount={item.amount || 0}
-                type={info.type === 0 ? "out" : "in"}
+                type={planning.type === 0 ? "out" : "in"}
               />
             )}
             ListEmptyComponent={() => (

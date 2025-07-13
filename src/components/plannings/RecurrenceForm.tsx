@@ -20,7 +20,7 @@ interface Props {
 
 const RecurrenceForm = ({ values, setFieldValue }: Props) => {
   const {
-    recurringType: type,
+    details: type,
     isUnique,
     isWeekly,
     isMonthly,
