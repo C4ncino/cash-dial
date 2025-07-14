@@ -14,7 +14,7 @@ const BudgetCard = ({ id, onPress, onLongPress }: Props) => {
 
   if (!budget) return null;
 
-  const { info, icon, color, getAmountSpent } = budget;
+  const { info, icon, color, amount } = budget;
 
   return (
     <Pressable
@@ -35,7 +35,7 @@ const BudgetCard = ({ id, onPress, onLongPress }: Props) => {
           </Text>
         </View>
 
-        <Progress max={info.amountLimit} current={getAmountSpent()} />
+        <Progress max={info.amountLimit} current={amount} />
       </View>
     </Pressable>
   );

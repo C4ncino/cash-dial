@@ -1,6 +1,5 @@
 import {
   getAmount,
-  getBudgetExpenses,
   getCategoryIds,
   getIntervalFunction,
 } from "@/utils/budgets";
@@ -25,11 +24,18 @@ const useBudget = (id: Id) => {
 
   const getInterval = getIntervalFunction(budget.type);
 
+  const amount = getAmount(
+    query,
+    budget.idCategory,
+    categoryIds,
+    getInterval()
+  );
+
   return {
     info: budget,
     icon,
     color,
-    getAmountSpent: () => getAmount(query, id, categoryIds, getInterval()),
+    amount,
   };
 };
 

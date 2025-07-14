@@ -7,8 +7,8 @@ import BudgetCard from "./BudgetCard";
 import Link from "@/widgets/Link";
 import ConfirmationModal from "@/widgets/ConfirmationModal";
 
-import useTinybase from "@/hooks/useDatabase";
 import useModal from "@/hooks/useModal";
+import useTinybase from "@/hooks/useDatabase";
 
 const BudgetsCard = () => {
   const deleteModal = useModal();
@@ -16,6 +16,7 @@ const BudgetsCard = () => {
   const [selectedId, setSelectedId] = useState<Id>();
 
   const budgets = useAll("budgets");
+  const _ = useAll("expenses");
 
   const handleDelete = () => {
     remove("budgets", selectedId as Id);
