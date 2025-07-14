@@ -24,7 +24,7 @@ const Button = ({
       <Pressable {...props} className={`w-full`} disabled={disabled}>
         {({ pressed }) => (
           <View
-            className="h-10 justify-center border-2 rounded-sm"
+            className="h-10 justify-center border-2 rounded-sm px-2"
             style={{
               borderColor: disabled ? "#dfdfdf" : color,
               backgroundColor: pressed ? color : "transparent",
