@@ -195,6 +195,18 @@ export const PLANNINGS_TYPES = {
   },
 } as const;
 
+export enum PLANNING_STAGES_ID {
+  PENDING,
+  COMPLETED,
+  CANCELLED,
+}
+
+export const PLANNING_STAGES = {
+  0: { id: 0, name: "Pendiente" },
+  1: { id: 1, name: "Completado" },
+  2: { id: 2, name: "Cancelado" },
+};
+
 export const DAYS = [
   { id: "1" },
   { id: "2" },

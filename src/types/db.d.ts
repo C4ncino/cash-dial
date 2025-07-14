@@ -113,7 +113,7 @@ type Tables = {
     [rowId: Id]: {
       idPlanning: string;
       date: number;
-      isPending?: boolean;
+      status?: number;
       amount?: number;
       idOrigin?: number;
     };

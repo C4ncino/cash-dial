@@ -24,7 +24,7 @@ const payDaysPlanningsConfig: TableConfig = {
 
 const historicPlanningsConfig: TableConfig = {
   idPlanning: { type: "string" },
-  isPending: { type: "boolean", default: true },
+  status: { type: "number", default: 0 },
   date: { type: "number" },
   amount: { type: "number" },
   idOrigin: { type: "number" },

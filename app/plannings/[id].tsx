@@ -1,9 +1,10 @@
 import colors from "tailwindcss/colors";
 import { Calendar } from "iconoir-react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 
 import Header from "@/widgets/Header";
+import Button from "@/widgets/Button";
 import AmountText from "@/widgets/AmountText";
 
 import DaySelector from "@/forms/DaySelector";
@@ -12,9 +13,15 @@ import NextDate from "@/plannings/NextDate";
 import ConfirmForm from "@/plannings/ConfirmForm";
 import HistoricCard from "@/plannings/HistoricCard";
 import EditPlanning from "@/plannings/EditPlanning";
+import CancelPayment from "@/plannings/CancelPayment";
 
 import { getUiElements } from "@/utils/categories";
-import { ACCOUNT_TYPES, ACCOUNT_TYPES_ID, MONTHS } from "@/db/ui";
+import {
+  ACCOUNT_TYPES,
+  ACCOUNT_TYPES_ID,
+  MONTHS,
+  PLANNING_STAGES_ID,
+} from "@/db/ui";
 
 import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
@@ -72,14 +79,18 @@ const planning = () => {
         <NextDate fontSize="base" idPlanning={id as Id} {...planning} />
       </View>
 
-      <Pressable
-        onPress={confirmModal.openModal}
-        className="border-2 border-blue-500 rounded-md mx-auto p-2 my-3 bg-blue-500"
-      >
-        <Text className="text-white text-center font-semibold">
-          Confirmar Pago
-        </Text>
-      </Pressable>
+      <View className="flex-row justify-center gap-3 my-4">
+        <View className="w-28">
+          <CancelPayment id={id as Id} />
+        </View>
+        <View className="w-28">
+          <Button
+            title="Confirmar"
+            color={colors.blue[500]}
+            onPress={confirmModal.openModal}
+          />
+        </View>
+      </View>
 
       {!isUnique && (
         <View>
@@ -206,6 +217,7 @@ const planning = () => {
             Historial
           </Text>
           <FlatList
+            inverted
             className="mt-2 max-h-[29.5rem]"
             data={history}
             keyExtractor={(item, i) => item.date.toString() + i.toString()}
@@ -214,6 +226,7 @@ const planning = () => {
                 date={item.date}
                 amount={item.amount || 0}
                 type={planning.type === 0 ? "out" : "in"}
+                status={item.status as PLANNING_STAGES_ID}
               />
             )}
             ListEmptyComponent={() => (

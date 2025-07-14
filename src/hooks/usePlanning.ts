@@ -1,7 +1,8 @@
-import { getDayRange } from "@/utils/dates";
 import useTinybase from "./useDatabase";
 import useRecurringType from "./useRecurringType";
-import { PLANNINGS_TYPES_ID } from "@/db/ui";
+
+import { getDayRange } from "@/utils/dates";
+import { PLANNING_STAGES_ID, PLANNINGS_TYPES_ID } from "@/db/ui";
 
 const usePlanning = (id: Id) => {
   const { useRowById, query, getById } = useTinybase();
@@ -34,7 +35,7 @@ const usePlanning = (id: Id) => {
   const history = query(
     "historicPlannings",
     { type: "select", column: "idPlanning" },
-    { type: "select", column: "isPending" },
+    { type: "select", column: "status" },
     {
       type: "where",
       column: "idPlanning",
@@ -43,9 +44,9 @@ const usePlanning = (id: Id) => {
     },
     {
       type: "where",
-      column: "isPending",
-      operator: "==",
-      value: false,
+      column: "status",
+      operator: "!=",
+      value: PLANNING_STAGES_ID.PENDING,
     }
   ).ids.map(
     (id) => getById("historicPlannings", id) as Row<"historicPlannings">
@@ -54,9 +55,14 @@ const usePlanning = (id: Id) => {
   const currentPendingId = query(
     "historicPlannings",
     { type: "select", column: "idPlanning" },
-    { type: "select", column: "isPending" },
+    { type: "select", column: "status" },
     { type: "where", column: "idPlanning", operator: "==", value: id },
-    { type: "where", column: "isPending", operator: "==", value: true }
+    {
+      type: "where",
+      column: "status",
+      operator: "==",
+      value: PLANNING_STAGES_ID.PENDING,
+    }
   ).ids[0];
 
   const currentPending = useRowById("historicPlannings", currentPendingId);
@@ -70,7 +76,7 @@ const usePlanning = (id: Id) => {
       "historicPlannings",
       { type: "select", column: "idPlanning" },
       { type: "select", column: "date" },
-      { type: "select", column: "isPending" },
+      { type: "select", column: "status" },
       {
         type: "where",
         column: "idPlanning",
@@ -91,9 +97,9 @@ const usePlanning = (id: Id) => {
       },
       {
         type: "where",
-        column: "isPending",
-        operator: "==",
-        value: false,
+        column: "status",
+        operator: "!=",
+        value: PLANNING_STAGES_ID.PENDING,
       }
     );
 

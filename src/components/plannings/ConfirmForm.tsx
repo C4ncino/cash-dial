@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from "react";
 import { KeyboardAvoidingView, ScrollView, Platform, Text } from "react-native";
 
 import BaseModal from "@/BaseModal";
@@ -5,6 +6,7 @@ import BaseModal from "@/BaseModal";
 import Input from "@/forms/Input";
 import DatePicker from "@/forms/DatePicker";
 
+import { PLANNING_STAGES_ID } from "@/db/ui";
 import { formatNumber } from "@/utils/formatters";
 import { getNextPayDate } from "@/utils/plannings";
 
@@ -44,18 +46,26 @@ const ConfirmForm = ({ id, ...props }: Props) => {
 
   const { isUnique } = recurringType;
 
-  let date = planning.date;
-  if (!isUnique) date = currentPending.date;
+  const prevDate = useMemo(() => {
+    let prevDate = planning.date;
+    if (!isUnique) prevDate = currentPending.date;
+
+    return prevDate;
+  }, [planning.date, currentPending.date, isUnique]);
 
   const { values, setFieldValue, validate } = useForm<ConfirmPlanning>({
-    date: date as number,
+    date: prevDate as number,
     amount: planning.amount,
   });
+
+  useEffect(() => {
+    setFieldValue("date", prevDate as number);
+  }, [prevDate]);
 
   const onSubmit = () => {
     update("historicPlannings", currentPendingId, {
       idPlanning: id,
-      isPending: false,
+      status: PLANNING_STAGES_ID.COMPLETED,
       amount: values.amount,
       date: values.date as number,
     });
@@ -79,7 +89,7 @@ const ConfirmForm = ({ id, ...props }: Props) => {
     if (!isUnique) {
       const nextDate = getNextPayDate(
         planning.recurringType,
-        date as number,
+        prevDate as number,
         recurringInfo.interval,
         payDays,
         !((dailyPays?.paid as number) + 1 === dailyPays?.missing)
@@ -87,8 +97,6 @@ const ConfirmForm = ({ id, ...props }: Props) => {
 
       create("historicPlannings", {
         idPlanning: id,
-        isPending: true,
-        amount: values.amount,
         date: nextDate,
       });
     }
@@ -133,9 +141,9 @@ const ConfirmForm = ({ id, ...props }: Props) => {
           <DatePicker
             needReset
             label="Fecha de pago"
-            value={date}
+            value={values.date}
             onSelect={(v) => setFieldValue("date", v)}
-            minimumDate={new Date(date as number)}
+            minimumDate={new Date(values.date as number)}
           />
         </ScrollView>
       </KeyboardAvoidingView>
