@@ -206,7 +206,7 @@ const planning = () => {
             Historial
           </Text>
           <FlatList
-            className="mt-2"
+            className="mt-2 max-h-[29.5rem]"
             data={history}
             keyExtractor={(item, i) => item.date.toString() + i.toString()}
             renderItem={({ item }) => (
