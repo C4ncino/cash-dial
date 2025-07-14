@@ -5,7 +5,7 @@ import { View, Text } from "react-native";
 import BudgetCard from "./BudgetCard";
 
 import Link from "@/widgets/Link";
-import DeleteModal from "@/widgets/DeleteModal";
+import ConfirmationModal from "@/widgets/ConfirmationModal";
 
 import useTinybase from "@/hooks/useDatabase";
 import useModal from "@/hooks/useModal";
@@ -55,9 +55,9 @@ const BudgetsCard = () => {
         <Link className="justify-end" href="/budgets" label="Mostrar más" />
       </View>
 
-      <DeleteModal
+      <ConfirmationModal
+        onConfirm={handleDelete}
         text="Seguro que desea eliminar este presupuesto? No podrá deshacerlo."
-        onDelete={handleDelete}
         {...deleteModal}
       />
     </>

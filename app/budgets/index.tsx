@@ -4,7 +4,7 @@ import { View, FlatList } from "react-native";
 
 import Header from "@/widgets/Header";
 import BudgetCard from "@/budget/BudgetCard";
-import DeleteModal from "@/widgets/DeleteModal";
+import ConfirmationModal from "@/widgets/ConfirmationModal";
 import CreateBudget from "@/budget/CreateBudget";
 
 import useModal from "@/hooks/useModal";
@@ -54,9 +54,9 @@ const Budgets = () => {
       />
 
       <CreateBudget {...createModal} />
-      <DeleteModal
+      <ConfirmationModal
+        onConfirm={handleDelete}
         text="Seguro que desea eliminar este presupuesto? No podrá deshacerlo."
-        onDelete={handleDelete}
         {...deleteModal}
       />
     </View>

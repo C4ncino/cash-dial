@@ -5,8 +5,8 @@ import { View, Text, SectionList } from "react-native";
 
 import Button from "@/widgets/Button";
 import DateTitle from "@/widgets/DateTitle";
-import DeleteModal from "@/widgets/DeleteModal";
 import ReturnButton from "@/widgets/ReturnButton";
+import ConfirmationModal from "@/widgets/ConfirmationModal";
 
 import IncomeCard from "@/movements/incomes/Card";
 import EditMovement from "@/movements/EditMovement";
@@ -99,8 +99,8 @@ const Movements = () => {
         closeModal={editCloseModal}
       />
       <CreateMovement {...createModal} />
-      <DeleteModal
-        onDelete={onDelete}
+      <ConfirmationModal
+        onConfirm={onDelete}
         text="Seguro que desea eliminar este movimiento? No podrá deshacerlo."
         {...deleteModal}
       />

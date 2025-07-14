@@ -7,11 +7,18 @@ import Button from "./Button";
 interface Props {
   visible: boolean;
   closeModal: () => void;
-  onDelete: () => void;
+  onConfirm: () => void;
+  confirmButtonLabel?: string;
   text: string;
 }
 
-const DeleteModal = ({ visible, closeModal, text, onDelete }: Props) => {
+const ConfirmationModal = ({
+  visible,
+  closeModal,
+  text,
+  onConfirm,
+  confirmButtonLabel = "Borrar",
+}: Props) => {
   return (
     <Modal visible={visible} transparent onRequestClose={closeModal}>
       <Pressable
@@ -22,7 +29,7 @@ const DeleteModal = ({ visible, closeModal, text, onDelete }: Props) => {
           <View className="w-full">
             <View className="flex-row items-center justify-center gap-2">
               <WarningSquare height={24} width={24} color={colors.red[500]} />
-              <Text className="text-2xl font-semibold text-red-600 dark:text-red-400 text-center ">
+              <Text className="text-2xl font-semibold text-red-500 text-center ">
                 Cuidado
               </Text>
               <WarningSquare height={24} width={24} color={colors.red[500]} />
@@ -36,11 +43,11 @@ const DeleteModal = ({ visible, closeModal, text, onDelete }: Props) => {
             </View>
             <View className="flex-1">
               <Button
-                title="Borrar"
+                title={confirmButtonLabel}
                 color={colors.red[500]}
                 style="outline"
                 onPress={() => {
-                  onDelete?.();
+                  onConfirm?.();
                   closeModal?.();
                 }}
               />
@@ -52,4 +59,4 @@ const DeleteModal = ({ visible, closeModal, text, onDelete }: Props) => {
   );
 };
 
-export default DeleteModal;
+export default ConfirmationModal;

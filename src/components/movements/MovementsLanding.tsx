@@ -9,7 +9,7 @@ import EditMovement from "./EditMovement";
 
 import Link from "@/widgets/Link";
 import { MOVEMENT_TYPES_ID } from "@/db/ui";
-import DeleteModal from "@/widgets/DeleteModal";
+import ConfirmationModal from "@/widgets/ConfirmationModal";
 
 import useModal from "@/hooks/useModal";
 import useMovements from "@/hooks/useMovements";
@@ -91,8 +91,8 @@ const MovementsLanding = ({ onEdit, afterEdit }: Props) => {
         type={type}
       />
 
-      <DeleteModal
-        onDelete={onDelete}
+      <ConfirmationModal
+        onConfirm={onDelete}
         text="Seguro que desea eliminar este movimiento? No podrá deshacerlo."
         {...deleteModal}
       />
