@@ -42,7 +42,7 @@ const CreatePlanning = (props: Props) => {
 
       if (!isDaily && (!values.payDaysData || values.payDaysData.length === 0))
         return false;
-    }
+    } else if (values.date && values.startDate < values.date) return false;
 
     return true;
   };
@@ -76,10 +76,11 @@ const CreatePlanning = (props: Props) => {
       );
     }
 
-    create("historicPlannings", {
-      idPlanning: planningId as string,
-      date: nextDate,
-    });
+    if (values.date === undefined || (values.date && nextDate <= values.date))
+      create("historicPlannings", {
+        idPlanning: planningId as string,
+        date: nextDate,
+      });
 
     props.closeModal();
     resetForm();

@@ -20,6 +20,7 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
     recurringInfo,
     recurringInfoId,
     currentPendingId,
+    currentPending,
     payDaysIds,
     payDays,
     recurringType,
@@ -55,7 +56,7 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
 
       if (!isDaily && (!values.payDaysData || values.payDaysData.length === 0))
         return false;
-    }
+    } else if (values.date && values.startDate < values.date) return false;
 
     return true;
   };
@@ -69,7 +70,7 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
         ...values,
       });
 
-    let nextDate = 0;
+    let nextDate = currentPending?.date || 0;
 
     if (isUnique && values.date !== planning.date)
       nextDate = values.date as number;
@@ -102,7 +103,10 @@ const EditPlanning = ({ id, visible, closeModal }: Props) => {
       );
     }
 
-    if (nextDate !== 0 && currentPendingId !== undefined)
+    if (
+      currentPendingId !== undefined &&
+      (values.date === undefined || (values.date && nextDate <= values.date))
+    )
       update("historicPlannings", currentPendingId, {
         idPlanning: id,
         date: nextDate,

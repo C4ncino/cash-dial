@@ -95,10 +95,14 @@ const ConfirmForm = ({ id, ...props }: Props) => {
         !((dailyPays?.paid as number) + 1 === dailyPays?.missing)
       );
 
-      create("historicPlannings", {
-        idPlanning: id,
-        date: nextDate,
-      });
+      if (
+        planning.date === undefined ||
+        (planning.date && nextDate <= planning.date)
+      )
+        create("historicPlannings", {
+          idPlanning: id,
+          date: nextDate,
+        });
     }
 
     props.closeModal();
