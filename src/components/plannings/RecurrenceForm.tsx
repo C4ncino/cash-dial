@@ -101,11 +101,6 @@ const RecurrenceForm = ({ values, setFieldValue }: Props) => {
 
               <Pressable
                 onPress={() => {
-                  const data =
-                    values.payDaysData?.filter((_, j) => j !== i) || [];
-
-                  console.log(data);
-
                   setFieldValue(
                     "payDaysData",
                     values.payDaysData?.filter((_, j) => j !== i) || []
