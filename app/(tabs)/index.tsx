@@ -11,7 +11,7 @@ import BudgetsCard from "@/budget/BudgetsCard";
 import PlanningCards from "@/plannings/PlanningCards";
 
 const Home = () => {
-  const { visible, closeModal, openModal } = useModal();
+  const createMovement = useModal();
   const [reRender, setReRender] = useState(true);
 
   return (
@@ -32,13 +32,13 @@ const Home = () => {
           afterEdit={() => setReRender(!reRender)}
         />
 
-        {reRender && <BudgetsCard />}
+        <BudgetsCard />
       </ScrollView>
 
-      <CreateMovement visible={visible} closeModal={closeModal} />
+      <CreateMovement {...createMovement} />
       <Pressable
         className="absolute right-4 bottom-8 rounded-full bg-green-600/85 p-1"
-        onPress={openModal}
+        onPress={createMovement.openModal}
       >
         <Plus width={40} height={40} color={colors.white} />
       </Pressable>
