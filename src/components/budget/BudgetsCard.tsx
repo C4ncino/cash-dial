@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { View, Text } from "react-native";
 
@@ -9,14 +9,48 @@ import ConfirmationModal from "@/widgets/ConfirmationModal";
 
 import useModal from "@/hooks/useModal";
 import useTinybase from "@/hooks/useDatabase";
+import { useSystemContext } from "@/contexts/hooks";
+import {
+  getAmount,
+  getCategoryIds,
+  getIntervalFunction,
+} from "@/utils/budgets";
 
 const BudgetsCard = () => {
   const deleteModal = useModal();
-  const { useAll, remove, query } = useTinybase();
+  const { useAll, remove, query, getById } = useTinybase();
   const [selectedId, setSelectedId] = useState<Id>();
+  const [criticalBudgets, setCriticalBudgets] = useState<Id[]>([]);
+  const { categories } = useSystemContext();
 
   const budgets = useAll("budgets");
   const _ = useAll("expenses");
+
+  useEffect(() => {
+    if (!budgets) return;
+
+    const relations: Array<{ id: Id; relation: number }> = [];
+
+    budgets.forEach((id) => {
+      const budget = getById("budgets", id);
+      if (!budget) return;
+      const categoryIds = getCategoryIds(budget.idCategory, categories);
+      const getInterval = getIntervalFunction(budget.type);
+
+      const amount = getAmount(
+        query,
+        budget.idCategory,
+        categoryIds,
+        getInterval()
+      );
+
+      relations.push({ id, relation: amount / budget.amountLimit });
+    });
+
+    relations.sort((a, b) => b.relation - a.relation);
+
+    setCriticalBudgets(relations.slice(0, 3).map((r) => r.id));
+  }, [budgets]);
 
   const handleDelete = () => {
     remove("budgets", selectedId as Id);
@@ -37,7 +71,7 @@ const BudgetsCard = () => {
           Presupuestos
         </Text>
 
-        {budgets.slice(0, 3).map((id) => (
+        {criticalBudgets.map((id) => (
           <View
             className="border-t border-zinc-200 dark:border-zinc-700"
             key={id}
