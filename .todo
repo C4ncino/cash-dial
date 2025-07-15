@@ -2,26 +2,36 @@ Cash Dial:
     Accounts: 
         ☐ elimination method
         ☐ create planning for credit Card
+        ☐ add pagination to cards
     Movements:
-        ☐ sum/rest to account
+        ✔ sum/rest to account @done(25-06-17 21:49)
         ✘ sum/rest to budget @cancelled(25-05-16 17:18)
-        ☐ elimination method
-        ☐ check light mode cards
+        ✔ elimination method @done(25-06-27 19:01)
+        ✔ check light mode cards @done(25-06-17 20:45)
+        ☐ Add to credit card planning
     Budget: 
         ✔ pagination @done(25-05-16 17:17)
         ✔ expenses query @done(25-05-05 21:59)
         ✔ expense cards @done(25-05-05 21:59)
-        ☐ elimination method
-        ☐ creation of historic at begin of the week
-        ☐ selection of 3 more critical budgets
+        ✔ elimination method @done(25-06-27 19:34)
+        ✔ creation of historic at begin of the period @done(25-06-30 19:29)
+        ✔ selection of 3 more critical budgets @done(25-07-14 19:48)
     Planning Page:
         ✔ plannings creation From @done(25-06-05 13:17)
-        ☐ elimination method
         ✔ plannings cards @done(25-06-07 18:42)
         ✔ plannings landing card @done(25-06-07 18:42)
+        ✔ create plannings solo view, with historic @done(25-06-17 20:09)
+        ✔ create confirmation form @done(25-07-08 21:19)
+        ✔ budget card in page @done(25-06-17 21:05)
+        ✔ Refractor a usePlanning Hook @done(25-07-13 19:33)
+        ✔ Change isPending to status @done(25-07-13 19:33)
+        ✔ Add cancellation method @done(25-07-13 19:33)
+        ✔ Check end date before creating new historic @done(25-07-14 19:12)
+        ☐ Check when no current pending is given (cancel edit)
+        ☐ Check edit next creation
+        ☐ elimination method
         ☐ selection of the 3 more urgent plannings
-        ☐ create plannings solo view, with historic
-        ☐ budget card in page
+        ☐ create notifications for plannings
     Stats Page:
         ☐ set tasks
     General:
@@ -31,3 +41,4 @@ Cash Dial:
             ✔ Have categories tree @done(25-05-02 13:03)
             Initialization sequence:
                 ☐ Review budgets times
+                ☐ Create notifications
