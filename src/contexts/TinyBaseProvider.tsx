@@ -111,8 +111,9 @@ const TinyBaseProvider = ({ children }: Props) => {
           idCategory: "5",
           name: "Presupuesto 1",
           amountLimit: 500,
-          type: 0,
+          type: 2,
           currency: "0",
+          startDate: new Date(2024, 4, 23, 0, 0, 0).getTime(),
         },
         // "1": {
         //   idCategory: "55",
@@ -129,18 +130,7 @@ const TinyBaseProvider = ({ children }: Props) => {
         //   currency: "0",
         // },
       })
-      .setTable("historicBudgets", {
-        "0": {
-          idBudget: "0",
-          startDate: new Date(2025, 3, 28, 15, 30, 0).getTime(),
-          amountLimit: 500,
-        },
-        "1": {
-          idBudget: "0",
-          startDate: new Date(2025, 4, 5, 0, 0, 0).getTime(),
-          amountLimit: 500,
-        },
-      })
+      .setTable("historicBudgets", {})
       .setTable("plannings", {
         "0": {
           idAccount: "0",
@@ -200,7 +190,7 @@ const TinyBaseProvider = ({ children }: Props) => {
           idPlanning: "2",
           interval: 1,
           times: 2,
-          startDate: new Date(2025, 5, 17, 0, 0, 0).getTime(),
+          startDate: new Date(2025, 6, 7, 0, 0, 0).getTime(),
         },
         "2": {
           idPlanning: "3",
@@ -254,7 +244,7 @@ const TinyBaseProvider = ({ children }: Props) => {
         },
         "1": {
           idPlanning: "1",
-          date: new Date(2025, 5, 17, 0, 0, 0).getTime(),
+          date: new Date(2025, 6, 12, 0, 0, 0).getTime(),
         },
         "2": {
           idPlanning: "2",
@@ -270,9 +260,15 @@ const TinyBaseProvider = ({ children }: Props) => {
         },
         "5": {
           idPlanning: "1",
-          isPending: false,
+          status: 1,
           amount: 500,
-          date: new Date(2025, 5, 16, 0, 0, 0).getTime(),
+          date: new Date(2025, 6, 12, 0, 0, 0).getTime(),
+        },
+        "6": {
+          idPlanning: "1",
+          status: 1,
+          amount: 500,
+          date: new Date(2025, 6, 12, 0, 0, 0).getTime(),
         },
       })
   );
